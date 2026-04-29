@@ -1,0 +1,630 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../app/generated/prisma"
+  previewFeatures = ["partialIndexes"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model accounts {
+  id                   String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bank_id              String                 @db.Uuid
+  account_id           String
+  account_number       String
+  account_type         String
+  balance              Decimal                @default(0) @db.Decimal(15, 2)
+  currency             String                 @default("SAR")
+  created_at           DateTime               @default(now()) @db.Timestamptz(6)
+  banks                banks                  @relation(fields: [bank_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  marasi               marasi[]
+  marasi_transactions  marasi_transactions[]
+  payment_transactions payment_transactions[]
+  recurring_expenses   recurring_expenses[]
+  zakat_payments       zakat_payments[]
+
+  @@index([bank_id], map: "idx_accounts_bank")
+}
+
+model ai_recommendations {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id             String   @db.Uuid
+  recommendation_type String
+  title               String
+  description         String
+  priority            String
+  is_dismissed        Boolean  @default(false)
+  created_at          DateTime @default(now()) @db.Timestamptz(6)
+  users               users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id, created_at], map: "idx_ai_recommendations_user")
+}
+
+model banks {
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id      String     @db.Uuid
+  bank_id      String
+  bank_name    String
+  is_connected Boolean    @default(false)
+  connected_at DateTime?  @db.Timestamptz(6)
+  created_at   DateTime   @default(now()) @db.Timestamptz(6)
+  accounts     accounts[]
+  users        users      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_banks_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model expense_notifications {
+  id                   String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id              String                    @db.Uuid
+  transaction_id       String?                   @db.Uuid
+  type                 expense_notification_type
+  channel              notification_channel
+  sent_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  read_at              DateTime?                 @db.Timestamptz(6)
+  created_at           DateTime                  @default(now()) @db.Timestamptz(6)
+  payment_transactions payment_transactions?     @relation(fields: [transaction_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users                users                     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id, sent_at(sort: Desc)], map: "idx_expense_notifications_unread", where: raw("(read_at IS NULL)"))
+  @@index([user_id, sent_at(sort: Desc)], map: "idx_expense_notifications_user")
+}
+
+model hawl_daily_checks {
+  id                    String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  hawl_id               String     @db.Uuid
+  user_id               String     @db.Uuid
+  check_date            DateTime   @db.Date
+  bank_balance          Decimal    @db.Decimal(15, 2)
+  manual_assets_total   Decimal    @db.Decimal(15, 2)
+  total_net_worth       Decimal    @db.Decimal(15, 2)
+  nisab_value_sar       Decimal    @db.Decimal(15, 2)
+  gold_price_per_gram   Decimal    @db.Decimal(10, 4)
+  silver_price_per_gram Decimal    @db.Decimal(10, 4)
+  is_above_nisab        Boolean
+  created_at            DateTime   @default(now()) @db.Timestamptz(6)
+  zakat_hawl            zakat_hawl @relation(fields: [hawl_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users                 users      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([hawl_id, check_date])
+  @@index([user_id, check_date], map: "idx_hawl_daily_checks_user")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model marasi {
+  id                   String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id              String                 @db.Uuid
+  account_id           String                 @db.Uuid
+  title                String
+  target_amount        Decimal                @db.Decimal(15, 2)
+  periodic_amount      Decimal                @db.Decimal(15, 2)
+  frequency            marsa_frequency
+  target_date          DateTime               @db.Date
+  current_balance      Decimal                @default(0) @db.Decimal(15, 2)
+  status               marsa_status           @default(active)
+  failed_attempts      Int                    @default(0)
+  next_deposit_at      DateTime?              @db.Timestamptz(6)
+  paused_at            DateTime?              @db.Timestamptz(6)
+  reached_at           DateTime?              @db.Timestamptz(6)
+  cancelled_at         DateTime?              @db.Timestamptz(6)
+  created_at           DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime               @default(now()) @db.Timestamptz(6)
+  accounts             accounts               @relation(fields: [account_id], references: [id], onUpdate: NoAction)
+  users                users                  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  marasi_notifications marasi_notifications[]
+  marasi_transactions  marasi_transactions[]
+
+  @@index([account_id], map: "idx_marasi_account")
+  @@index([status], map: "idx_marasi_active", where: raw("(status = 'active'::marsa_status)"))
+  @@index([next_deposit_at], map: "idx_marasi_due", where: raw("((status = 'active'::marsa_status) AND (next_deposit_at IS NOT NULL))"))
+  @@index([user_id], map: "idx_marasi_user")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model marasi_attempts {
+  id                  String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  transaction_id      String               @db.Uuid
+  attempt_number      Int
+  at                  DateTime             @default(now()) @db.Timestamptz(6)
+  status              marsa_attempt_status
+  message             String
+  gateway_code        String?
+  gateway_response    Json?
+  created_at          DateTime             @default(now()) @db.Timestamptz(6)
+  marasi_transactions marasi_transactions  @relation(fields: [transaction_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([transaction_id, at], map: "idx_marasi_attempts_transaction")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model marasi_notifications {
+  id                  String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id             String                  @db.Uuid
+  marsa_id            String?                 @db.Uuid
+  transaction_id      String?                 @db.Uuid
+  type                marsa_notification_type
+  channel             notification_channel
+  sent_at             DateTime                @default(now()) @db.Timestamptz(6)
+  read_at             DateTime?               @db.Timestamptz(6)
+  created_at          DateTime                @default(now()) @db.Timestamptz(6)
+  marasi              marasi?                 @relation(fields: [marsa_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  marasi_transactions marasi_transactions?    @relation(fields: [transaction_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users               users                   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id, sent_at(sort: Desc)], map: "idx_marasi_notifications_unread", where: raw("(read_at IS NULL)"))
+  @@index([user_id, sent_at(sort: Desc)], map: "idx_marasi_notifications_user")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model marasi_transactions {
+  id                   String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  marsa_id             String                 @db.Uuid
+  user_id              String                 @db.Uuid
+  account_id           String                 @db.Uuid
+  type                 marsa_tx_type
+  amount               Decimal                @db.Decimal(15, 2)
+  scheduled_for        DateTime?              @db.Timestamptz(6)
+  executed_at          DateTime?              @db.Timestamptz(6)
+  status               marsa_tx_status        @default(scheduled)
+  retry_count          Int                    @default(0)
+  bank_ref             String?
+  failure_reason       String?
+  note                 String?
+  resolved_manually    Boolean                @default(false)
+  created_at           DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime               @default(now()) @db.Timestamptz(6)
+  marasi_attempts      marasi_attempts[]
+  marasi_notifications marasi_notifications[]
+  accounts             accounts               @relation(fields: [account_id], references: [id], onUpdate: NoAction)
+  marasi               marasi                 @relation(fields: [marsa_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users                users                  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([account_id], map: "idx_marasi_transactions_account")
+  @@index([marsa_id, created_at(sort: Desc)], map: "idx_marasi_transactions_marsa")
+  @@index([scheduled_for], map: "idx_marasi_transactions_pending", where: raw("(status = ANY (ARRAY['scheduled'::marsa_tx_status, 'processing'::marsa_tx_status, 'retrying'::marsa_tx_status]))"))
+  @@index([scheduled_for], map: "idx_marasi_transactions_scheduled")
+  @@index([status], map: "idx_marasi_transactions_status")
+  @@index([user_id], map: "idx_marasi_transactions_user")
+}
+
+model nisab_price_history {
+  id                     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  price_date             DateTime @unique @db.Date
+  gold_price_per_gram    Decimal  @db.Decimal(10, 4)
+  gold_nisab_grams       Int      @default(85)
+  gold_nisab_value_sar   Decimal  @db.Decimal(15, 2)
+  silver_price_per_gram  Decimal  @db.Decimal(10, 4)
+  silver_nisab_grams     Int      @default(595)
+  silver_nisab_value_sar Decimal  @db.Decimal(15, 2)
+  source                 String   @default("goldapi")
+  raw_response           Json?
+  fetched_at             DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([price_date], map: "idx_nisab_price_history_date")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model payment_attempts {
+  id                   String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  transaction_id       String               @db.Uuid
+  attempt_number       Int
+  at                   DateTime             @default(now()) @db.Timestamptz(6)
+  status               attempt_status
+  message              String
+  gateway_code         String?
+  gateway_response     Json?
+  created_at           DateTime             @default(now()) @db.Timestamptz(6)
+  payment_transactions payment_transactions @relation(fields: [transaction_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([transaction_id, at], map: "idx_payment_attempts_transaction")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model payment_transactions {
+  id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  recurring_expense_id  String                  @db.Uuid
+  user_id               String                  @db.Uuid
+  account_id            String                  @db.Uuid
+  scheduled_for         DateTime                @db.Timestamptz(6)
+  executed_at           DateTime?               @db.Timestamptz(6)
+  amount                Decimal?                @db.Decimal(15, 2)
+  status                transaction_status      @default(scheduled)
+  retry_count           Int                     @default(0)
+  bank_ref              String?
+  failure_reason        String?
+  note                  String?
+  resolved_manually     Boolean                 @default(false)
+  created_at            DateTime                @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime                @default(now()) @db.Timestamptz(6)
+  expense_notifications expense_notifications[]
+  payment_attempts      payment_attempts[]
+  accounts              accounts                @relation(fields: [account_id], references: [id], onUpdate: NoAction)
+  recurring_expenses    recurring_expenses      @relation(fields: [recurring_expense_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users                 users                   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([recurring_expense_id], map: "idx_payment_transactions_expense")
+  @@index([scheduled_for], map: "idx_payment_transactions_pending", where: raw("(status = ANY (ARRAY['scheduled'::transaction_status, 'awaiting_confirmation'::transaction_status, 'retrying'::transaction_status]))"))
+  @@index([scheduled_for], map: "idx_payment_transactions_scheduled")
+  @@index([status], map: "idx_payment_transactions_status")
+  @@index([user_id], map: "idx_payment_transactions_user")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model recurring_expenses {
+  id                   String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id              String                 @db.Uuid
+  account_id           String                 @db.Uuid
+  title                String
+  description          String?
+  amount_type          amount_type
+  amount               Decimal?               @db.Decimal(15, 2)
+  unit                 schedule_unit
+  interval             Int
+  day_of_week          day_of_week?
+  day_of_month         Int?
+  time_of_day          DateTime               @db.Time(6)
+  payment_mode         payment_mode           @default(auto)
+  status               expense_status         @default(active)
+  created_at           DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime               @default(now()) @db.Timestamptz(6)
+  payment_transactions payment_transactions[]
+  accounts             accounts               @relation(fields: [account_id], references: [id], onUpdate: NoAction)
+  users                users                  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([account_id], map: "idx_recurring_expenses_account")
+  @@index([status], map: "idx_recurring_expenses_active", where: raw("(status = 'active'::expense_status)"))
+  @@index([user_id], map: "idx_recurring_expenses_user")
+}
+
+model user_zakat_settings {
+  id                       String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id                  String                   @unique @db.Uuid
+  nisab_standard           nisab_standard           @default(SILVER)
+  nisab_locked_until       DateTime?                @db.Timestamptz(6)
+  nisab_standard_confirmed Boolean                  @default(false)
+  previous_net_balance     Decimal                  @default(0) @db.Decimal(15, 2)
+  money_collected_date     DateTime?                @db.Timestamptz(6)
+  last_zakat_payment_date  DateTime?                @db.Timestamptz(6)
+  is_setup_complete        Boolean                  @default(false)
+  auto_pay_enabled         Boolean                  @default(false)
+  auto_pay_receiver_id     String?                  @db.Uuid
+  created_at               DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime                 @default(now()) @db.Timestamptz(6)
+  zakat_payment_receivers  zakat_payment_receivers? @relation(fields: [auto_pay_receiver_id], references: [id], onUpdate: NoAction)
+  users                    users                    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  zakat_hawl               zakat_hawl[]
+  zakat_payments           zakat_payments[]
+}
+
+model users {
+  id                      String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                    String
+  email                   String                    @unique
+  created_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  ai_recommendations      ai_recommendations[]
+  banks                   banks[]
+  expense_notifications   expense_notifications[]
+  hawl_daily_checks       hawl_daily_checks[]
+  marasi                  marasi[]
+  marasi_notifications    marasi_notifications[]
+  marasi_transactions     marasi_transactions[]
+  payment_transactions    payment_transactions[]
+  recurring_expenses      recurring_expenses[]
+  user_zakat_settings     user_zakat_settings?
+  zakat_asset_history     zakat_asset_history[]
+  zakat_assets            zakat_assets[]
+  zakat_calculations      zakat_calculations[]
+  zakat_liabilities       zakat_liabilities[]
+  zakat_payment_receivers zakat_payment_receivers[]
+}
+
+model zakat_asset_history {
+  id           String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  asset_id     String               @db.Uuid
+  user_id      String               @db.Uuid
+  action       asset_history_action
+  snapshot     Json
+  change_note  String?
+  action_at    DateTime             @default(now()) @db.Timestamptz(6)
+  created_at   DateTime             @default(now()) @db.Timestamptz(6)
+  zakat_assets zakat_assets         @relation(fields: [asset_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users        users                @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([asset_id], map: "idx_zakat_asset_history_asset")
+  @@index([user_id, action_at], map: "idx_zakat_asset_history_user")
+}
+
+model zakat_assets {
+  id                       String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id                  String                     @db.Uuid
+  asset_type               asset_type
+  custom_label             String?
+  description              String?
+  amount                   Decimal                    @db.Decimal(15, 2)
+  currency                 String                     @default("SAR")
+  weight_grams             Decimal?                   @db.Decimal(10, 3)
+  karat                    Int?
+  owned_since              DateTime                   @db.Timestamptz(6)
+  owned_until              DateTime?                  @db.Timestamptz(6)
+  status                   asset_status               @default(ACTIVE)
+  created_at               DateTime                   @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime                   @default(now()) @db.Timestamptz(6)
+  zakat_asset_history      zakat_asset_history[]
+  users                    users                      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  zakat_calculation_assets zakat_calculation_assets[]
+
+  @@index([user_id, owned_since], map: "idx_zakat_assets_owned")
+  @@index([user_id, status], map: "idx_zakat_assets_user")
+}
+
+model zakat_calculation_assets {
+  id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  calculation_id     String             @db.Uuid
+  asset_id           String?            @db.Uuid
+  label              String
+  asset_type         String
+  value_at_calc      Decimal            @db.Decimal(15, 2)
+  is_zakatable       Boolean
+  zakat_assets       zakat_assets?      @relation(fields: [asset_id], references: [id], onUpdate: NoAction)
+  zakat_calculations zakat_calculations @relation(fields: [calculation_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([calculation_id], map: "idx_zakat_calculation_assets_calc")
+}
+
+model zakat_calculations {
+  id                       String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id                  String                     @db.Uuid
+  hawl_id                  String?                    @db.Uuid
+  nisab_standard           nisab_standard
+  nisab_value_sar          Decimal                    @db.Decimal(15, 2)
+  gold_price_per_gram      Decimal                    @db.Decimal(10, 4)
+  silver_price_per_gram    Decimal                    @db.Decimal(10, 4)
+  bank_balance_total       Decimal                    @db.Decimal(15, 2)
+  manual_assets_total      Decimal                    @db.Decimal(15, 2)
+  liabilities_total        Decimal                    @db.Decimal(15, 2)
+  net_worth                Decimal                    @db.Decimal(15, 2)
+  is_above_nisab           Boolean
+  zakat_amount             Decimal?                   @db.Decimal(15, 2)
+  zakat_rate               Decimal                    @default(0.025) @db.Decimal(5, 4)
+  calculated_at            DateTime                   @default(now()) @db.Timestamptz(6)
+  zakat_calculation_assets zakat_calculation_assets[]
+  zakat_hawl               zakat_hawl?                @relation(fields: [hawl_id], references: [id], onUpdate: NoAction)
+  users                    users                      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  zakat_payments           zakat_payments?
+
+  @@index([user_id, calculated_at], map: "idx_zakat_calculations_user")
+}
+
+model zakat_hawl {
+  id                  String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id             String               @db.Uuid
+  status              hawl_status          @default(PENDING)
+  start_date          DateTime             @db.Timestamptz(6)
+  expected_end_date   DateTime             @db.Timestamptz(6)
+  completed_at        DateTime?            @db.Timestamptz(6)
+  broken_at           DateTime?            @db.Timestamptz(6)
+  break_reason        String?
+  nisab_standard      nisab_standard
+  balance_at_start    Decimal              @db.Decimal(15, 2)
+  created_at          DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime             @default(now()) @db.Timestamptz(6)
+  hawl_daily_checks   hawl_daily_checks[]
+  zakat_calculations  zakat_calculations[]
+  user_zakat_settings user_zakat_settings  @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id, status], map: "idx_zakat_hawl_user")
+}
+
+model zakat_liabilities {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String    @db.Uuid
+  label      String
+  amount     Decimal   @db.Decimal(15, 2)
+  currency   String    @default("SAR")
+  due_date   DateTime? @db.Timestamptz(6)
+  notes      String?
+  is_settled Boolean   @default(false)
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at DateTime  @default(now()) @db.Timestamptz(6)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id, is_settled], map: "idx_zakat_liabilities_user")
+}
+
+model zakat_payment_receivers {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id             String                @db.Uuid
+  label               String
+  iban                String
+  account_name        String
+  bank_name           String?
+  is_charity          Boolean               @default(true)
+  is_default          Boolean               @default(false)
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime              @default(now()) @db.Timestamptz(6)
+  user_zakat_settings user_zakat_settings[]
+  users               users                 @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  zakat_payments      zakat_payments[]
+
+  @@index([user_id], map: "idx_zakat_payment_receivers_user")
+}
+
+model zakat_payments {
+  id                      String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id                 String                   @db.Uuid
+  calculation_id          String?                  @unique @db.Uuid
+  account_id              String?                  @db.Uuid
+  amount                  Decimal                  @db.Decimal(15, 2)
+  currency                String                   @default("SAR")
+  status                  payment_status           @default(PENDING)
+  receiver_id             String?                  @db.Uuid
+  to_iban                 String?
+  bank_reference          String?
+  is_automated            Boolean                  @default(false)
+  notes                   String?
+  paid_at                 DateTime?                @db.Timestamptz(6)
+  created_at              DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime                 @default(now()) @db.Timestamptz(6)
+  accounts                accounts?                @relation(fields: [account_id], references: [id], onUpdate: NoAction)
+  zakat_calculations      zakat_calculations?      @relation(fields: [calculation_id], references: [id], onUpdate: NoAction)
+  zakat_payment_receivers zakat_payment_receivers? @relation(fields: [receiver_id], references: [id], onUpdate: NoAction)
+  user_zakat_settings     user_zakat_settings      @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id, created_at], map: "idx_zakat_payments_user")
+}
+
+enum amount_type {
+  fixed
+  variable
+}
+
+enum asset_history_action {
+  CREATED
+  UPDATED
+  DELETED
+  ZAKAT_PAID
+}
+
+enum asset_status {
+  ACTIVE
+  ZAKAT_PAID
+  DELETED
+  EDITED
+}
+
+enum asset_type {
+  GOLD_SAVINGS
+  SILVER_SAVINGS
+  STOCKS
+  CONFIRMED_DEBTS
+  TRADE_GOODS
+  CASH
+  CUSTOM
+}
+
+enum attempt_status {
+  info
+  succeeded
+  failed
+}
+
+enum day_of_week {
+  mon
+  tue
+  wed
+  thu
+  fri
+  sat
+  sun
+}
+
+enum expense_notification_type {
+  payment_failed
+  awaiting_confirmation
+  all_retries_exhausted
+  auto_skipped
+}
+
+enum expense_status {
+  active
+  paused
+  archived
+}
+
+enum hawl_status {
+  ACTIVE
+  BROKEN
+  COMPLETED
+  PENDING
+}
+
+enum marsa_attempt_status {
+  info
+  succeeded
+  failed
+}
+
+enum marsa_frequency {
+  weekly
+  biweekly
+  monthly
+}
+
+enum marsa_notification_type {
+  deposit_failed
+  all_retries_exhausted
+  goal_reached
+  milestone_reached
+  upcoming_deposit
+}
+
+enum marsa_status {
+  active
+  paused
+  reached
+  cancelled
+  archived
+}
+
+enum marsa_tx_status {
+  scheduled
+  processing
+  retrying
+  succeeded
+  failed
+  cancelled
+}
+
+enum marsa_tx_type {
+  auto_debit
+  manual_topup
+  withdrawal
+  release
+}
+
+enum nisab_standard {
+  SILVER
+  GOLD
+}
+
+enum notification_channel {
+  push
+  email
+  sms
+  in_app
+}
+
+enum payment_mode {
+  auto
+  manual
+}
+
+enum payment_status {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum schedule_unit {
+  day
+  week
+  month
+}
+
+enum transaction_status {
+  scheduled
+  awaiting_confirmation
+  processing
+  retrying
+  succeeded
+  failed
+  skipped
+}
