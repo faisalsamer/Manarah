@@ -1,26 +1,472 @@
 @import "tailwindcss";
 
+
+@theme {
+  /* ── Fonts ──────────────────────────────────────────────── */
+  --font-arabic:  'Cairo', 'Tajawal', 'IBM Plex Arabic', sans-serif;
+  --font-numbers: 'Inter', 'Poppins', sans-serif;
+
+  /* ── Brand — Primary Teal/Green ─────────────────────────── */
+  --color-primary-50:  #E6FAF4;
+  --color-primary-100: #B3F0DC;
+  --color-primary-200: #66DDB9;
+  --color-primary-300: #1DCCA0;
+  --color-primary-400: #00C48C;
+  --color-primary-500: #00A876;
+  --color-primary-600: #008C61;
+  --color-primary-700: #00704D;
+  --color-primary-800: #005439;
+  --color-primary-900: #003826;
+
+  /* ── Sidebar Dark Navy ──────────────────────────────────── */
+  --color-sidebar-bg:            #0A2235;
+  --color-sidebar-bg-deep:       #061929;
+  --color-sidebar-active-bg:     rgba(0, 196, 140, 0.13);
+  --color-sidebar-active-border: #00C48C;
+  --color-sidebar-text:          rgba(255, 255, 255, 0.85);
+  --color-sidebar-text-muted:    rgba(255, 255, 255, 0.45);
+  --color-sidebar-icon:          rgba(255, 255, 255, 0.55);
+
+  /* ── Surface ────────────────────────────────────────────── */
+  --color-page-bg:  #F0F4F8;
+  --color-card-bg:  #FFFFFF;
+  --color-surface:  #F8FAFC;
+
+  /* ── Text ───────────────────────────────────────────────── */
+  --color-text-primary:   #1A2B3C;
+  --color-text-secondary: #5E7387;
+  --color-text-muted:     #9EAAB6;
+  --color-text-inverse:   #FFFFFF;
+  --color-text-teal:      #00C48C;
+
+  /* ── Borders ────────────────────────────────────────────── */
+  --color-border:        #E8EDF4;
+  --color-border-strong: #C8D4DF;
+
+  /* ── Semantic ───────────────────────────────────────────── */
+  --color-success:       #00C48C;
+  --color-success-light: #E6FAF4;
+  --color-warning:       #FF9800;
+  --color-warning-light: #FFF3E0;
+  --color-danger:        #E53935;
+  --color-danger-light:  #FFEBEE;
+  --color-info:          #2979FF;
+  --color-info-light:    #E8F0FF;
+
+  /* ── Badges ─────────────────────────────────────────────── */
+  --color-badge-on-track-bg:    #E6FAF4;
+  --color-badge-on-track-text:  #00A876;
+  --color-badge-near-goal-bg:   #FFF3E0;
+  --color-badge-near-goal-text: #E65100;
+  --color-badge-delayed-bg:     #FFEBEE;
+  --color-badge-delayed-text:   #C62828;
+  --color-badge-achieved-bg:    #E8F5E9;
+  --color-badge-achieved-text:  #2E7D32;
+
+  /* ── Hero Banner ────────────────────────────────────────── */
+  --color-hero-from:    #0D3B5E;
+  --color-hero-to:      #1A5276;
+  --color-hero-overlay: rgba(0, 196, 140, 0.08);
+
+  /* ── Progress Bar ───────────────────────────────────────── */
+  --color-progress-track: #E8EDF4;
+  --color-progress-start: #00C48C;
+  --color-progress-end:   #1DCCA0;
+
+  /* ── Charts ─────────────────────────────────────────────── */
+  --color-chart-income:  #00C48C;
+  --color-chart-expense: rgba(0, 196, 140, 0.3);
+  --color-chart-grid:    #E8EDF4;
+  --color-chart-axis:    #9EAAB6;
+
+  /* ── Border Radius ──────────────────────────────────────── */
+  --radius-xs:   4px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   20px;
+  --radius-2xl:  24px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ────────────────────────────────────────────── */
+  --shadow-xs:   0 1px 3px rgba(10, 34, 53, 0.06);
+  --shadow-sm:   0 2px 8px rgba(10, 34, 53, 0.08);
+  --shadow-md:   0 4px 16px rgba(10, 34, 53, 0.10);
+  --shadow-lg:   0 8px 32px rgba(10, 34, 53, 0.12);
+  --shadow-teal: 0 4px 16px rgba(0, 196, 140, 0.25);
+
+  /* ── Font Sizes ─────────────────────────────────────────── */
+  --text-h1:       24px;
+  --text-h2:       20px;
+  --text-h3:       18px;
+  --text-h4:       16px;
+  --text-body-lg:  15px;
+  --text-body:     14px;
+  --text-body-sm:  13px;
+  --text-caption:  12px;
+  --text-micro:    11px;
+
+  /* ── Font Weights ───────────────────────────────────────── */
+  --font-weight-regular:  400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+
+  /* ── Line Heights ───────────────────────────────────────── */
+  --leading-tight:   1.25;
+  --leading-snug:    1.4;
+  --leading-normal:  1.6;
+  --leading-relaxed: 1.75;
+
+  /* ── Z-Index ────────────────────────────────────────────── */
+  --z-index-navbar:  100;
+  --z-index-sidebar: 200;
+  --z-index-modal:   300;
+  --z-index-toast:   400;
+
+  /* ── Transitions ────────────────────────────────────────── */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Animations (Radix data-state hooks) ────────────────── */
+  --animate-overlay-show: overlay-show 200ms ease-out;
+  --animate-overlay-hide: overlay-hide 150ms ease-in;
+  --animate-dialog-show:  dialog-show  250ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-dialog-hide:  dialog-hide  180ms ease-in;
+}
+
+@keyframes overlay-show {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes overlay-hide {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes dialog-show {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+@keyframes dialog-hide {
+  from { opacity: 1; transform: scale(1)    translateY(0); }
+  to   { opacity: 0; transform: scale(0.96) translateY(8px); }
+}
+
+/* ── Layout variables (not Tailwind utilities) ───────────────
+   Used directly via var() in component CSS / inline styles    */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --sidebar-width:      220px;
+  --sidebar-collapsed:  64px;
+  --navbar-height:      60px;
+  --content-max-width:  1200px;
+  --card-padding:       24px;
+  --section-gap:        24px;
+  --grid-gap:           16px;
+  --progress-height:    6px;
+
+  /* ── Spacing aliases (4px base) ─────────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ── Font size aliases (--fs-* → --text-*) ──────────────── */
+  --fs-h1:      var(--text-h1);
+  --fs-h2:      var(--text-h2);
+  --fs-h3:      var(--text-h3);
+  --fs-h4:      var(--text-h4);
+  --fs-body-lg: var(--text-body-lg);
+  --fs-body:    var(--text-body);
+  --fs-body-sm: var(--text-body-sm);
+  --fs-caption: var(--text-caption);
+  --fs-micro:   var(--text-micro);
+
+  /* ── Font family alias ───────────────────────────────────── */
+  --font-primary: var(--font-arabic);
+
+  /* ── Transition aliases ──────────────────────────────────── */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
+  --transition-spring: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ── Global Base (RTL-aware) ─────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  html {
+    font-family: var(--font-arabic);
+    font-size: 16px;
+    direction: rtl;
+    text-align: right;
+    scrollbar-gutter: stable;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-page-bg);
+    color: var(--color-text-primary);
+    line-height: var(--leading-normal);
+    /* Radix's react-remove-scroll-bar applies inline padding-right to <body>
+       to compensate for a removed scrollbar. With scrollbar-gutter:stable on
+       <html> the gutter is already reserved, so that compensation just shifts
+       our content. !important is required to win over the inline style. */
+    padding-right: 0 !important;
+    padding-left: 0 !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ── Component Classes ───────────────────────────────────────
+   Use these as className="btn btn-primary" etc.
+   Team can also replace these with Tailwind utility combos.  */
+@layer components {
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: var(--radius-full);
+    font-family: var(--font-arabic);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    border: none;
+    transition: all 250ms ease;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--color-primary-400);
+    color: var(--color-text-inverse);
+    box-shadow: var(--shadow-teal);
+  }
+  .btn-primary:hover {
+    background: var(--color-primary-500);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 196, 140, 0.35);
+  }
+  .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-teal);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--color-primary-400);
+    border: 1.5px solid var(--color-primary-400);
+  }
+  .btn-outline:hover { background: var(--color-primary-50); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1.5px solid var(--color-border);
+  }
+  .btn-ghost:hover {
+    background: var(--color-surface);
+    border-color: var(--color-border-strong);
+  }
+
+  /* Cards */
+  .card {
+    background: var(--color-card-bg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    padding: var(--card-padding);
+    box-shadow: var(--shadow-xs);
+    transition: box-shadow 250ms ease;
+  }
+  .card:hover { box-shadow: var(--shadow-sm); }
+
+  /* Badges */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-size: var(--text-caption);
+    font-weight: var(--font-weight-semibold);
+  }
+  .badge-on-track  { background: var(--color-badge-on-track-bg);  color: var(--color-badge-on-track-text); }
+  .badge-near-goal { background: var(--color-badge-near-goal-bg); color: var(--color-badge-near-goal-text); }
+  .badge-delayed   { background: var(--color-badge-delayed-bg);   color: var(--color-badge-delayed-text); }
+  .badge-achieved  { background: var(--color-badge-achieved-bg);  color: var(--color-badge-achieved-text); }
+
+  /* Progress Bar */
+  .progress-track {
+    width: 100%;
+    height: var(--progress-height);
+    background: var(--color-progress-track);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    background: linear-gradient(to left, var(--color-progress-end), var(--color-progress-start));
+    transition: width 400ms ease;
+  }
+
+  /* Navbar */
+  .navbar {
+    height: var(--navbar-height);
+    background: var(--color-card-bg);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: var(--z-index-navbar);
+    box-shadow: var(--shadow-xs);
+  }
+
+  /* Stat Card */
+  .stat-card {
+    background: var(--color-card-bg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-xs);
+  }
+
+  /* Goal Card */
+  .goal-card {
+    background: var(--color-card-bg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: var(--shadow-xs);
+    transition: box-shadow 250ms ease, transform 250ms ease;
+  }
+  .goal-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  /* Bank Card */
+  .bank-card {
+    background: var(--color-card-bg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: var(--shadow-xs);
+    position: relative;
+  }
+
+  /* Hero Banner */
+  .hero-banner {
+    background: linear-gradient(135deg, var(--color-hero-from) 0%, var(--color-hero-to) 100%);
+    border-radius: var(--radius-lg);
+    padding: 40px 32px;
+    position: relative;
+    overflow: hidden;
+    color: var(--color-text-inverse);
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .hero-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-hero-overlay);
+    pointer-events: none;
+  }
+
+  /* Tip Banner */
+  .tip-banner {
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, #DFFAF1 100%);
+    border: 1px solid var(--color-primary-200);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* Table */
+  .table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: var(--color-card-bg);
+  }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-body-sm);
+  }
+
+  .data-table th {
+    padding: 12px 16px;
+    text-align: right;
+    font-size: var(--text-caption);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .data-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    vertical-align: middle;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--color-surface); }
+
+  /* Search Input */
+  .search-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 8px 16px;
+    font-family: var(--font-arabic);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-primary);
+    direction: rtl;
+  }
+  .search-input:focus-within {
+    border-color: var(--color-primary-400);
+    box-shadow: 0 0 0 3px rgba(0, 196, 140, 0.12);
+    outline: none;
+  }
+
+  /* Donut Chart */
+  .donut-ring {
+    stroke: var(--color-primary-400);
+    fill: none;
+    stroke-linecap: round;
+    transition: stroke-dasharray 400ms ease;
+  }
 }
