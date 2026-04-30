@@ -98,6 +98,9 @@ export const AccountsScalarFieldEnum = {
   account_id: 'account_id',
   account_number: 'account_number',
   account_type: 'account_type',
+  account_name: 'account_name',
+  iban: 'iban',
+  is_primary: 'is_primary',
   balance: 'balance',
   currency: 'currency',
   created_at: 'created_at'
@@ -125,6 +128,10 @@ export const BanksScalarFieldEnum = {
   user_id: 'user_id',
   bank_id: 'bank_id',
   bank_name: 'bank_name',
+  bank_name_ar: 'bank_name_ar',
+  bank_code: 'bank_code',
+  logo_url: 'logo_url',
+  bank_type: 'bank_type',
   is_connected: 'is_connected',
   connected_at: 'connected_at',
   created_at: 'created_at'

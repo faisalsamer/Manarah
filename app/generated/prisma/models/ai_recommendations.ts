@@ -383,10 +383,6 @@ export type ai_recommendationsOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type ai_recommendationsCreateNestedManyWithoutUsersInput = {
   create?: Prisma.XOR<Prisma.ai_recommendationsCreateWithoutUsersInput, Prisma.ai_recommendationsUncheckedCreateWithoutUsersInput> | Prisma.ai_recommendationsCreateWithoutUsersInput[] | Prisma.ai_recommendationsUncheckedCreateWithoutUsersInput[]
   connectOrCreate?: Prisma.ai_recommendationsCreateOrConnectWithoutUsersInput | Prisma.ai_recommendationsCreateOrConnectWithoutUsersInput[]

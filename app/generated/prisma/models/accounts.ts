@@ -40,6 +40,9 @@ export type AccountsMinAggregateOutputType = {
   account_id: string | null
   account_number: string | null
   account_type: string | null
+  account_name: string | null
+  iban: string | null
+  is_primary: boolean | null
   balance: runtime.Decimal | null
   currency: string | null
   created_at: Date | null
@@ -51,6 +54,9 @@ export type AccountsMaxAggregateOutputType = {
   account_id: string | null
   account_number: string | null
   account_type: string | null
+  account_name: string | null
+  iban: string | null
+  is_primary: boolean | null
   balance: runtime.Decimal | null
   currency: string | null
   created_at: Date | null
@@ -62,6 +68,9 @@ export type AccountsCountAggregateOutputType = {
   account_id: number
   account_number: number
   account_type: number
+  account_name: number
+  iban: number
+  is_primary: number
   balance: number
   currency: number
   created_at: number
@@ -83,6 +92,9 @@ export type AccountsMinAggregateInputType = {
   account_id?: true
   account_number?: true
   account_type?: true
+  account_name?: true
+  iban?: true
+  is_primary?: true
   balance?: true
   currency?: true
   created_at?: true
@@ -94,6 +106,9 @@ export type AccountsMaxAggregateInputType = {
   account_id?: true
   account_number?: true
   account_type?: true
+  account_name?: true
+  iban?: true
+  is_primary?: true
   balance?: true
   currency?: true
   created_at?: true
@@ -105,6 +120,9 @@ export type AccountsCountAggregateInputType = {
   account_id?: true
   account_number?: true
   account_type?: true
+  account_name?: true
+  iban?: true
+  is_primary?: true
   balance?: true
   currency?: true
   created_at?: true
@@ -203,6 +221,9 @@ export type AccountsGroupByOutputType = {
   account_id: string
   account_number: string
   account_type: string
+  account_name: string | null
+  iban: string | null
+  is_primary: boolean
   balance: runtime.Decimal
   currency: string
   created_at: Date
@@ -237,6 +258,9 @@ export type accountsWhereInput = {
   account_id?: Prisma.StringFilter<"accounts"> | string
   account_number?: Prisma.StringFilter<"accounts"> | string
   account_type?: Prisma.StringFilter<"accounts"> | string
+  account_name?: Prisma.StringNullableFilter<"accounts"> | string | null
+  iban?: Prisma.StringNullableFilter<"accounts"> | string | null
+  is_primary?: Prisma.BoolFilter<"accounts"> | boolean
   balance?: Prisma.DecimalFilter<"accounts"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"accounts"> | string
   created_at?: Prisma.DateTimeFilter<"accounts"> | Date | string
@@ -254,6 +278,9 @@ export type accountsOrderByWithRelationInput = {
   account_id?: Prisma.SortOrder
   account_number?: Prisma.SortOrder
   account_type?: Prisma.SortOrder
+  account_name?: Prisma.SortOrderInput | Prisma.SortOrder
+  iban?: Prisma.SortOrderInput | Prisma.SortOrder
+  is_primary?: Prisma.SortOrder
   balance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -274,6 +301,9 @@ export type accountsWhereUniqueInput = Prisma.AtLeast<{
   account_id?: Prisma.StringFilter<"accounts"> | string
   account_number?: Prisma.StringFilter<"accounts"> | string
   account_type?: Prisma.StringFilter<"accounts"> | string
+  account_name?: Prisma.StringNullableFilter<"accounts"> | string | null
+  iban?: Prisma.StringNullableFilter<"accounts"> | string | null
+  is_primary?: Prisma.BoolFilter<"accounts"> | boolean
   balance?: Prisma.DecimalFilter<"accounts"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"accounts"> | string
   created_at?: Prisma.DateTimeFilter<"accounts"> | Date | string
@@ -291,6 +321,9 @@ export type accountsOrderByWithAggregationInput = {
   account_id?: Prisma.SortOrder
   account_number?: Prisma.SortOrder
   account_type?: Prisma.SortOrder
+  account_name?: Prisma.SortOrderInput | Prisma.SortOrder
+  iban?: Prisma.SortOrderInput | Prisma.SortOrder
+  is_primary?: Prisma.SortOrder
   balance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -310,6 +343,9 @@ export type accountsScalarWhereWithAggregatesInput = {
   account_id?: Prisma.StringWithAggregatesFilter<"accounts"> | string
   account_number?: Prisma.StringWithAggregatesFilter<"accounts"> | string
   account_type?: Prisma.StringWithAggregatesFilter<"accounts"> | string
+  account_name?: Prisma.StringNullableWithAggregatesFilter<"accounts"> | string | null
+  iban?: Prisma.StringNullableWithAggregatesFilter<"accounts"> | string | null
+  is_primary?: Prisma.BoolWithAggregatesFilter<"accounts"> | boolean
   balance?: Prisma.DecimalWithAggregatesFilter<"accounts"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringWithAggregatesFilter<"accounts"> | string
   created_at?: Prisma.DateTimeWithAggregatesFilter<"accounts"> | Date | string
@@ -320,6 +356,9 @@ export type accountsCreateInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -337,6 +376,9 @@ export type accountsUncheckedCreateInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -352,6 +394,9 @@ export type accountsUpdateInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -369,6 +414,9 @@ export type accountsUncheckedUpdateInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -385,6 +433,9 @@ export type accountsCreateManyInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -395,6 +446,9 @@ export type accountsUpdateManyMutationInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -406,6 +460,9 @@ export type accountsUncheckedUpdateManyInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -417,6 +474,9 @@ export type accountsCountOrderByAggregateInput = {
   account_id?: Prisma.SortOrder
   account_number?: Prisma.SortOrder
   account_type?: Prisma.SortOrder
+  account_name?: Prisma.SortOrder
+  iban?: Prisma.SortOrder
+  is_primary?: Prisma.SortOrder
   balance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -432,6 +492,9 @@ export type accountsMaxOrderByAggregateInput = {
   account_id?: Prisma.SortOrder
   account_number?: Prisma.SortOrder
   account_type?: Prisma.SortOrder
+  account_name?: Prisma.SortOrder
+  iban?: Prisma.SortOrder
+  is_primary?: Prisma.SortOrder
   balance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -443,6 +506,9 @@ export type accountsMinOrderByAggregateInput = {
   account_id?: Prisma.SortOrder
   account_number?: Prisma.SortOrder
   account_type?: Prisma.SortOrder
+  account_name?: Prisma.SortOrder
+  iban?: Prisma.SortOrder
+  is_primary?: Prisma.SortOrder
   balance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -474,6 +540,14 @@ export type AccountsNullableScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type DecimalFieldUpdateOperationsInput = {
@@ -607,6 +681,9 @@ export type accountsCreateWithoutBanksInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -622,6 +699,9 @@ export type accountsUncheckedCreateWithoutBanksInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -667,6 +747,9 @@ export type accountsScalarWhereInput = {
   account_id?: Prisma.StringFilter<"accounts"> | string
   account_number?: Prisma.StringFilter<"accounts"> | string
   account_type?: Prisma.StringFilter<"accounts"> | string
+  account_name?: Prisma.StringNullableFilter<"accounts"> | string | null
+  iban?: Prisma.StringNullableFilter<"accounts"> | string | null
+  is_primary?: Prisma.BoolFilter<"accounts"> | boolean
   balance?: Prisma.DecimalFilter<"accounts"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"accounts"> | string
   created_at?: Prisma.DateTimeFilter<"accounts"> | Date | string
@@ -677,6 +760,9 @@ export type accountsCreateWithoutMarasiInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -693,6 +779,9 @@ export type accountsUncheckedCreateWithoutMarasiInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -723,6 +812,9 @@ export type accountsUpdateWithoutMarasiInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -739,6 +831,9 @@ export type accountsUncheckedUpdateWithoutMarasiInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -753,6 +848,9 @@ export type accountsCreateWithoutMarasi_transactionsInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -769,6 +867,9 @@ export type accountsUncheckedCreateWithoutMarasi_transactionsInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -799,6 +900,9 @@ export type accountsUpdateWithoutMarasi_transactionsInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -815,6 +919,9 @@ export type accountsUncheckedUpdateWithoutMarasi_transactionsInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -829,6 +936,9 @@ export type accountsCreateWithoutPayment_transactionsInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -845,6 +955,9 @@ export type accountsUncheckedCreateWithoutPayment_transactionsInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -875,6 +988,9 @@ export type accountsUpdateWithoutPayment_transactionsInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -891,6 +1007,9 @@ export type accountsUncheckedUpdateWithoutPayment_transactionsInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -905,6 +1024,9 @@ export type accountsCreateWithoutRecurring_expensesInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -921,6 +1043,9 @@ export type accountsUncheckedCreateWithoutRecurring_expensesInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -951,6 +1076,9 @@ export type accountsUpdateWithoutRecurring_expensesInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -967,6 +1095,9 @@ export type accountsUncheckedUpdateWithoutRecurring_expensesInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -981,6 +1112,9 @@ export type accountsCreateWithoutZakat_paymentsInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -997,6 +1131,9 @@ export type accountsUncheckedCreateWithoutZakat_paymentsInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -1027,6 +1164,9 @@ export type accountsUpdateWithoutZakat_paymentsInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1043,6 +1183,9 @@ export type accountsUncheckedUpdateWithoutZakat_paymentsInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1057,6 +1200,9 @@ export type accountsCreateManyBanksInput = {
   account_id: string
   account_number: string
   account_type: string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
@@ -1067,6 +1213,9 @@ export type accountsUpdateWithoutBanksInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1082,6 +1231,9 @@ export type accountsUncheckedUpdateWithoutBanksInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1097,6 +1249,9 @@ export type accountsUncheckedUpdateManyWithoutBanksInput = {
   account_id?: Prisma.StringFieldUpdateOperationsInput | string
   account_number?: Prisma.StringFieldUpdateOperationsInput | string
   account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1175,6 +1330,9 @@ export type accountsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   account_id?: boolean
   account_number?: boolean
   account_type?: boolean
+  account_name?: boolean
+  iban?: boolean
+  is_primary?: boolean
   balance?: boolean
   currency?: boolean
   created_at?: boolean
@@ -1193,6 +1351,9 @@ export type accountsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   account_id?: boolean
   account_number?: boolean
   account_type?: boolean
+  account_name?: boolean
+  iban?: boolean
+  is_primary?: boolean
   balance?: boolean
   currency?: boolean
   created_at?: boolean
@@ -1205,6 +1366,9 @@ export type accountsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   account_id?: boolean
   account_number?: boolean
   account_type?: boolean
+  account_name?: boolean
+  iban?: boolean
+  is_primary?: boolean
   balance?: boolean
   currency?: boolean
   created_at?: boolean
@@ -1217,12 +1381,15 @@ export type accountsSelectScalar = {
   account_id?: boolean
   account_number?: boolean
   account_type?: boolean
+  account_name?: boolean
+  iban?: boolean
+  is_primary?: boolean
   balance?: boolean
   currency?: boolean
   created_at?: boolean
 }
 
-export type accountsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bank_id" | "account_id" | "account_number" | "account_type" | "balance" | "currency" | "created_at", ExtArgs["result"]["accounts"]>
+export type accountsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bank_id" | "account_id" | "account_number" | "account_type" | "account_name" | "iban" | "is_primary" | "balance" | "currency" | "created_at", ExtArgs["result"]["accounts"]>
 export type accountsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   banks?: boolean | Prisma.banksDefaultArgs<ExtArgs>
   marasi?: boolean | Prisma.accounts$marasiArgs<ExtArgs>
@@ -1255,6 +1422,9 @@ export type $accountsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     account_id: string
     account_number: string
     account_type: string
+    account_name: string | null
+    iban: string | null
+    is_primary: boolean
     balance: runtime.Decimal
     currency: string
     created_at: Date
@@ -1692,6 +1862,9 @@ export interface accountsFieldRefs {
   readonly account_id: Prisma.FieldRef<"accounts", 'String'>
   readonly account_number: Prisma.FieldRef<"accounts", 'String'>
   readonly account_type: Prisma.FieldRef<"accounts", 'String'>
+  readonly account_name: Prisma.FieldRef<"accounts", 'String'>
+  readonly iban: Prisma.FieldRef<"accounts", 'String'>
+  readonly is_primary: Prisma.FieldRef<"accounts", 'Boolean'>
   readonly balance: Prisma.FieldRef<"accounts", 'Decimal'>
   readonly currency: Prisma.FieldRef<"accounts", 'String'>
   readonly created_at: Prisma.FieldRef<"accounts", 'DateTime'>

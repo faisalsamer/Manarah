@@ -88,6 +88,7 @@ export function Dialog({
               'border border-[var(--color-border)] shadow-[var(--shadow-lg)]',
               'font-[var(--font-arabic)] text-right',
               'focus:outline-none',
+              'transition-[max-width] duration-200',
               'data-[state=open]:animate-dialog-show',
               'data-[state=closed]:animate-dialog-hide',
               sizeClasses[size],
