@@ -43,6 +43,9 @@ export type AccountsMinAggregateOutputType = {
   balance: runtime.Decimal | null
   currency: string | null
   created_at: Date | null
+  account_name: string | null
+  iban: string | null
+  is_primary: boolean | null
 }
 
 export type AccountsMaxAggregateOutputType = {
@@ -54,6 +57,9 @@ export type AccountsMaxAggregateOutputType = {
   balance: runtime.Decimal | null
   currency: string | null
   created_at: Date | null
+  account_name: string | null
+  iban: string | null
+  is_primary: boolean | null
 }
 
 export type AccountsCountAggregateOutputType = {
@@ -65,6 +71,9 @@ export type AccountsCountAggregateOutputType = {
   balance: number
   currency: number
   created_at: number
+  account_name: number
+  iban: number
+  is_primary: number
   _all: number
 }
 
@@ -86,6 +95,9 @@ export type AccountsMinAggregateInputType = {
   balance?: true
   currency?: true
   created_at?: true
+  account_name?: true
+  iban?: true
+  is_primary?: true
 }
 
 export type AccountsMaxAggregateInputType = {
@@ -97,6 +109,9 @@ export type AccountsMaxAggregateInputType = {
   balance?: true
   currency?: true
   created_at?: true
+  account_name?: true
+  iban?: true
+  is_primary?: true
 }
 
 export type AccountsCountAggregateInputType = {
@@ -108,6 +123,9 @@ export type AccountsCountAggregateInputType = {
   balance?: true
   currency?: true
   created_at?: true
+  account_name?: true
+  iban?: true
+  is_primary?: true
   _all?: true
 }
 
@@ -206,6 +224,9 @@ export type AccountsGroupByOutputType = {
   balance: runtime.Decimal
   currency: string
   created_at: Date
+  account_name: string | null
+  iban: string | null
+  is_primary: boolean
   _count: AccountsCountAggregateOutputType | null
   _avg: AccountsAvgAggregateOutputType | null
   _sum: AccountsSumAggregateOutputType | null
@@ -240,6 +261,9 @@ export type accountsWhereInput = {
   balance?: Prisma.DecimalFilter<"accounts"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"accounts"> | string
   created_at?: Prisma.DateTimeFilter<"accounts"> | Date | string
+  account_name?: Prisma.StringNullableFilter<"accounts"> | string | null
+  iban?: Prisma.StringNullableFilter<"accounts"> | string | null
+  is_primary?: Prisma.BoolFilter<"accounts"> | boolean
   banks?: Prisma.XOR<Prisma.BanksScalarRelationFilter, Prisma.banksWhereInput>
   marasi?: Prisma.MarasiListRelationFilter
   marasi_transactions?: Prisma.Marasi_transactionsListRelationFilter
@@ -257,6 +281,9 @@ export type accountsOrderByWithRelationInput = {
   balance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  account_name?: Prisma.SortOrderInput | Prisma.SortOrder
+  iban?: Prisma.SortOrderInput | Prisma.SortOrder
+  is_primary?: Prisma.SortOrder
   banks?: Prisma.banksOrderByWithRelationInput
   marasi?: Prisma.marasiOrderByRelationAggregateInput
   marasi_transactions?: Prisma.marasi_transactionsOrderByRelationAggregateInput
@@ -277,6 +304,9 @@ export type accountsWhereUniqueInput = Prisma.AtLeast<{
   balance?: Prisma.DecimalFilter<"accounts"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"accounts"> | string
   created_at?: Prisma.DateTimeFilter<"accounts"> | Date | string
+  account_name?: Prisma.StringNullableFilter<"accounts"> | string | null
+  iban?: Prisma.StringNullableFilter<"accounts"> | string | null
+  is_primary?: Prisma.BoolFilter<"accounts"> | boolean
   banks?: Prisma.XOR<Prisma.BanksScalarRelationFilter, Prisma.banksWhereInput>
   marasi?: Prisma.MarasiListRelationFilter
   marasi_transactions?: Prisma.Marasi_transactionsListRelationFilter
@@ -294,6 +324,9 @@ export type accountsOrderByWithAggregationInput = {
   balance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  account_name?: Prisma.SortOrderInput | Prisma.SortOrder
+  iban?: Prisma.SortOrderInput | Prisma.SortOrder
+  is_primary?: Prisma.SortOrder
   _count?: Prisma.accountsCountOrderByAggregateInput
   _avg?: Prisma.accountsAvgOrderByAggregateInput
   _max?: Prisma.accountsMaxOrderByAggregateInput
@@ -313,6 +346,9 @@ export type accountsScalarWhereWithAggregatesInput = {
   balance?: Prisma.DecimalWithAggregatesFilter<"accounts"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringWithAggregatesFilter<"accounts"> | string
   created_at?: Prisma.DateTimeWithAggregatesFilter<"accounts"> | Date | string
+  account_name?: Prisma.StringNullableWithAggregatesFilter<"accounts"> | string | null
+  iban?: Prisma.StringNullableWithAggregatesFilter<"accounts"> | string | null
+  is_primary?: Prisma.BoolWithAggregatesFilter<"accounts"> | boolean
 }
 
 export type accountsCreateInput = {
@@ -323,6 +359,9 @@ export type accountsCreateInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   banks: Prisma.banksCreateNestedOneWithoutAccountsInput
   marasi?: Prisma.marasiCreateNestedManyWithoutAccountsInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutAccountsInput
@@ -340,6 +379,9 @@ export type accountsUncheckedCreateInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   marasi?: Prisma.marasiUncheckedCreateNestedManyWithoutAccountsInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsUncheckedCreateNestedManyWithoutAccountsInput
@@ -355,6 +397,9 @@ export type accountsUpdateInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   banks?: Prisma.banksUpdateOneRequiredWithoutAccountsNestedInput
   marasi?: Prisma.marasiUpdateManyWithoutAccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutAccountsNestedInput
@@ -372,6 +417,9 @@ export type accountsUncheckedUpdateInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUncheckedUpdateManyWithoutAccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
@@ -388,6 +436,9 @@ export type accountsCreateManyInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
 }
 
 export type accountsUpdateManyMutationInput = {
@@ -398,6 +449,9 @@ export type accountsUpdateManyMutationInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type accountsUncheckedUpdateManyInput = {
@@ -409,6 +463,9 @@ export type accountsUncheckedUpdateManyInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type accountsCountOrderByAggregateInput = {
@@ -420,6 +477,9 @@ export type accountsCountOrderByAggregateInput = {
   balance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  account_name?: Prisma.SortOrder
+  iban?: Prisma.SortOrder
+  is_primary?: Prisma.SortOrder
 }
 
 export type accountsAvgOrderByAggregateInput = {
@@ -435,6 +495,9 @@ export type accountsMaxOrderByAggregateInput = {
   balance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  account_name?: Prisma.SortOrder
+  iban?: Prisma.SortOrder
+  is_primary?: Prisma.SortOrder
 }
 
 export type accountsMinOrderByAggregateInput = {
@@ -446,6 +509,9 @@ export type accountsMinOrderByAggregateInput = {
   balance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  account_name?: Prisma.SortOrder
+  iban?: Prisma.SortOrder
+  is_primary?: Prisma.SortOrder
 }
 
 export type accountsSumOrderByAggregateInput = {
@@ -486,6 +552,14 @@ export type DecimalFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type accountsCreateNestedManyWithoutBanksInput = {
@@ -610,6 +684,9 @@ export type accountsCreateWithoutBanksInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   marasi?: Prisma.marasiCreateNestedManyWithoutAccountsInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsCreateNestedManyWithoutAccountsInput
@@ -625,6 +702,9 @@ export type accountsUncheckedCreateWithoutBanksInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   marasi?: Prisma.marasiUncheckedCreateNestedManyWithoutAccountsInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsUncheckedCreateNestedManyWithoutAccountsInput
@@ -670,6 +750,9 @@ export type accountsScalarWhereInput = {
   balance?: Prisma.DecimalFilter<"accounts"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFilter<"accounts"> | string
   created_at?: Prisma.DateTimeFilter<"accounts"> | Date | string
+  account_name?: Prisma.StringNullableFilter<"accounts"> | string | null
+  iban?: Prisma.StringNullableFilter<"accounts"> | string | null
+  is_primary?: Prisma.BoolFilter<"accounts"> | boolean
 }
 
 export type accountsCreateWithoutMarasiInput = {
@@ -680,6 +763,9 @@ export type accountsCreateWithoutMarasiInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   banks: Prisma.banksCreateNestedOneWithoutAccountsInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsCreateNestedManyWithoutAccountsInput
@@ -696,6 +782,9 @@ export type accountsUncheckedCreateWithoutMarasiInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedCreateNestedManyWithoutAccountsInput
@@ -726,6 +815,9 @@ export type accountsUpdateWithoutMarasiInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   banks?: Prisma.banksUpdateOneRequiredWithoutAccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUpdateManyWithoutAccountsNestedInput
@@ -742,6 +834,9 @@ export type accountsUncheckedUpdateWithoutMarasiInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedUpdateManyWithoutAccountsNestedInput
@@ -756,6 +851,9 @@ export type accountsCreateWithoutMarasi_transactionsInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   banks: Prisma.banksCreateNestedOneWithoutAccountsInput
   marasi?: Prisma.marasiCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsCreateNestedManyWithoutAccountsInput
@@ -772,6 +870,9 @@ export type accountsUncheckedCreateWithoutMarasi_transactionsInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   marasi?: Prisma.marasiUncheckedCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedCreateNestedManyWithoutAccountsInput
@@ -802,6 +903,9 @@ export type accountsUpdateWithoutMarasi_transactionsInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   banks?: Prisma.banksUpdateOneRequiredWithoutAccountsNestedInput
   marasi?: Prisma.marasiUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUpdateManyWithoutAccountsNestedInput
@@ -818,6 +922,9 @@ export type accountsUncheckedUpdateWithoutMarasi_transactionsInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUncheckedUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedUpdateManyWithoutAccountsNestedInput
@@ -832,6 +939,9 @@ export type accountsCreateWithoutPayment_transactionsInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   banks: Prisma.banksCreateNestedOneWithoutAccountsInput
   marasi?: Prisma.marasiCreateNestedManyWithoutAccountsInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutAccountsInput
@@ -848,6 +958,9 @@ export type accountsUncheckedCreateWithoutPayment_transactionsInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   marasi?: Prisma.marasiUncheckedCreateNestedManyWithoutAccountsInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedCreateNestedManyWithoutAccountsInput
@@ -878,6 +991,9 @@ export type accountsUpdateWithoutPayment_transactionsInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   banks?: Prisma.banksUpdateOneRequiredWithoutAccountsNestedInput
   marasi?: Prisma.marasiUpdateManyWithoutAccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutAccountsNestedInput
@@ -894,6 +1010,9 @@ export type accountsUncheckedUpdateWithoutPayment_transactionsInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUncheckedUpdateManyWithoutAccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedUpdateManyWithoutAccountsNestedInput
@@ -908,6 +1027,9 @@ export type accountsCreateWithoutRecurring_expensesInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   banks: Prisma.banksCreateNestedOneWithoutAccountsInput
   marasi?: Prisma.marasiCreateNestedManyWithoutAccountsInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutAccountsInput
@@ -924,6 +1046,9 @@ export type accountsUncheckedCreateWithoutRecurring_expensesInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   marasi?: Prisma.marasiUncheckedCreateNestedManyWithoutAccountsInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsUncheckedCreateNestedManyWithoutAccountsInput
@@ -954,6 +1079,9 @@ export type accountsUpdateWithoutRecurring_expensesInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   banks?: Prisma.banksUpdateOneRequiredWithoutAccountsNestedInput
   marasi?: Prisma.marasiUpdateManyWithoutAccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutAccountsNestedInput
@@ -970,6 +1098,9 @@ export type accountsUncheckedUpdateWithoutRecurring_expensesInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUncheckedUpdateManyWithoutAccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
@@ -984,6 +1115,9 @@ export type accountsCreateWithoutZakat_paymentsInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   banks: Prisma.banksCreateNestedOneWithoutAccountsInput
   marasi?: Prisma.marasiCreateNestedManyWithoutAccountsInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutAccountsInput
@@ -1000,6 +1134,9 @@ export type accountsUncheckedCreateWithoutZakat_paymentsInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
   marasi?: Prisma.marasiUncheckedCreateNestedManyWithoutAccountsInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsUncheckedCreateNestedManyWithoutAccountsInput
@@ -1030,6 +1167,9 @@ export type accountsUpdateWithoutZakat_paymentsInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   banks?: Prisma.banksUpdateOneRequiredWithoutAccountsNestedInput
   marasi?: Prisma.marasiUpdateManyWithoutAccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutAccountsNestedInput
@@ -1046,6 +1186,9 @@ export type accountsUncheckedUpdateWithoutZakat_paymentsInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUncheckedUpdateManyWithoutAccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
@@ -1060,6 +1203,9 @@ export type accountsCreateManyBanksInput = {
   balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: string
   created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
 }
 
 export type accountsUpdateWithoutBanksInput = {
@@ -1070,6 +1216,9 @@ export type accountsUpdateWithoutBanksInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUpdateManyWithoutAccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUpdateManyWithoutAccountsNestedInput
@@ -1085,6 +1234,9 @@ export type accountsUncheckedUpdateWithoutBanksInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUncheckedUpdateManyWithoutAccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
@@ -1100,6 +1252,9 @@ export type accountsUncheckedUpdateManyWithoutBanksInput = {
   balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -1178,6 +1333,9 @@ export type accountsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   balance?: boolean
   currency?: boolean
   created_at?: boolean
+  account_name?: boolean
+  iban?: boolean
+  is_primary?: boolean
   banks?: boolean | Prisma.banksDefaultArgs<ExtArgs>
   marasi?: boolean | Prisma.accounts$marasiArgs<ExtArgs>
   marasi_transactions?: boolean | Prisma.accounts$marasi_transactionsArgs<ExtArgs>
@@ -1196,6 +1354,9 @@ export type accountsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   balance?: boolean
   currency?: boolean
   created_at?: boolean
+  account_name?: boolean
+  iban?: boolean
+  is_primary?: boolean
   banks?: boolean | Prisma.banksDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["accounts"]>
 
@@ -1208,6 +1369,9 @@ export type accountsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   balance?: boolean
   currency?: boolean
   created_at?: boolean
+  account_name?: boolean
+  iban?: boolean
+  is_primary?: boolean
   banks?: boolean | Prisma.banksDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["accounts"]>
 
@@ -1220,9 +1384,12 @@ export type accountsSelectScalar = {
   balance?: boolean
   currency?: boolean
   created_at?: boolean
+  account_name?: boolean
+  iban?: boolean
+  is_primary?: boolean
 }
 
-export type accountsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bank_id" | "account_id" | "account_number" | "account_type" | "balance" | "currency" | "created_at", ExtArgs["result"]["accounts"]>
+export type accountsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bank_id" | "account_id" | "account_number" | "account_type" | "balance" | "currency" | "created_at" | "account_name" | "iban" | "is_primary", ExtArgs["result"]["accounts"]>
 export type accountsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   banks?: boolean | Prisma.banksDefaultArgs<ExtArgs>
   marasi?: boolean | Prisma.accounts$marasiArgs<ExtArgs>
@@ -1258,6 +1425,9 @@ export type $accountsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     balance: runtime.Decimal
     currency: string
     created_at: Date
+    account_name: string | null
+    iban: string | null
+    is_primary: boolean
   }, ExtArgs["result"]["accounts"]>
   composites: {}
 }
@@ -1695,6 +1865,9 @@ export interface accountsFieldRefs {
   readonly balance: Prisma.FieldRef<"accounts", 'Decimal'>
   readonly currency: Prisma.FieldRef<"accounts", 'String'>
   readonly created_at: Prisma.FieldRef<"accounts", 'DateTime'>
+  readonly account_name: Prisma.FieldRef<"accounts", 'String'>
+  readonly iban: Prisma.FieldRef<"accounts", 'String'>
+  readonly is_primary: Prisma.FieldRef<"accounts", 'Boolean'>
 }
     
 

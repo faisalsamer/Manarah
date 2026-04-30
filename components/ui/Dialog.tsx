@@ -5,13 +5,14 @@ import { X } from 'lucide-react';
 import type { ReactNode, RefObject } from 'react';
 import { IconButton } from './Button';
 
-type DialogSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
+type DialogSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 
 const sizeClasses: Record<DialogSize, string> = {
   sm: 'max-w-sm',
   md: 'max-w-md',
   lg: 'max-w-lg',
   xl: 'max-w-2xl',
+  '2xl': 'max-w-3xl',
   full: 'max-w-[min(92vw,1100px)]',
 };
 

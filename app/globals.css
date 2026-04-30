@@ -132,6 +132,15 @@
   --animate-overlay-hide: overlay-hide 150ms ease-in;
   --animate-dialog-show:  dialog-show  250ms cubic-bezier(0.34, 1.56, 0.64, 1);
   --animate-dialog-hide:  dialog-hide  180ms ease-in;
+
+  --animate-sheet-in-right:  sheet-in-right  280ms cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-sheet-out-right: sheet-out-right 220ms cubic-bezier(0.32, 0, 0.67, 0);
+  --animate-sheet-in-left:   sheet-in-left   280ms cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-sheet-out-left:  sheet-out-left  220ms cubic-bezier(0.32, 0, 0.67, 0);
+  --animate-sheet-in-top:    sheet-in-top    280ms cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-sheet-out-top:   sheet-out-top   220ms cubic-bezier(0.32, 0, 0.67, 0);
+  --animate-sheet-in-bottom: sheet-in-bottom 280ms cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-sheet-out-bottom:sheet-out-bottom 220ms cubic-bezier(0.32, 0, 0.67, 0);
 }
 
 @keyframes overlay-show {
@@ -150,6 +159,15 @@
   from { opacity: 1; transform: scale(1)    translateY(0); }
   to   { opacity: 0; transform: scale(0.96) translateY(8px); }
 }
+
+@keyframes sheet-in-right  { from { transform: translateX(100%); }  to { transform: translateX(0); } }
+@keyframes sheet-out-right { from { transform: translateX(0); }     to { transform: translateX(100%); } }
+@keyframes sheet-in-left   { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes sheet-out-left  { from { transform: translateX(0); }     to { transform: translateX(-100%); } }
+@keyframes sheet-in-top    { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+@keyframes sheet-out-top   { from { transform: translateY(0); }     to { transform: translateY(-100%); } }
+@keyframes sheet-in-bottom { from { transform: translateY(100%); }  to { transform: translateY(0); } }
+@keyframes sheet-out-bottom{ from { transform: translateY(0); }     to { transform: translateY(100%); } }
 
 /* ── Layout variables (not Tailwind utilities) ───────────────
    Used directly via var() in component CSS / inline styles    */

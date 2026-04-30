@@ -2175,7 +2175,10 @@ export const AccountsScalarFieldEnum = {
   account_type: 'account_type',
   balance: 'balance',
   currency: 'currency',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  account_name: 'account_name',
+  iban: 'iban',
+  is_primary: 'is_primary'
 } as const
 
 export type AccountsScalarFieldEnum = (typeof AccountsScalarFieldEnum)[keyof typeof AccountsScalarFieldEnum]
@@ -2202,7 +2205,11 @@ export const BanksScalarFieldEnum = {
   bank_name: 'bank_name',
   is_connected: 'is_connected',
   connected_at: 'connected_at',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  bank_name_ar: 'bank_name_ar',
+  bank_code: 'bank_code',
+  logo_url: 'logo_url',
+  bank_type: 'bank_type'
 } as const
 
 export type BanksScalarFieldEnum = (typeof BanksScalarFieldEnum)[keyof typeof BanksScalarFieldEnum]

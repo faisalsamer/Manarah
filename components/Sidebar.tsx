@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Sparkles, LayoutDashboard, TrendingUp, CreditCard, Settings, Landmark } from 'lucide-react';
+import { LayoutDashboard, Building2, Receipt, PiggyBank, HandCoins, Landmark } from 'lucide-react';
 
 const menuItems = [
-  { icon: Sparkles,        label: 'المستشار الذكي',     href: '/advisor' },
-  { icon: LayoutDashboard, label: 'الصفحة الرئيسية',    href: '/dashboard' },
-  { icon: TrendingUp,      label: 'المصاريف والنفقات', href: '/expenses' },
-  { icon: CreditCard,      label: 'المدفوعات',          href: '/payments' },
-  { icon: Settings,        label: 'الإعدادات',          href: '/settings' },
+  { icon: LayoutDashboard, label: 'الصفحة الرئيسية',     href: '/advisor' },
+  { icon: Building2,       label: 'البنوك',              href: '/dashboard' },
+  { icon: Receipt,         label: 'المصاريف والنفقات',   href: '/expenses' },
+  { icon: PiggyBank,       label: 'المدخرات',            href: '/payments' },
+  { icon: HandCoins,       label: 'الزكاة',              href: '/settings' },
 ];
 
 export default function Sidebar() {

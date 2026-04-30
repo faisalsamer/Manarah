@@ -32,6 +32,10 @@ export type BanksMinAggregateOutputType = {
   is_connected: boolean | null
   connected_at: Date | null
   created_at: Date | null
+  bank_name_ar: string | null
+  bank_code: string | null
+  logo_url: string | null
+  bank_type: string | null
 }
 
 export type BanksMaxAggregateOutputType = {
@@ -42,6 +46,10 @@ export type BanksMaxAggregateOutputType = {
   is_connected: boolean | null
   connected_at: Date | null
   created_at: Date | null
+  bank_name_ar: string | null
+  bank_code: string | null
+  logo_url: string | null
+  bank_type: string | null
 }
 
 export type BanksCountAggregateOutputType = {
@@ -52,6 +60,10 @@ export type BanksCountAggregateOutputType = {
   is_connected: number
   connected_at: number
   created_at: number
+  bank_name_ar: number
+  bank_code: number
+  logo_url: number
+  bank_type: number
   _all: number
 }
 
@@ -64,6 +76,10 @@ export type BanksMinAggregateInputType = {
   is_connected?: true
   connected_at?: true
   created_at?: true
+  bank_name_ar?: true
+  bank_code?: true
+  logo_url?: true
+  bank_type?: true
 }
 
 export type BanksMaxAggregateInputType = {
@@ -74,6 +90,10 @@ export type BanksMaxAggregateInputType = {
   is_connected?: true
   connected_at?: true
   created_at?: true
+  bank_name_ar?: true
+  bank_code?: true
+  logo_url?: true
+  bank_type?: true
 }
 
 export type BanksCountAggregateInputType = {
@@ -84,6 +104,10 @@ export type BanksCountAggregateInputType = {
   is_connected?: true
   connected_at?: true
   created_at?: true
+  bank_name_ar?: true
+  bank_code?: true
+  logo_url?: true
+  bank_type?: true
   _all?: true
 }
 
@@ -167,6 +191,10 @@ export type BanksGroupByOutputType = {
   is_connected: boolean
   connected_at: Date | null
   created_at: Date
+  bank_name_ar: string | null
+  bank_code: string | null
+  logo_url: string | null
+  bank_type: string | null
   _count: BanksCountAggregateOutputType | null
   _min: BanksMinAggregateOutputType | null
   _max: BanksMaxAggregateOutputType | null
@@ -198,6 +226,10 @@ export type banksWhereInput = {
   is_connected?: Prisma.BoolFilter<"banks"> | boolean
   connected_at?: Prisma.DateTimeNullableFilter<"banks"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"banks"> | Date | string
+  bank_name_ar?: Prisma.StringNullableFilter<"banks"> | string | null
+  bank_code?: Prisma.StringNullableFilter<"banks"> | string | null
+  logo_url?: Prisma.StringNullableFilter<"banks"> | string | null
+  bank_type?: Prisma.StringNullableFilter<"banks"> | string | null
   accounts?: Prisma.AccountsListRelationFilter
   users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>
 }
@@ -210,12 +242,17 @@ export type banksOrderByWithRelationInput = {
   is_connected?: Prisma.SortOrder
   connected_at?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  bank_name_ar?: Prisma.SortOrderInput | Prisma.SortOrder
+  bank_code?: Prisma.SortOrderInput | Prisma.SortOrder
+  logo_url?: Prisma.SortOrderInput | Prisma.SortOrder
+  bank_type?: Prisma.SortOrderInput | Prisma.SortOrder
   accounts?: Prisma.accountsOrderByRelationAggregateInput
   users?: Prisma.usersOrderByWithRelationInput
 }
 
 export type banksWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  user_id_bank_id?: Prisma.banksUser_idBank_idCompoundUniqueInput
   AND?: Prisma.banksWhereInput | Prisma.banksWhereInput[]
   OR?: Prisma.banksWhereInput[]
   NOT?: Prisma.banksWhereInput | Prisma.banksWhereInput[]
@@ -225,9 +262,13 @@ export type banksWhereUniqueInput = Prisma.AtLeast<{
   is_connected?: Prisma.BoolFilter<"banks"> | boolean
   connected_at?: Prisma.DateTimeNullableFilter<"banks"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"banks"> | Date | string
+  bank_name_ar?: Prisma.StringNullableFilter<"banks"> | string | null
+  bank_code?: Prisma.StringNullableFilter<"banks"> | string | null
+  logo_url?: Prisma.StringNullableFilter<"banks"> | string | null
+  bank_type?: Prisma.StringNullableFilter<"banks"> | string | null
   accounts?: Prisma.AccountsListRelationFilter
   users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>
-}, "id">
+}, "id" | "user_id_bank_id">
 
 export type banksOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -237,6 +278,10 @@ export type banksOrderByWithAggregationInput = {
   is_connected?: Prisma.SortOrder
   connected_at?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  bank_name_ar?: Prisma.SortOrderInput | Prisma.SortOrder
+  bank_code?: Prisma.SortOrderInput | Prisma.SortOrder
+  logo_url?: Prisma.SortOrderInput | Prisma.SortOrder
+  bank_type?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.banksCountOrderByAggregateInput
   _max?: Prisma.banksMaxOrderByAggregateInput
   _min?: Prisma.banksMinOrderByAggregateInput
@@ -253,6 +298,10 @@ export type banksScalarWhereWithAggregatesInput = {
   is_connected?: Prisma.BoolWithAggregatesFilter<"banks"> | boolean
   connected_at?: Prisma.DateTimeNullableWithAggregatesFilter<"banks"> | Date | string | null
   created_at?: Prisma.DateTimeWithAggregatesFilter<"banks"> | Date | string
+  bank_name_ar?: Prisma.StringNullableWithAggregatesFilter<"banks"> | string | null
+  bank_code?: Prisma.StringNullableWithAggregatesFilter<"banks"> | string | null
+  logo_url?: Prisma.StringNullableWithAggregatesFilter<"banks"> | string | null
+  bank_type?: Prisma.StringNullableWithAggregatesFilter<"banks"> | string | null
 }
 
 export type banksCreateInput = {
@@ -262,6 +311,10 @@ export type banksCreateInput = {
   is_connected?: boolean
   connected_at?: Date | string | null
   created_at?: Date | string
+  bank_name_ar?: string | null
+  bank_code?: string | null
+  logo_url?: string | null
+  bank_type?: string | null
   accounts?: Prisma.accountsCreateNestedManyWithoutBanksInput
   users: Prisma.usersCreateNestedOneWithoutBanksInput
 }
@@ -274,6 +327,10 @@ export type banksUncheckedCreateInput = {
   is_connected?: boolean
   connected_at?: Date | string | null
   created_at?: Date | string
+  bank_name_ar?: string | null
+  bank_code?: string | null
+  logo_url?: string | null
+  bank_type?: string | null
   accounts?: Prisma.accountsUncheckedCreateNestedManyWithoutBanksInput
 }
 
@@ -284,6 +341,10 @@ export type banksUpdateInput = {
   is_connected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   connected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank_name_ar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accounts?: Prisma.accountsUpdateManyWithoutBanksNestedInput
   users?: Prisma.usersUpdateOneRequiredWithoutBanksNestedInput
 }
@@ -296,6 +357,10 @@ export type banksUncheckedUpdateInput = {
   is_connected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   connected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank_name_ar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accounts?: Prisma.accountsUncheckedUpdateManyWithoutBanksNestedInput
 }
 
@@ -307,6 +372,10 @@ export type banksCreateManyInput = {
   is_connected?: boolean
   connected_at?: Date | string | null
   created_at?: Date | string
+  bank_name_ar?: string | null
+  bank_code?: string | null
+  logo_url?: string | null
+  bank_type?: string | null
 }
 
 export type banksUpdateManyMutationInput = {
@@ -316,6 +385,10 @@ export type banksUpdateManyMutationInput = {
   is_connected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   connected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank_name_ar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type banksUncheckedUpdateManyInput = {
@@ -326,11 +399,20 @@ export type banksUncheckedUpdateManyInput = {
   is_connected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   connected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank_name_ar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type BanksScalarRelationFilter = {
   is?: Prisma.banksWhereInput
   isNot?: Prisma.banksWhereInput
+}
+
+export type banksUser_idBank_idCompoundUniqueInput = {
+  user_id: string
+  bank_id: string
 }
 
 export type banksCountOrderByAggregateInput = {
@@ -341,6 +423,10 @@ export type banksCountOrderByAggregateInput = {
   is_connected?: Prisma.SortOrder
   connected_at?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  bank_name_ar?: Prisma.SortOrder
+  bank_code?: Prisma.SortOrder
+  logo_url?: Prisma.SortOrder
+  bank_type?: Prisma.SortOrder
 }
 
 export type banksMaxOrderByAggregateInput = {
@@ -351,6 +437,10 @@ export type banksMaxOrderByAggregateInput = {
   is_connected?: Prisma.SortOrder
   connected_at?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  bank_name_ar?: Prisma.SortOrder
+  bank_code?: Prisma.SortOrder
+  logo_url?: Prisma.SortOrder
+  bank_type?: Prisma.SortOrder
 }
 
 export type banksMinOrderByAggregateInput = {
@@ -361,6 +451,10 @@ export type banksMinOrderByAggregateInput = {
   is_connected?: Prisma.SortOrder
   connected_at?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  bank_name_ar?: Prisma.SortOrder
+  bank_code?: Prisma.SortOrder
+  logo_url?: Prisma.SortOrder
+  bank_type?: Prisma.SortOrder
 }
 
 export type BanksListRelationFilter = {
@@ -440,6 +534,10 @@ export type banksCreateWithoutAccountsInput = {
   is_connected?: boolean
   connected_at?: Date | string | null
   created_at?: Date | string
+  bank_name_ar?: string | null
+  bank_code?: string | null
+  logo_url?: string | null
+  bank_type?: string | null
   users: Prisma.usersCreateNestedOneWithoutBanksInput
 }
 
@@ -451,6 +549,10 @@ export type banksUncheckedCreateWithoutAccountsInput = {
   is_connected?: boolean
   connected_at?: Date | string | null
   created_at?: Date | string
+  bank_name_ar?: string | null
+  bank_code?: string | null
+  logo_url?: string | null
+  bank_type?: string | null
 }
 
 export type banksCreateOrConnectWithoutAccountsInput = {
@@ -476,6 +578,10 @@ export type banksUpdateWithoutAccountsInput = {
   is_connected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   connected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank_name_ar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   users?: Prisma.usersUpdateOneRequiredWithoutBanksNestedInput
 }
 
@@ -487,6 +593,10 @@ export type banksUncheckedUpdateWithoutAccountsInput = {
   is_connected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   connected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank_name_ar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type banksCreateWithoutUsersInput = {
@@ -496,6 +606,10 @@ export type banksCreateWithoutUsersInput = {
   is_connected?: boolean
   connected_at?: Date | string | null
   created_at?: Date | string
+  bank_name_ar?: string | null
+  bank_code?: string | null
+  logo_url?: string | null
+  bank_type?: string | null
   accounts?: Prisma.accountsCreateNestedManyWithoutBanksInput
 }
 
@@ -506,6 +620,10 @@ export type banksUncheckedCreateWithoutUsersInput = {
   is_connected?: boolean
   connected_at?: Date | string | null
   created_at?: Date | string
+  bank_name_ar?: string | null
+  bank_code?: string | null
+  logo_url?: string | null
+  bank_type?: string | null
   accounts?: Prisma.accountsUncheckedCreateNestedManyWithoutBanksInput
 }
 
@@ -546,6 +664,10 @@ export type banksScalarWhereInput = {
   is_connected?: Prisma.BoolFilter<"banks"> | boolean
   connected_at?: Prisma.DateTimeNullableFilter<"banks"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"banks"> | Date | string
+  bank_name_ar?: Prisma.StringNullableFilter<"banks"> | string | null
+  bank_code?: Prisma.StringNullableFilter<"banks"> | string | null
+  logo_url?: Prisma.StringNullableFilter<"banks"> | string | null
+  bank_type?: Prisma.StringNullableFilter<"banks"> | string | null
 }
 
 export type banksCreateManyUsersInput = {
@@ -555,6 +677,10 @@ export type banksCreateManyUsersInput = {
   is_connected?: boolean
   connected_at?: Date | string | null
   created_at?: Date | string
+  bank_name_ar?: string | null
+  bank_code?: string | null
+  logo_url?: string | null
+  bank_type?: string | null
 }
 
 export type banksUpdateWithoutUsersInput = {
@@ -564,6 +690,10 @@ export type banksUpdateWithoutUsersInput = {
   is_connected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   connected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank_name_ar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accounts?: Prisma.accountsUpdateManyWithoutBanksNestedInput
 }
 
@@ -574,6 +704,10 @@ export type banksUncheckedUpdateWithoutUsersInput = {
   is_connected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   connected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank_name_ar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accounts?: Prisma.accountsUncheckedUpdateManyWithoutBanksNestedInput
 }
 
@@ -584,6 +718,10 @@ export type banksUncheckedUpdateManyWithoutUsersInput = {
   is_connected?: Prisma.BoolFieldUpdateOperationsInput | boolean
   connected_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bank_name_ar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bank_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -625,6 +763,10 @@ export type banksSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   is_connected?: boolean
   connected_at?: boolean
   created_at?: boolean
+  bank_name_ar?: boolean
+  bank_code?: boolean
+  logo_url?: boolean
+  bank_type?: boolean
   accounts?: boolean | Prisma.banks$accountsArgs<ExtArgs>
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.BanksCountOutputTypeDefaultArgs<ExtArgs>
@@ -638,6 +780,10 @@ export type banksSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   is_connected?: boolean
   connected_at?: boolean
   created_at?: boolean
+  bank_name_ar?: boolean
+  bank_code?: boolean
+  logo_url?: boolean
+  bank_type?: boolean
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["banks"]>
 
@@ -649,6 +795,10 @@ export type banksSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   is_connected?: boolean
   connected_at?: boolean
   created_at?: boolean
+  bank_name_ar?: boolean
+  bank_code?: boolean
+  logo_url?: boolean
+  bank_type?: boolean
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["banks"]>
 
@@ -660,9 +810,13 @@ export type banksSelectScalar = {
   is_connected?: boolean
   connected_at?: boolean
   created_at?: boolean
+  bank_name_ar?: boolean
+  bank_code?: boolean
+  logo_url?: boolean
+  bank_type?: boolean
 }
 
-export type banksOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "bank_id" | "bank_name" | "is_connected" | "connected_at" | "created_at", ExtArgs["result"]["banks"]>
+export type banksOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "bank_id" | "bank_name" | "is_connected" | "connected_at" | "created_at" | "bank_name_ar" | "bank_code" | "logo_url" | "bank_type", ExtArgs["result"]["banks"]>
 export type banksInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.banks$accountsArgs<ExtArgs>
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
@@ -689,6 +843,10 @@ export type $banksPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     is_connected: boolean
     connected_at: Date | null
     created_at: Date
+    bank_name_ar: string | null
+    bank_code: string | null
+    logo_url: string | null
+    bank_type: string | null
   }, ExtArgs["result"]["banks"]>
   composites: {}
 }
@@ -1121,6 +1279,10 @@ export interface banksFieldRefs {
   readonly is_connected: Prisma.FieldRef<"banks", 'Boolean'>
   readonly connected_at: Prisma.FieldRef<"banks", 'DateTime'>
   readonly created_at: Prisma.FieldRef<"banks", 'DateTime'>
+  readonly bank_name_ar: Prisma.FieldRef<"banks", 'String'>
+  readonly bank_code: Prisma.FieldRef<"banks", 'String'>
+  readonly logo_url: Prisma.FieldRef<"banks", 'String'>
+  readonly bank_type: Prisma.FieldRef<"banks", 'String'>
 }
     
 

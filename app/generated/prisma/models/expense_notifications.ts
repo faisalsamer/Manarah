@@ -393,10 +393,6 @@ export type Enumnotification_channelFieldUpdateOperationsInput = {
   set?: $Enums.notification_channel
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type expense_notificationsCreateNestedManyWithoutPayment_transactionsInput = {
   create?: Prisma.XOR<Prisma.expense_notificationsCreateWithoutPayment_transactionsInput, Prisma.expense_notificationsUncheckedCreateWithoutPayment_transactionsInput> | Prisma.expense_notificationsCreateWithoutPayment_transactionsInput[] | Prisma.expense_notificationsUncheckedCreateWithoutPayment_transactionsInput[]
   connectOrCreate?: Prisma.expense_notificationsCreateOrConnectWithoutPayment_transactionsInput | Prisma.expense_notificationsCreateOrConnectWithoutPayment_transactionsInput[]
