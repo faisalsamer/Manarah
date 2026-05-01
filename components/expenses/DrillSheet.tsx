@@ -36,13 +36,9 @@ export function DrillSheet({
   highlightTxId,
 }: DrillSheetProps) {
   // Fetch only this expense's transactions — sized to one expense's history
-  // (typically tens of rows), not the full ledger. Hook is a no-op when the
-  // sheet is closed because `expenseId` won't change between toggles, and
-  // we don't unmount it (the parent does), so refetches happen only on real
-  // expense changes.
-  const txs = useTransactions(
-    expense ? { expenseId: expense.id } : { expenseId: '__none__' },
-  );
+  // (typically tens of rows), not the full ledger. Skip the fetch entirely
+  // until an expense is selected so we don't send a malformed expenseId.
+  const txs = useTransactions({ expenseId: expense?.id, enabled: !!expense });
 
   if (!expense) {
     return <Sheet open={open} onClose={onClose} />;

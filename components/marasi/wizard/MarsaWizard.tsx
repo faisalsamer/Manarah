@@ -26,7 +26,8 @@ import { StepTarget } from './StepTarget';
 export interface MarsaWizardProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (draft: MarsaDraft) => void;
+  /** May return a Promise — the wizard awaits it and shows a loading button. */
+  onSubmit: (draft: MarsaDraft) => void | Promise<void>;
   banks: BankVM[];
 }
 
@@ -52,6 +53,7 @@ const emptyDraft = (): MarsaDraft => ({
 export function MarsaWizard({ open, onClose, onSubmit, banks }: MarsaWizardProps) {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<MarsaDraft>(emptyDraft);
+  const [submitting, setSubmitting] = useState(false);
 
   const update = (patch: Partial<MarsaDraft>) =>
     setData((prev) => ({ ...prev, ...patch }));
@@ -63,7 +65,6 @@ export function MarsaWizard({ open, onClose, onSubmit, banks }: MarsaWizardProps
       case 1: {
         if (!data.targetAmount || parseFloat(data.targetAmount) <= 0) return false;
         if (!data.targetDate) return false;
-        // The target date must be at least one day in the future for calcPlan to succeed.
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const target = new Date(data.targetDate);
@@ -71,6 +72,8 @@ export function MarsaWizard({ open, onClose, onSubmit, banks }: MarsaWizardProps
         return target.getTime() > today.getTime();
       }
       case 2:
+        // Frequency picked AND it must produce a valid plan (first cycle must
+        // fit before target_date). calcPlan returns null otherwise.
         if (!data.frequency) return false;
         return (
           calcPlan(parseFloat(data.targetAmount), 0, data.frequency, data.targetDate) !==
@@ -83,21 +86,30 @@ export function MarsaWizard({ open, onClose, onSubmit, banks }: MarsaWizardProps
     }
   }, [step, data]);
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step < TOTAL_STEPS - 1) {
       setStep(step + 1);
-    } else {
-      onSubmit(data);
+      return;
+    }
+    // Final step — await the submit so the loading spinner stays on the button
+    // until the API call (and any hook refetches the page chains after) finish.
+    setSubmitting(true);
+    try {
+      await onSubmit(data);
       setData(emptyDraft());
       setStep(0);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleBack = () => {
+    if (submitting) return;
     if (step > 0) setStep(step - 1);
   };
 
   const handleClose = () => {
+    if (submitting) return;
     setData(emptyDraft());
     setStep(0);
     onClose();
@@ -127,6 +139,9 @@ export function MarsaWizard({ open, onClose, onSubmit, banks }: MarsaWizardProps
       open={open}
       onClose={handleClose}
       size="2xl"
+      closeOnOverlayClick={!submitting}
+      closeOnEscape={!submitting}
+      showCloseButton={!submitting}
       title={
         <div>
           <div className="text-micro uppercase tracking-[0.2em] text-text-muted mb-1">
@@ -140,14 +155,15 @@ export function MarsaWizard({ open, onClose, onSubmit, banks }: MarsaWizardProps
           <Button
             variant="ghost"
             startIcon={<ChevronRight size={16} />}
-            disabled={step === 0}
+            disabled={step === 0 || submitting}
             onClick={handleBack}
           >
             {wizardLabels.back}
           </Button>
           <Button
             variant="primary"
-            disabled={!canProceed}
+            disabled={!canProceed || submitting}
+            loading={submitting}
             endIcon={step === TOTAL_STEPS - 1 ? <Check size={16} /> : <ChevronLeft size={16} />}
             onClick={handleNext}
           >

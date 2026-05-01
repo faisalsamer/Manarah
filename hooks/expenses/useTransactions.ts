@@ -8,19 +8,27 @@ interface Options {
   expenseId?: string;
   /** Restrict to a fixed set of statuses (e.g. action-required tab fetches `['failed', 'awaiting_confirmation']`). */
   statuses?: TransactionStatus[];
+  /** Skip the fetch entirely (e.g. while the parent doesn't yet have an expense to filter by). Defaults to true. */
+  enabled?: boolean;
 }
 
 export function useTransactions(opts: Options = {}) {
-  const { expenseId, statuses } = opts;
+  const { expenseId, statuses, enabled = true } = opts;
   // Stabilize the statuses array key so a fresh array reference per render
   // doesn't trigger an infinite refetch loop.
   const statusesKey = useMemo(() => statuses?.slice().sort().join(',') ?? '', [statuses]);
 
   const [data, setData] = useState<TransactionVM[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState<Error | null>(null);
 
   const refetch = useCallback(async () => {
+    if (!enabled) {
+      setData([]);
+      setLoading(false);
+      setError(null);
+      return;
+    }
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -35,7 +43,7 @@ export function useTransactions(opts: Options = {}) {
     } finally {
       setLoading(false);
     }
-  }, [expenseId, statusesKey]);
+  }, [enabled, expenseId, statusesKey]);
 
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { void refetch(); }, [refetch]);

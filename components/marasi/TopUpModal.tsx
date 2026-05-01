@@ -16,14 +16,19 @@ export interface TopUpModalProps {
   onClose: () => void;
   marsa: MarsaVM | undefined;
   banks: BankVM[];
-  onConfirm: (opts: { marsaId: string; amount: string }) => void;
+  /** May return a Promise — the modal awaits it and shows a loading button. */
+  onConfirm: (opts: { marsaId: string; amount: string }) => void | Promise<void>;
 }
 
 export function TopUpModal({ open, onClose, marsa, banks, onConfirm }: TopUpModalProps) {
   const [amount, setAmount] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (open) setAmount('');
+    if (open) {
+      setAmount('');
+      setSubmitting(false);
+    }
   }, [open]);
 
   if (!marsa) {
@@ -37,17 +42,30 @@ export function TopUpModal({ open, onClose, marsa, banks, onConfirm }: TopUpModa
   const hasInsufficient = !!account && Number.isFinite(value) && value > balance;
   const canSubmit = !!account && Number.isFinite(value) && value > 0 && !hasInsufficient;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!canSubmit) return;
-    onConfirm({ marsaId: marsa.id, amount });
-    setAmount('');
+    setSubmitting(true);
+    try {
+      await onConfirm({ marsaId: marsa.id, amount });
+      setAmount('');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleClose = () => {
+    if (submitting) return;
+    onClose();
   };
 
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       size="lg"
+      closeOnOverlayClick={!submitting}
+      closeOnEscape={!submitting}
+      showCloseButton={!submitting}
       title={
         <div>
           <div className="text-micro uppercase tracking-[0.2em] text-text-muted mb-1">
@@ -58,13 +76,14 @@ export function TopUpModal({ open, onClose, marsa, banks, onConfirm }: TopUpModa
       }
       footer={
         <DialogActions>
-          <Button variant="ghost" onClick={onClose}>
+          <Button variant="ghost" disabled={submitting} onClick={handleClose}>
             {topUpLabels.cancel}
           </Button>
           <Button
             variant="primary"
             startIcon={<Plus size={16} />}
-            disabled={!canSubmit}
+            disabled={!canSubmit || submitting}
+            loading={submitting}
             onClick={handleSubmit}
           >
             {topUpLabels.confirm}

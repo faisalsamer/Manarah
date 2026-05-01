@@ -2,6 +2,10 @@
  * Seed in-app notifications for the Marāsi module, mirroring `marasi_notifications`.
  * Each row anchors to a marsa and (optionally) a transaction from `lib/marasi/mock-data.ts`.
  * Delete this file once the API is wired and notifications come from the DB.
+ *
+ * `context` is intentionally left as `null` here — the cross-module bell
+ * still resolves marsa/tx from the local mock arrays. Once the API lands the
+ * real `toMarsaNotificationVM` mapper bakes the snapshot in.
  */
 
 import type { MarsaNotificationVM } from './types';
@@ -18,6 +22,7 @@ export const MOCK_MARASI_NOTIFICATIONS: MarsaNotificationVM[] = [
     sentAt: '2026-04-29T14:00:25+03:00',
     readAt: null,
     createdAt: '2026-04-29T14:00:25+03:00',
+    context: null,
   },
   {
     id: 'mn-2',
@@ -28,6 +33,7 @@ export const MOCK_MARASI_NOTIFICATIONS: MarsaNotificationVM[] = [
     sentAt: '2026-04-29T09:00:18+03:00',
     readAt: '2026-04-29T19:42:00+03:00',
     createdAt: '2026-04-29T09:00:18+03:00',
+    context: null,
   },
   // ── Emergency reserve — goal reached
   {
@@ -39,6 +45,7 @@ export const MOCK_MARASI_NOTIFICATIONS: MarsaNotificationVM[] = [
     sentAt: '2026-04-15T09:00:14+03:00',
     readAt: null,
     createdAt: '2026-04-15T09:00:14+03:00',
+    context: null,
   },
   // ── Hajj — milestone (e.g. crossed 30%)
   {
@@ -50,6 +57,7 @@ export const MOCK_MARASI_NOTIFICATIONS: MarsaNotificationVM[] = [
     sentAt: '2026-04-01T09:01:00+03:00',
     readAt: '2026-04-01T20:18:00+03:00',
     createdAt: '2026-04-01T09:01:00+03:00',
+    context: null,
   },
   // ── Hajj — upcoming deposit reminder
   {
@@ -61,6 +69,7 @@ export const MOCK_MARASI_NOTIFICATIONS: MarsaNotificationVM[] = [
     sentAt: '2026-04-30T09:00:00+03:00',
     readAt: null,
     createdAt: '2026-04-30T09:00:00+03:00',
+    context: null,
   },
   // ── Camera — goal reached, then released (older)
   {
@@ -72,5 +81,6 @@ export const MOCK_MARASI_NOTIFICATIONS: MarsaNotificationVM[] = [
     sentAt: '2026-03-12T09:00:09+03:00',
     readAt: '2026-03-12T20:00:00+03:00',
     createdAt: '2026-03-12T09:00:09+03:00',
+    context: null,
   },
 ];

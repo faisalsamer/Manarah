@@ -7,24 +7,12 @@ import type { ExpenseDraft, ExpenseVM, TransactionVM } from './types';
 import type { ExpenseNotificationVM } from './notifications/types';
 import { toNotificationVM } from './mappers';
 
-// ─── Errors ──────────────────────────────────────────────────
-/**
- * Thin error type so route handlers can map known failure modes to
- * 4xx responses without leaking Prisma errors.
- */
-export class MutationError extends Error {
-  constructor(
-    public code:
-      | 'not_found'
-      | 'invalid_input'
-      | 'account_not_found'
-      | 'insufficient_funds'
-      | 'already_resolved',
-    message?: string,
-  ) {
-    super(message ?? code);
-  }
-}
+// Shared error class — moved to `lib/api/errors.ts` so the marasi module can
+// throw the same errors and `lib/api/response.ts` only needs one mapping.
+// Re-exported here for back-compat with callers that already import it from
+// this module.
+export { MutationError } from '../api/errors';
+import { MutationError } from '../api/errors';
 
 // ─── Helpers ─────────────────────────────────────────────────
 /** Look up our DB account row from external (bank_id, account_id) for a user. */

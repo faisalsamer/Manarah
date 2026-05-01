@@ -2,16 +2,22 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { LayoutDashboard, Building2, Receipt, PiggyBank, HandCoins, Landmark } from 'lucide-react';
 import { Money } from '@/components/ui/RiyalSign';
 import type { CurrentUser } from '@/lib/user';
 
+interface LinkedBankSummary {
+  total_balance: number;
+}
+
 const menuItems = [
   { icon: LayoutDashboard, label: 'الصفحة الرئيسية',     href: '/advisor' },
-  { icon: Building2,       label: 'البنوك',              href: '/dashboard' },
+  { icon: Building2,       label: 'البنوك',              href: '/banking' },
   { icon: Receipt,         label: 'المصاريف والنفقات',   href: '/expenses' },
   { icon: PiggyBank,       label: 'المدخرات',            href: '/marasi' },
-  { icon: HandCoins,       label: 'الزكاة',              href: '/settings' },
+  { icon: HandCoins,       label: 'الزاكاة',            href: '/zakat' },
+
 ];
 
 export interface SidebarProps {
@@ -21,6 +27,27 @@ export interface SidebarProps {
 export default function Sidebar({ user }: SidebarProps) {
   const pathname = usePathname();
   const initial = user.name.trim().charAt(0) || '?';
+
+  const [totalBalance, setTotalBalance] = useState<number | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/banks/linked/linked')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data: unknown) => {
+        if (cancelled) return;
+        const sum = Array.isArray(data)
+          ? (data as LinkedBankSummary[]).reduce((acc, b) => acc + (b.total_balance ?? 0), 0)
+          : 0;
+        setTotalBalance(sum);
+      })
+      .catch(() => {
+        if (!cancelled) setTotalBalance(0);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <aside className="fixed top-0 right-0 w-(--sidebar-width) h-screen flex flex-col z-sidebar overflow-hidden bg-linear-to-b from-sidebar-bg to-sidebar-bg-deep">
@@ -72,9 +99,12 @@ export default function Sidebar({ user }: SidebarProps) {
       <div className="mt-auto mx-3 mb-3 p-4 rounded-md bg-white/6 border border-white/10">
         <div className="text-micro text-sidebar-text-muted mb-1.5">الرصيد الإجمالي</div>
         <div className="text-[22px] font-bold text-text-inverse">
-          <Money amount={42800} />
+          {totalBalance === null ? (
+            <span className="text-sidebar-text-muted">—</span>
+          ) : (
+            <Money amount={totalBalance} />
+          )}
         </div>
-        <div className="text-caption text-primary-400 mt-1">↑ 2.4% هذا الشهر</div>
       </div>
 
       {/* User */}

@@ -1,0 +1,71 @@
+{
+  "recommendations": [
+    {
+      "id": "rec_1",
+      "type": "pay_zakah",
+      "message": "واجب عليك دفع الزكاة والمبلغ المستحق هو 567.97 ريال سعودي",
+      "action": "pay_zakah",
+      "action_params": {
+        "amount": 567.97
+      },
+      "priority": "high"
+    },
+    {
+      "id": "rec_2",
+      "type": "reduce_expense",
+      "message": "قلل مصاريف الرواتب من 8000.00 ريال إلى 522.79 ريال",
+      "action": "set_budget_alert",
+      "action_params": {
+        "category": "salary",
+        "current_amount": 8000.0,
+        "target_amount": 522.79
+      },
+      "priority": "medium"
+    },
+    {
+      "id": "rec_3",
+      "type": "reduce_expense",
+      "message": "قلل مصاريف التحويلات من 4871.66 ريال إلى 522.79 ريال",
+      "action": "set_budget_alert",
+      "action_params": {
+        "category": "transfer",
+        "current_amount": 4871.66,
+        "target_amount": 522.79
+      },
+      "priority": "medium"
+    },
+    {
+      "id": "rec_4",
+      "type": "reduce_expense",
+      "message": "قلل مصاريف التسوق من 2352.78 ريال إلى 347.86 ريال",
+      "action": "set_budget_alert",
+      "action_params": {
+        "category": "shopping",
+        "current_amount": 2352.78,
+        "target_amount": 347.86
+      },
+      "priority": "medium"
+    },
+    {
+      "id": "rec_5",
+      "type": "increase_savings",
+      "message": "حاول زيادة معدل الادخار الحالي من -53.8% إلى 20%",
+      "action": "increase_savings",
+      "action_params": {
+        "current_savings_rate": -53.8,
+        "target_savings_rate": 20
+      },
+      "priority": "low"
+    }
+  ],
+  "investments": [],
+  "financial_summary": {
+    "monthly_income": 3478.61,
+    "monthly_expenses": 5349.71,
+    "savings_rate": -53.79,
+    "zakah_due": 567.97,
+    "emergency_fund_months": 8.4,
+    "net_worth": 22718.76
+  },
+  "generated_at": "2026-04-29T02:24:56.533337Z"
+}

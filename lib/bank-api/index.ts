@@ -209,3 +209,76 @@ export async function chargeAccount(input: {
     };
   });
 }
+
+/**
+ * Credit an account: append a credit row to transactions, increment the
+ * balance + available_balance on the account in banks, return the new
+ * transaction id plus balance-after.
+ *
+ * Used by the marasi module when releasing a goal's segregated balance back
+ * to a chosen bank account (after `reached`, or as part of `cancel`).
+ *
+ * Throws if the account isn't found.
+ */
+export async function creditAccount(input: {
+  bankId: string;
+  accountId: string;
+  amount: number;
+  /** Source label, shown in the user's bank statement. e.g. the goal's title. */
+  merchant: string;
+  category?: string;
+  description?: string;
+}): Promise<ChargeResult> {
+  return withBankStore(async ({ banks, txs }) => {
+    const bank = banks.banks.find((b) => b.bank_id === input.bankId);
+    if (!bank) throw new Error(`Bank ${input.bankId} not found`);
+
+    let account: BankApiAccount | undefined;
+    let customerId: string | undefined;
+    for (const customer of bank.customers) {
+      const acc = customer.accounts.find((a) => a.account_id === input.accountId);
+      if (acc) {
+        account = acc;
+        customerId = customer.customer_id;
+        break;
+      }
+    }
+    if (!account || !customerId) {
+      throw new Error(`Account ${input.accountId} not found at ${input.bankId}`);
+    }
+
+    const newBalance = +(account.balance + input.amount).toFixed(2);
+    const newAvailable = +(account.available_balance + input.amount).toFixed(2);
+    account.balance = newBalance;
+    account.available_balance = newAvailable;
+
+    const transactionId = genTransactionId(txs.transactions);
+    const timestamp = nowClientTimestamptz();
+    const date = timestamp.slice(0, 10);
+
+    const tx: BankApiTransaction = {
+      transaction_id: transactionId,
+      account_id: input.accountId,
+      customer_id: customerId,
+      bank_id: input.bankId,
+      date,
+      timestamp,
+      type: 'credit',
+      category: input.category ?? 'savings',
+      merchant: input.merchant,
+      amount: input.amount,
+      currency: account.currency,
+      balance_after: newBalance,
+      status: 'completed',
+      description: input.description ?? input.merchant,
+    };
+
+    txs.transactions.push(tx);
+
+    return {
+      result: { bankRef: transactionId, balanceAfter: newBalance, timestamp },
+      banks,
+      txs,
+    };
+  });
+}

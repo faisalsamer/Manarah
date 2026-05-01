@@ -59,6 +59,9 @@ export type MarasiMinAggregateOutputType = {
   cancelled_at: Date | null
   created_at: Date | null
   updated_at: Date | null
+  withdrawn: boolean | null
+  withdrawn_at: Date | null
+  release_account_id: string | null
 }
 
 export type MarasiMaxAggregateOutputType = {
@@ -79,6 +82,9 @@ export type MarasiMaxAggregateOutputType = {
   cancelled_at: Date | null
   created_at: Date | null
   updated_at: Date | null
+  withdrawn: boolean | null
+  withdrawn_at: Date | null
+  release_account_id: string | null
 }
 
 export type MarasiCountAggregateOutputType = {
@@ -99,6 +105,9 @@ export type MarasiCountAggregateOutputType = {
   cancelled_at: number
   created_at: number
   updated_at: number
+  withdrawn: number
+  withdrawn_at: number
+  release_account_id: number
   _all: number
 }
 
@@ -135,6 +144,9 @@ export type MarasiMinAggregateInputType = {
   cancelled_at?: true
   created_at?: true
   updated_at?: true
+  withdrawn?: true
+  withdrawn_at?: true
+  release_account_id?: true
 }
 
 export type MarasiMaxAggregateInputType = {
@@ -155,6 +167,9 @@ export type MarasiMaxAggregateInputType = {
   cancelled_at?: true
   created_at?: true
   updated_at?: true
+  withdrawn?: true
+  withdrawn_at?: true
+  release_account_id?: true
 }
 
 export type MarasiCountAggregateInputType = {
@@ -175,6 +190,9 @@ export type MarasiCountAggregateInputType = {
   cancelled_at?: true
   created_at?: true
   updated_at?: true
+  withdrawn?: true
+  withdrawn_at?: true
+  release_account_id?: true
   _all?: true
 }
 
@@ -282,6 +300,9 @@ export type MarasiGroupByOutputType = {
   cancelled_at: Date | null
   created_at: Date
   updated_at: Date
+  withdrawn: boolean
+  withdrawn_at: Date | null
+  release_account_id: string | null
   _count: MarasiCountAggregateOutputType | null
   _avg: MarasiAvgAggregateOutputType | null
   _sum: MarasiSumAggregateOutputType | null
@@ -325,7 +346,11 @@ export type marasiWhereInput = {
   cancelled_at?: Prisma.DateTimeNullableFilter<"marasi"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"marasi"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"marasi"> | Date | string
+  withdrawn?: Prisma.BoolFilter<"marasi"> | boolean
+  withdrawn_at?: Prisma.DateTimeNullableFilter<"marasi"> | Date | string | null
+  release_account_id?: Prisma.UuidNullableFilter<"marasi"> | string | null
   accounts?: Prisma.XOR<Prisma.AccountsScalarRelationFilter, Prisma.accountsWhereInput>
+  accounts_marasi_release_account_idToaccounts?: Prisma.XOR<Prisma.AccountsNullableScalarRelationFilter, Prisma.accountsWhereInput> | null
   users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>
   marasi_notifications?: Prisma.Marasi_notificationsListRelationFilter
   marasi_transactions?: Prisma.Marasi_transactionsListRelationFilter
@@ -349,7 +374,11 @@ export type marasiOrderByWithRelationInput = {
   cancelled_at?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
+  withdrawn?: Prisma.SortOrder
+  withdrawn_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  release_account_id?: Prisma.SortOrderInput | Prisma.SortOrder
   accounts?: Prisma.accountsOrderByWithRelationInput
+  accounts_marasi_release_account_idToaccounts?: Prisma.accountsOrderByWithRelationInput
   users?: Prisma.usersOrderByWithRelationInput
   marasi_notifications?: Prisma.marasi_notificationsOrderByRelationAggregateInput
   marasi_transactions?: Prisma.marasi_transactionsOrderByRelationAggregateInput
@@ -376,7 +405,11 @@ export type marasiWhereUniqueInput = Prisma.AtLeast<{
   cancelled_at?: Prisma.DateTimeNullableFilter<"marasi"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"marasi"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"marasi"> | Date | string
+  withdrawn?: Prisma.BoolFilter<"marasi"> | boolean
+  withdrawn_at?: Prisma.DateTimeNullableFilter<"marasi"> | Date | string | null
+  release_account_id?: Prisma.UuidNullableFilter<"marasi"> | string | null
   accounts?: Prisma.XOR<Prisma.AccountsScalarRelationFilter, Prisma.accountsWhereInput>
+  accounts_marasi_release_account_idToaccounts?: Prisma.XOR<Prisma.AccountsNullableScalarRelationFilter, Prisma.accountsWhereInput> | null
   users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>
   marasi_notifications?: Prisma.Marasi_notificationsListRelationFilter
   marasi_transactions?: Prisma.Marasi_transactionsListRelationFilter
@@ -400,6 +433,9 @@ export type marasiOrderByWithAggregationInput = {
   cancelled_at?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
+  withdrawn?: Prisma.SortOrder
+  withdrawn_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  release_account_id?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.marasiCountOrderByAggregateInput
   _avg?: Prisma.marasiAvgOrderByAggregateInput
   _max?: Prisma.marasiMaxOrderByAggregateInput
@@ -428,6 +464,9 @@ export type marasiScalarWhereWithAggregatesInput = {
   cancelled_at?: Prisma.DateTimeNullableWithAggregatesFilter<"marasi"> | Date | string | null
   created_at?: Prisma.DateTimeWithAggregatesFilter<"marasi"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"marasi"> | Date | string
+  withdrawn?: Prisma.BoolWithAggregatesFilter<"marasi"> | boolean
+  withdrawn_at?: Prisma.DateTimeNullableWithAggregatesFilter<"marasi"> | Date | string | null
+  release_account_id?: Prisma.UuidNullableWithAggregatesFilter<"marasi"> | string | null
 }
 
 export type marasiCreateInput = {
@@ -446,7 +485,10 @@ export type marasiCreateInput = {
   cancelled_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
   accounts: Prisma.accountsCreateNestedOneWithoutMarasiInput
+  accounts_marasi_release_account_idToaccounts?: Prisma.accountsCreateNestedOneWithoutMarasi_marasi_release_account_idToaccountsInput
   users: Prisma.usersCreateNestedOneWithoutMarasiInput
   marasi_notifications?: Prisma.marasi_notificationsCreateNestedManyWithoutMarasiInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutMarasiInput
@@ -470,6 +512,9 @@ export type marasiUncheckedCreateInput = {
   cancelled_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
+  release_account_id?: string | null
   marasi_notifications?: Prisma.marasi_notificationsUncheckedCreateNestedManyWithoutMarasiInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutMarasiInput
 }
@@ -490,7 +535,10 @@ export type marasiUpdateInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.accountsUpdateOneRequiredWithoutMarasiNestedInput
+  accounts_marasi_release_account_idToaccounts?: Prisma.accountsUpdateOneWithoutMarasi_marasi_release_account_idToaccountsNestedInput
   users?: Prisma.usersUpdateOneRequiredWithoutMarasiNestedInput
   marasi_notifications?: Prisma.marasi_notificationsUpdateManyWithoutMarasiNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutMarasiNestedInput
@@ -514,6 +562,9 @@ export type marasiUncheckedUpdateInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  release_account_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   marasi_notifications?: Prisma.marasi_notificationsUncheckedUpdateManyWithoutMarasiNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutMarasiNestedInput
 }
@@ -536,6 +587,9 @@ export type marasiCreateManyInput = {
   cancelled_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
+  release_account_id?: string | null
 }
 
 export type marasiUpdateManyMutationInput = {
@@ -554,6 +608,8 @@ export type marasiUpdateManyMutationInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type marasiUncheckedUpdateManyInput = {
@@ -574,6 +630,9 @@ export type marasiUncheckedUpdateManyInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  release_account_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MarasiListRelationFilter = {
@@ -604,6 +663,9 @@ export type marasiCountOrderByAggregateInput = {
   cancelled_at?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
+  withdrawn?: Prisma.SortOrder
+  withdrawn_at?: Prisma.SortOrder
+  release_account_id?: Prisma.SortOrder
 }
 
 export type marasiAvgOrderByAggregateInput = {
@@ -631,6 +693,9 @@ export type marasiMaxOrderByAggregateInput = {
   cancelled_at?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
+  withdrawn?: Prisma.SortOrder
+  withdrawn_at?: Prisma.SortOrder
+  release_account_id?: Prisma.SortOrder
 }
 
 export type marasiMinOrderByAggregateInput = {
@@ -651,6 +716,9 @@ export type marasiMinOrderByAggregateInput = {
   cancelled_at?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
+  withdrawn?: Prisma.SortOrder
+  withdrawn_at?: Prisma.SortOrder
+  release_account_id?: Prisma.SortOrder
 }
 
 export type marasiSumOrderByAggregateInput = {
@@ -677,10 +745,24 @@ export type marasiCreateNestedManyWithoutAccountsInput = {
   connect?: Prisma.marasiWhereUniqueInput | Prisma.marasiWhereUniqueInput[]
 }
 
+export type marasiCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput = {
+  create?: Prisma.XOR<Prisma.marasiCreateWithoutAccounts_marasi_release_account_idToaccountsInput, Prisma.marasiUncheckedCreateWithoutAccounts_marasi_release_account_idToaccountsInput> | Prisma.marasiCreateWithoutAccounts_marasi_release_account_idToaccountsInput[] | Prisma.marasiUncheckedCreateWithoutAccounts_marasi_release_account_idToaccountsInput[]
+  connectOrCreate?: Prisma.marasiCreateOrConnectWithoutAccounts_marasi_release_account_idToaccountsInput | Prisma.marasiCreateOrConnectWithoutAccounts_marasi_release_account_idToaccountsInput[]
+  createMany?: Prisma.marasiCreateManyAccounts_marasi_release_account_idToaccountsInputEnvelope
+  connect?: Prisma.marasiWhereUniqueInput | Prisma.marasiWhereUniqueInput[]
+}
+
 export type marasiUncheckedCreateNestedManyWithoutAccountsInput = {
   create?: Prisma.XOR<Prisma.marasiCreateWithoutAccountsInput, Prisma.marasiUncheckedCreateWithoutAccountsInput> | Prisma.marasiCreateWithoutAccountsInput[] | Prisma.marasiUncheckedCreateWithoutAccountsInput[]
   connectOrCreate?: Prisma.marasiCreateOrConnectWithoutAccountsInput | Prisma.marasiCreateOrConnectWithoutAccountsInput[]
   createMany?: Prisma.marasiCreateManyAccountsInputEnvelope
+  connect?: Prisma.marasiWhereUniqueInput | Prisma.marasiWhereUniqueInput[]
+}
+
+export type marasiUncheckedCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput = {
+  create?: Prisma.XOR<Prisma.marasiCreateWithoutAccounts_marasi_release_account_idToaccountsInput, Prisma.marasiUncheckedCreateWithoutAccounts_marasi_release_account_idToaccountsInput> | Prisma.marasiCreateWithoutAccounts_marasi_release_account_idToaccountsInput[] | Prisma.marasiUncheckedCreateWithoutAccounts_marasi_release_account_idToaccountsInput[]
+  connectOrCreate?: Prisma.marasiCreateOrConnectWithoutAccounts_marasi_release_account_idToaccountsInput | Prisma.marasiCreateOrConnectWithoutAccounts_marasi_release_account_idToaccountsInput[]
+  createMany?: Prisma.marasiCreateManyAccounts_marasi_release_account_idToaccountsInputEnvelope
   connect?: Prisma.marasiWhereUniqueInput | Prisma.marasiWhereUniqueInput[]
 }
 
@@ -698,6 +780,20 @@ export type marasiUpdateManyWithoutAccountsNestedInput = {
   deleteMany?: Prisma.marasiScalarWhereInput | Prisma.marasiScalarWhereInput[]
 }
 
+export type marasiUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput = {
+  create?: Prisma.XOR<Prisma.marasiCreateWithoutAccounts_marasi_release_account_idToaccountsInput, Prisma.marasiUncheckedCreateWithoutAccounts_marasi_release_account_idToaccountsInput> | Prisma.marasiCreateWithoutAccounts_marasi_release_account_idToaccountsInput[] | Prisma.marasiUncheckedCreateWithoutAccounts_marasi_release_account_idToaccountsInput[]
+  connectOrCreate?: Prisma.marasiCreateOrConnectWithoutAccounts_marasi_release_account_idToaccountsInput | Prisma.marasiCreateOrConnectWithoutAccounts_marasi_release_account_idToaccountsInput[]
+  upsert?: Prisma.marasiUpsertWithWhereUniqueWithoutAccounts_marasi_release_account_idToaccountsInput | Prisma.marasiUpsertWithWhereUniqueWithoutAccounts_marasi_release_account_idToaccountsInput[]
+  createMany?: Prisma.marasiCreateManyAccounts_marasi_release_account_idToaccountsInputEnvelope
+  set?: Prisma.marasiWhereUniqueInput | Prisma.marasiWhereUniqueInput[]
+  disconnect?: Prisma.marasiWhereUniqueInput | Prisma.marasiWhereUniqueInput[]
+  delete?: Prisma.marasiWhereUniqueInput | Prisma.marasiWhereUniqueInput[]
+  connect?: Prisma.marasiWhereUniqueInput | Prisma.marasiWhereUniqueInput[]
+  update?: Prisma.marasiUpdateWithWhereUniqueWithoutAccounts_marasi_release_account_idToaccountsInput | Prisma.marasiUpdateWithWhereUniqueWithoutAccounts_marasi_release_account_idToaccountsInput[]
+  updateMany?: Prisma.marasiUpdateManyWithWhereWithoutAccounts_marasi_release_account_idToaccountsInput | Prisma.marasiUpdateManyWithWhereWithoutAccounts_marasi_release_account_idToaccountsInput[]
+  deleteMany?: Prisma.marasiScalarWhereInput | Prisma.marasiScalarWhereInput[]
+}
+
 export type marasiUncheckedUpdateManyWithoutAccountsNestedInput = {
   create?: Prisma.XOR<Prisma.marasiCreateWithoutAccountsInput, Prisma.marasiUncheckedCreateWithoutAccountsInput> | Prisma.marasiCreateWithoutAccountsInput[] | Prisma.marasiUncheckedCreateWithoutAccountsInput[]
   connectOrCreate?: Prisma.marasiCreateOrConnectWithoutAccountsInput | Prisma.marasiCreateOrConnectWithoutAccountsInput[]
@@ -709,6 +805,20 @@ export type marasiUncheckedUpdateManyWithoutAccountsNestedInput = {
   connect?: Prisma.marasiWhereUniqueInput | Prisma.marasiWhereUniqueInput[]
   update?: Prisma.marasiUpdateWithWhereUniqueWithoutAccountsInput | Prisma.marasiUpdateWithWhereUniqueWithoutAccountsInput[]
   updateMany?: Prisma.marasiUpdateManyWithWhereWithoutAccountsInput | Prisma.marasiUpdateManyWithWhereWithoutAccountsInput[]
+  deleteMany?: Prisma.marasiScalarWhereInput | Prisma.marasiScalarWhereInput[]
+}
+
+export type marasiUncheckedUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput = {
+  create?: Prisma.XOR<Prisma.marasiCreateWithoutAccounts_marasi_release_account_idToaccountsInput, Prisma.marasiUncheckedCreateWithoutAccounts_marasi_release_account_idToaccountsInput> | Prisma.marasiCreateWithoutAccounts_marasi_release_account_idToaccountsInput[] | Prisma.marasiUncheckedCreateWithoutAccounts_marasi_release_account_idToaccountsInput[]
+  connectOrCreate?: Prisma.marasiCreateOrConnectWithoutAccounts_marasi_release_account_idToaccountsInput | Prisma.marasiCreateOrConnectWithoutAccounts_marasi_release_account_idToaccountsInput[]
+  upsert?: Prisma.marasiUpsertWithWhereUniqueWithoutAccounts_marasi_release_account_idToaccountsInput | Prisma.marasiUpsertWithWhereUniqueWithoutAccounts_marasi_release_account_idToaccountsInput[]
+  createMany?: Prisma.marasiCreateManyAccounts_marasi_release_account_idToaccountsInputEnvelope
+  set?: Prisma.marasiWhereUniqueInput | Prisma.marasiWhereUniqueInput[]
+  disconnect?: Prisma.marasiWhereUniqueInput | Prisma.marasiWhereUniqueInput[]
+  delete?: Prisma.marasiWhereUniqueInput | Prisma.marasiWhereUniqueInput[]
+  connect?: Prisma.marasiWhereUniqueInput | Prisma.marasiWhereUniqueInput[]
+  update?: Prisma.marasiUpdateWithWhereUniqueWithoutAccounts_marasi_release_account_idToaccountsInput | Prisma.marasiUpdateWithWhereUniqueWithoutAccounts_marasi_release_account_idToaccountsInput[]
+  updateMany?: Prisma.marasiUpdateManyWithWhereWithoutAccounts_marasi_release_account_idToaccountsInput | Prisma.marasiUpdateManyWithWhereWithoutAccounts_marasi_release_account_idToaccountsInput[]
   deleteMany?: Prisma.marasiScalarWhereInput | Prisma.marasiScalarWhereInput[]
 }
 
@@ -816,6 +926,9 @@ export type marasiCreateWithoutAccountsInput = {
   cancelled_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
+  accounts_marasi_release_account_idToaccounts?: Prisma.accountsCreateNestedOneWithoutMarasi_marasi_release_account_idToaccountsInput
   users: Prisma.usersCreateNestedOneWithoutMarasiInput
   marasi_notifications?: Prisma.marasi_notificationsCreateNestedManyWithoutMarasiInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutMarasiInput
@@ -838,6 +951,9 @@ export type marasiUncheckedCreateWithoutAccountsInput = {
   cancelled_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
+  release_account_id?: string | null
   marasi_notifications?: Prisma.marasi_notificationsUncheckedCreateNestedManyWithoutMarasiInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutMarasiInput
 }
@@ -849,6 +965,64 @@ export type marasiCreateOrConnectWithoutAccountsInput = {
 
 export type marasiCreateManyAccountsInputEnvelope = {
   data: Prisma.marasiCreateManyAccountsInput | Prisma.marasiCreateManyAccountsInput[]
+  skipDuplicates?: boolean
+}
+
+export type marasiCreateWithoutAccounts_marasi_release_account_idToaccountsInput = {
+  id?: string
+  title: string
+  target_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  periodic_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  frequency: $Enums.marsa_frequency
+  target_date: Date | string
+  current_balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.marsa_status
+  failed_attempts?: number
+  next_deposit_at?: Date | string | null
+  paused_at?: Date | string | null
+  reached_at?: Date | string | null
+  cancelled_at?: Date | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
+  accounts: Prisma.accountsCreateNestedOneWithoutMarasiInput
+  users: Prisma.usersCreateNestedOneWithoutMarasiInput
+  marasi_notifications?: Prisma.marasi_notificationsCreateNestedManyWithoutMarasiInput
+  marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutMarasiInput
+}
+
+export type marasiUncheckedCreateWithoutAccounts_marasi_release_account_idToaccountsInput = {
+  id?: string
+  user_id: string
+  account_id: string
+  title: string
+  target_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  periodic_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  frequency: $Enums.marsa_frequency
+  target_date: Date | string
+  current_balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.marsa_status
+  failed_attempts?: number
+  next_deposit_at?: Date | string | null
+  paused_at?: Date | string | null
+  reached_at?: Date | string | null
+  cancelled_at?: Date | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
+  marasi_notifications?: Prisma.marasi_notificationsUncheckedCreateNestedManyWithoutMarasiInput
+  marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutMarasiInput
+}
+
+export type marasiCreateOrConnectWithoutAccounts_marasi_release_account_idToaccountsInput = {
+  where: Prisma.marasiWhereUniqueInput
+  create: Prisma.XOR<Prisma.marasiCreateWithoutAccounts_marasi_release_account_idToaccountsInput, Prisma.marasiUncheckedCreateWithoutAccounts_marasi_release_account_idToaccountsInput>
+}
+
+export type marasiCreateManyAccounts_marasi_release_account_idToaccountsInputEnvelope = {
+  data: Prisma.marasiCreateManyAccounts_marasi_release_account_idToaccountsInput | Prisma.marasiCreateManyAccounts_marasi_release_account_idToaccountsInput[]
   skipDuplicates?: boolean
 }
 
@@ -889,6 +1063,25 @@ export type marasiScalarWhereInput = {
   cancelled_at?: Prisma.DateTimeNullableFilter<"marasi"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"marasi"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"marasi"> | Date | string
+  withdrawn?: Prisma.BoolFilter<"marasi"> | boolean
+  withdrawn_at?: Prisma.DateTimeNullableFilter<"marasi"> | Date | string | null
+  release_account_id?: Prisma.UuidNullableFilter<"marasi"> | string | null
+}
+
+export type marasiUpsertWithWhereUniqueWithoutAccounts_marasi_release_account_idToaccountsInput = {
+  where: Prisma.marasiWhereUniqueInput
+  update: Prisma.XOR<Prisma.marasiUpdateWithoutAccounts_marasi_release_account_idToaccountsInput, Prisma.marasiUncheckedUpdateWithoutAccounts_marasi_release_account_idToaccountsInput>
+  create: Prisma.XOR<Prisma.marasiCreateWithoutAccounts_marasi_release_account_idToaccountsInput, Prisma.marasiUncheckedCreateWithoutAccounts_marasi_release_account_idToaccountsInput>
+}
+
+export type marasiUpdateWithWhereUniqueWithoutAccounts_marasi_release_account_idToaccountsInput = {
+  where: Prisma.marasiWhereUniqueInput
+  data: Prisma.XOR<Prisma.marasiUpdateWithoutAccounts_marasi_release_account_idToaccountsInput, Prisma.marasiUncheckedUpdateWithoutAccounts_marasi_release_account_idToaccountsInput>
+}
+
+export type marasiUpdateManyWithWhereWithoutAccounts_marasi_release_account_idToaccountsInput = {
+  where: Prisma.marasiScalarWhereInput
+  data: Prisma.XOR<Prisma.marasiUpdateManyMutationInput, Prisma.marasiUncheckedUpdateManyWithoutAccounts_marasi_release_account_idToaccountsInput>
 }
 
 export type marasiCreateWithoutMarasi_notificationsInput = {
@@ -907,7 +1100,10 @@ export type marasiCreateWithoutMarasi_notificationsInput = {
   cancelled_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
   accounts: Prisma.accountsCreateNestedOneWithoutMarasiInput
+  accounts_marasi_release_account_idToaccounts?: Prisma.accountsCreateNestedOneWithoutMarasi_marasi_release_account_idToaccountsInput
   users: Prisma.usersCreateNestedOneWithoutMarasiInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutMarasiInput
 }
@@ -930,6 +1126,9 @@ export type marasiUncheckedCreateWithoutMarasi_notificationsInput = {
   cancelled_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
+  release_account_id?: string | null
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutMarasiInput
 }
 
@@ -965,7 +1164,10 @@ export type marasiUpdateWithoutMarasi_notificationsInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.accountsUpdateOneRequiredWithoutMarasiNestedInput
+  accounts_marasi_release_account_idToaccounts?: Prisma.accountsUpdateOneWithoutMarasi_marasi_release_account_idToaccountsNestedInput
   users?: Prisma.usersUpdateOneRequiredWithoutMarasiNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutMarasiNestedInput
 }
@@ -988,6 +1190,9 @@ export type marasiUncheckedUpdateWithoutMarasi_notificationsInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  release_account_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutMarasiNestedInput
 }
 
@@ -1007,7 +1212,10 @@ export type marasiCreateWithoutMarasi_transactionsInput = {
   cancelled_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
   accounts: Prisma.accountsCreateNestedOneWithoutMarasiInput
+  accounts_marasi_release_account_idToaccounts?: Prisma.accountsCreateNestedOneWithoutMarasi_marasi_release_account_idToaccountsInput
   users: Prisma.usersCreateNestedOneWithoutMarasiInput
   marasi_notifications?: Prisma.marasi_notificationsCreateNestedManyWithoutMarasiInput
 }
@@ -1030,6 +1238,9 @@ export type marasiUncheckedCreateWithoutMarasi_transactionsInput = {
   cancelled_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
+  release_account_id?: string | null
   marasi_notifications?: Prisma.marasi_notificationsUncheckedCreateNestedManyWithoutMarasiInput
 }
 
@@ -1065,7 +1276,10 @@ export type marasiUpdateWithoutMarasi_transactionsInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.accountsUpdateOneRequiredWithoutMarasiNestedInput
+  accounts_marasi_release_account_idToaccounts?: Prisma.accountsUpdateOneWithoutMarasi_marasi_release_account_idToaccountsNestedInput
   users?: Prisma.usersUpdateOneRequiredWithoutMarasiNestedInput
   marasi_notifications?: Prisma.marasi_notificationsUpdateManyWithoutMarasiNestedInput
 }
@@ -1088,6 +1302,9 @@ export type marasiUncheckedUpdateWithoutMarasi_transactionsInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  release_account_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   marasi_notifications?: Prisma.marasi_notificationsUncheckedUpdateManyWithoutMarasiNestedInput
 }
 
@@ -1107,7 +1324,10 @@ export type marasiCreateWithoutUsersInput = {
   cancelled_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
   accounts: Prisma.accountsCreateNestedOneWithoutMarasiInput
+  accounts_marasi_release_account_idToaccounts?: Prisma.accountsCreateNestedOneWithoutMarasi_marasi_release_account_idToaccountsInput
   marasi_notifications?: Prisma.marasi_notificationsCreateNestedManyWithoutMarasiInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutMarasiInput
 }
@@ -1129,6 +1349,9 @@ export type marasiUncheckedCreateWithoutUsersInput = {
   cancelled_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
+  release_account_id?: string | null
   marasi_notifications?: Prisma.marasi_notificationsUncheckedCreateNestedManyWithoutMarasiInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutMarasiInput
 }
@@ -1176,6 +1399,31 @@ export type marasiCreateManyAccountsInput = {
   cancelled_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
+  release_account_id?: string | null
+}
+
+export type marasiCreateManyAccounts_marasi_release_account_idToaccountsInput = {
+  id?: string
+  user_id: string
+  account_id: string
+  title: string
+  target_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  periodic_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  frequency: $Enums.marsa_frequency
+  target_date: Date | string
+  current_balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.marsa_status
+  failed_attempts?: number
+  next_deposit_at?: Date | string | null
+  paused_at?: Date | string | null
+  reached_at?: Date | string | null
+  cancelled_at?: Date | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
 }
 
 export type marasiUpdateWithoutAccountsInput = {
@@ -1194,6 +1442,9 @@ export type marasiUpdateWithoutAccountsInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts_marasi_release_account_idToaccounts?: Prisma.accountsUpdateOneWithoutMarasi_marasi_release_account_idToaccountsNestedInput
   users?: Prisma.usersUpdateOneRequiredWithoutMarasiNestedInput
   marasi_notifications?: Prisma.marasi_notificationsUpdateManyWithoutMarasiNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutMarasiNestedInput
@@ -1216,6 +1467,9 @@ export type marasiUncheckedUpdateWithoutAccountsInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  release_account_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   marasi_notifications?: Prisma.marasi_notificationsUncheckedUpdateManyWithoutMarasiNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutMarasiNestedInput
 }
@@ -1237,6 +1491,79 @@ export type marasiUncheckedUpdateManyWithoutAccountsInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  release_account_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type marasiUpdateWithoutAccounts_marasi_release_account_idToaccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  target_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  periodic_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  frequency?: Prisma.Enummarsa_frequencyFieldUpdateOperationsInput | $Enums.marsa_frequency
+  target_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  current_balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.Enummarsa_statusFieldUpdateOperationsInput | $Enums.marsa_status
+  failed_attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  next_deposit_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paused_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reached_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.accountsUpdateOneRequiredWithoutMarasiNestedInput
+  users?: Prisma.usersUpdateOneRequiredWithoutMarasiNestedInput
+  marasi_notifications?: Prisma.marasi_notificationsUpdateManyWithoutMarasiNestedInput
+  marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutMarasiNestedInput
+}
+
+export type marasiUncheckedUpdateWithoutAccounts_marasi_release_account_idToaccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  account_id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  target_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  periodic_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  frequency?: Prisma.Enummarsa_frequencyFieldUpdateOperationsInput | $Enums.marsa_frequency
+  target_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  current_balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.Enummarsa_statusFieldUpdateOperationsInput | $Enums.marsa_status
+  failed_attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  next_deposit_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paused_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reached_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  marasi_notifications?: Prisma.marasi_notificationsUncheckedUpdateManyWithoutMarasiNestedInput
+  marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutMarasiNestedInput
+}
+
+export type marasiUncheckedUpdateManyWithoutAccounts_marasi_release_account_idToaccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  account_id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  target_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  periodic_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  frequency?: Prisma.Enummarsa_frequencyFieldUpdateOperationsInput | $Enums.marsa_frequency
+  target_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  current_balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.Enummarsa_statusFieldUpdateOperationsInput | $Enums.marsa_status
+  failed_attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  next_deposit_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paused_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reached_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type marasiCreateManyUsersInput = {
@@ -1256,6 +1583,9 @@ export type marasiCreateManyUsersInput = {
   cancelled_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  withdrawn?: boolean
+  withdrawn_at?: Date | string | null
+  release_account_id?: string | null
 }
 
 export type marasiUpdateWithoutUsersInput = {
@@ -1274,7 +1604,10 @@ export type marasiUpdateWithoutUsersInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   accounts?: Prisma.accountsUpdateOneRequiredWithoutMarasiNestedInput
+  accounts_marasi_release_account_idToaccounts?: Prisma.accountsUpdateOneWithoutMarasi_marasi_release_account_idToaccountsNestedInput
   marasi_notifications?: Prisma.marasi_notificationsUpdateManyWithoutMarasiNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutMarasiNestedInput
 }
@@ -1296,6 +1629,9 @@ export type marasiUncheckedUpdateWithoutUsersInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  release_account_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   marasi_notifications?: Prisma.marasi_notificationsUncheckedUpdateManyWithoutMarasiNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutMarasiNestedInput
 }
@@ -1317,6 +1653,9 @@ export type marasiUncheckedUpdateManyWithoutUsersInput = {
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  withdrawn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  withdrawn_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  release_account_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1377,7 +1716,11 @@ export type marasiSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   cancelled_at?: boolean
   created_at?: boolean
   updated_at?: boolean
+  withdrawn?: boolean
+  withdrawn_at?: boolean
+  release_account_id?: boolean
   accounts?: boolean | Prisma.accountsDefaultArgs<ExtArgs>
+  accounts_marasi_release_account_idToaccounts?: boolean | Prisma.marasi$accounts_marasi_release_account_idToaccountsArgs<ExtArgs>
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
   marasi_notifications?: boolean | Prisma.marasi$marasi_notificationsArgs<ExtArgs>
   marasi_transactions?: boolean | Prisma.marasi$marasi_transactionsArgs<ExtArgs>
@@ -1402,7 +1745,11 @@ export type marasiSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   cancelled_at?: boolean
   created_at?: boolean
   updated_at?: boolean
+  withdrawn?: boolean
+  withdrawn_at?: boolean
+  release_account_id?: boolean
   accounts?: boolean | Prisma.accountsDefaultArgs<ExtArgs>
+  accounts_marasi_release_account_idToaccounts?: boolean | Prisma.marasi$accounts_marasi_release_account_idToaccountsArgs<ExtArgs>
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["marasi"]>
 
@@ -1424,7 +1771,11 @@ export type marasiSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   cancelled_at?: boolean
   created_at?: boolean
   updated_at?: boolean
+  withdrawn?: boolean
+  withdrawn_at?: boolean
+  release_account_id?: boolean
   accounts?: boolean | Prisma.accountsDefaultArgs<ExtArgs>
+  accounts_marasi_release_account_idToaccounts?: boolean | Prisma.marasi$accounts_marasi_release_account_idToaccountsArgs<ExtArgs>
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["marasi"]>
 
@@ -1446,11 +1797,15 @@ export type marasiSelectScalar = {
   cancelled_at?: boolean
   created_at?: boolean
   updated_at?: boolean
+  withdrawn?: boolean
+  withdrawn_at?: boolean
+  release_account_id?: boolean
 }
 
-export type marasiOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "account_id" | "title" | "target_amount" | "periodic_amount" | "frequency" | "target_date" | "current_balance" | "status" | "failed_attempts" | "next_deposit_at" | "paused_at" | "reached_at" | "cancelled_at" | "created_at" | "updated_at", ExtArgs["result"]["marasi"]>
+export type marasiOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "account_id" | "title" | "target_amount" | "periodic_amount" | "frequency" | "target_date" | "current_balance" | "status" | "failed_attempts" | "next_deposit_at" | "paused_at" | "reached_at" | "cancelled_at" | "created_at" | "updated_at" | "withdrawn" | "withdrawn_at" | "release_account_id", ExtArgs["result"]["marasi"]>
 export type marasiInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.accountsDefaultArgs<ExtArgs>
+  accounts_marasi_release_account_idToaccounts?: boolean | Prisma.marasi$accounts_marasi_release_account_idToaccountsArgs<ExtArgs>
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
   marasi_notifications?: boolean | Prisma.marasi$marasi_notificationsArgs<ExtArgs>
   marasi_transactions?: boolean | Prisma.marasi$marasi_transactionsArgs<ExtArgs>
@@ -1458,10 +1813,12 @@ export type marasiInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 }
 export type marasiIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.accountsDefaultArgs<ExtArgs>
+  accounts_marasi_release_account_idToaccounts?: boolean | Prisma.marasi$accounts_marasi_release_account_idToaccountsArgs<ExtArgs>
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
 }
 export type marasiIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.accountsDefaultArgs<ExtArgs>
+  accounts_marasi_release_account_idToaccounts?: boolean | Prisma.marasi$accounts_marasi_release_account_idToaccountsArgs<ExtArgs>
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
 }
 
@@ -1469,6 +1826,7 @@ export type $marasiPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "marasi"
   objects: {
     accounts: Prisma.$accountsPayload<ExtArgs>
+    accounts_marasi_release_account_idToaccounts: Prisma.$accountsPayload<ExtArgs> | null
     users: Prisma.$usersPayload<ExtArgs>
     marasi_notifications: Prisma.$marasi_notificationsPayload<ExtArgs>[]
     marasi_transactions: Prisma.$marasi_transactionsPayload<ExtArgs>[]
@@ -1491,6 +1849,9 @@ export type $marasiPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     cancelled_at: Date | null
     created_at: Date
     updated_at: Date
+    withdrawn: boolean
+    withdrawn_at: Date | null
+    release_account_id: string | null
   }, ExtArgs["result"]["marasi"]>
   composites: {}
 }
@@ -1886,6 +2247,7 @@ readonly fields: marasiFieldRefs;
 export interface Prisma__marasiClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   accounts<T extends Prisma.accountsDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.accountsDefaultArgs<ExtArgs>>): Prisma.Prisma__accountsClient<runtime.Types.Result.GetResult<Prisma.$accountsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  accounts_marasi_release_account_idToaccounts<T extends Prisma.marasi$accounts_marasi_release_account_idToaccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.marasi$accounts_marasi_release_account_idToaccountsArgs<ExtArgs>>): Prisma.Prisma__accountsClient<runtime.Types.Result.GetResult<Prisma.$accountsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   users<T extends Prisma.usersDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usersDefaultArgs<ExtArgs>>): Prisma.Prisma__usersClient<runtime.Types.Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   marasi_notifications<T extends Prisma.marasi$marasi_notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.marasi$marasi_notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$marasi_notificationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   marasi_transactions<T extends Prisma.marasi$marasi_transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.marasi$marasi_transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$marasi_transactionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1935,6 +2297,9 @@ export interface marasiFieldRefs {
   readonly cancelled_at: Prisma.FieldRef<"marasi", 'DateTime'>
   readonly created_at: Prisma.FieldRef<"marasi", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"marasi", 'DateTime'>
+  readonly withdrawn: Prisma.FieldRef<"marasi", 'Boolean'>
+  readonly withdrawn_at: Prisma.FieldRef<"marasi", 'DateTime'>
+  readonly release_account_id: Prisma.FieldRef<"marasi", 'String'>
 }
     
 
@@ -2333,6 +2698,25 @@ export type marasiDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many marasis to delete.
    */
   limit?: number
+}
+
+/**
+ * marasi.accounts_marasi_release_account_idToaccounts
+ */
+export type marasi$accounts_marasi_release_account_idToaccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the accounts
+   */
+  select?: Prisma.accountsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the accounts
+   */
+  omit?: Prisma.accountsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.accountsInclude<ExtArgs> | null
+  where?: Prisma.accountsWhereInput
 }
 
 /**

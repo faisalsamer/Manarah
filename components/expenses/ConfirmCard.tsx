@@ -91,7 +91,6 @@ export function ConfirmCard({ tx, expense, banks, onConfirm, onSkip }: ConfirmCa
                   inputSize="md"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  currency={commonLabels.currency}
                   placeholder="0.00"
                   autoFocus
                 />

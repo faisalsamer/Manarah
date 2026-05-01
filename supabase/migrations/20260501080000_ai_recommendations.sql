@@ -1,0 +1,6 @@
+ALTER TABLE ai_recommendations 
+ADD COLUMN message TEXT,
+ADD COLUMN action VARCHAR(50),
+ADD COLUMN action_params JSON,
+ADD COLUMN is_applied BOOLEAN DEFAULT FALSE,
+ADD COLUMN applied_at TIMESTAMP;

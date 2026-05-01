@@ -12,6 +12,7 @@ import {
   type SelectHTMLAttributes,
   type TextareaHTMLAttributes,
 } from 'react';
+import { RiyalSign } from './RiyalSign';
 
 // ─── Field wrapper ───────────────────────────────────────────
 export interface FieldProps {
@@ -457,12 +458,16 @@ export function Toggle({
 // ─── MoneyInput ──────────────────────────────────────────────
 export interface MoneyInputProps
   extends Omit<InputProps, 'type' | 'startAdornment' | 'inputMode'> {
-  currency?: string;
+  /**
+   * Override the default Saudi Riyal glyph (e.g. for a future multi-currency
+   * world). Pass any ReactNode — usually omitted.
+   */
+  sign?: ReactNode;
 }
 
 export const MoneyInput = forwardRef<HTMLInputElement, MoneyInputProps>(
   function MoneyInput(
-    { currency = 'SAR', inputSize = 'lg', className = '', ...rest },
+    { sign, inputSize = 'lg', className = '', ...rest },
     ref,
   ) {
     return (
@@ -474,8 +479,8 @@ export const MoneyInput = forwardRef<HTMLInputElement, MoneyInputProps>(
         inputMode="decimal"
         inputSize={inputSize}
         startAdornment={
-          <span className="text-body-sm font-semibold text-text-secondary">
-            {currency}
+          <span className="text-text-secondary">
+            {sign ?? <RiyalSign size="0.9em" />}
           </span>
         }
         className={['font-numbers', className].join(' ')}

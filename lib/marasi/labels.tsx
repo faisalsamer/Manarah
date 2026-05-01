@@ -160,6 +160,7 @@ export const drillLabels = {
   actionCancel: 'إنهاء المدخر',
   actionRetry: 'إعادة المحاولة الآن',
   actionRetryHint: 'سنحاول الخصم مجدداً من الحساب المرتبط.',
+  actionChangeSource: 'تغيير حساب التمويل',
   // Failure banner
   failureBannerTitle: (n: number) =>
     n === 1 ? 'محاولة فاشلة واحدة' : `${n} محاولات فاشلة`,
@@ -189,6 +190,20 @@ export const topUpLabels = {
   insufficientWarning: (current: string | number, owed: string | number): ReactNode => (
     <>الحساب يحتوي على <Money amount={current} /> فقط — أقل من <Money amount={owed} /> المطلوب.</>
   ),
+} as const;
+
+// ─── Change-source modal ─────────────────────────────────────
+export const changeSourceLabels = {
+  eyebrow: 'تغيير حساب التمويل',
+  heading: 'من أي حساب نخصم في الدفعات القادمة؟',
+  helper:
+    'الدفعات التلقائية المُجدولة (التي لم تُنفَّذ بعد) ستُحوَّل لتُسحب من الحساب الجديد.',
+  currentSourceLabel: 'الحساب الحالي',
+  destinationLabel: 'الحساب الجديد',
+  cancel: 'تراجع',
+  confirm: 'تحديث الحساب',
+  /** Disable the confirm button when the user re-picks the same account. */
+  sameAccountHint: 'هذا هو الحساب الحالي بالفعل.',
 } as const;
 
 // ─── Release / cancel modal ──────────────────────────────────
@@ -252,6 +267,12 @@ export const wizardLabels = {
   // Step 3 — frequency
   frequencyHeading: 'كم مرة نخصم؟',
   frequencyHelper: 'كلما زاد التكرار، صغرت الدفعة الواحدة.',
+  /** Error Callout shown when the picked frequency can't reach target in time. */
+  frequencyTooSoonTitle: 'هذا التكرار لن يصل في الموعد',
+  frequencyTooSoonBody: (frequency: MarsaFrequency, days: number) =>
+    `التكرار "${frequencyLabels[frequency]}" يحتاج ${days} يوماً على الأقل بين اليوم وتاريخ الوصول. اختر تكراراً أقصر، أو عُد للخطوة السابقة وعدّل تاريخ الوصول.`,
+  /** Live "first deposit" note shown once a valid frequency is picked. */
+  firstDepositLabel: 'أول دفعة في',
   weeklyTitle: 'أسبوعياً',
   weeklySubtitle: 'دفعات أكثر، أصغر في القيمة',
   weeklyExample: 'الأنسب للأهداف القصيرة',
@@ -266,7 +287,7 @@ export const wizardLabels = {
   planSummary: (amount: string | number, every: string, cycles: string): ReactNode => (
     <>سنحوّل <Money amount={amount} /> {every} لمدة {cycles} حتى تصل إلى هدفك.</>
   ),
-  planMissingDetails: 'أكمل المبلغ والتاريخ في الخطوة السابقة لرؤية الخطة.',
+  planMissingDetails: 'أكمل المبلغ والتاريخ لرؤية الخطة.',
   // Step 4 — source
   sourceHeading: 'من أي حساب نخصم؟',
   sourceHelper: 'هذا الحساب سيُستخدم للدفعات التلقائية والإيداعات اليدوية.',

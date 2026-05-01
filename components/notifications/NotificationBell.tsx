@@ -4,13 +4,7 @@ import { Bell } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 import { Popover } from '@/components/ui/Popover';
 import { useNotifications } from '@/hooks/expenses/useNotifications';
-import { nowClientTimestamptz } from '@/lib/datetime';
-import {
-  MOCK_MARASI,
-  MOCK_MARASI_TRANSACTIONS,
-} from '@/lib/marasi/mock-data';
-import { MOCK_MARASI_NOTIFICATIONS } from '@/lib/marasi/notifications/mock-data';
-import type { MarsaNotificationVM } from '@/lib/marasi/notifications/types';
+import { useMarasiNotifications } from '@/hooks/marasi/useMarasiNotifications';
 import {
   compareFeedItemsDesc,
   type NotificationFeedItem,
@@ -18,32 +12,23 @@ import {
 import { NotificationPanel } from './NotificationPanel';
 
 /**
- * Global notification bell that lives in the app header.
+ * Global notification bell that lives in the app header. Merges streams from
+ * every module (expenses + marasi) into one chronological feed.
  *
- * - **Expenses** notifications come from `/api/notifications` via the
- *   `useNotifications` hook. The notifications carry a `context` snapshot
- *   (joined expense + transaction fields), so the bell doesn't need to fetch
- *   expenses/transactions separately to render them. We pass `undefined` for
- *   the legacy `expense` / `transaction` fields on the FeedItem — the visuals
- *   helpers fall back to `notif.context`.
- *
- * - **Marasi** notifications are still mocks — same pattern as before. When
- *   the marasi backend lands we'll swap to its hook and drop the mock imports.
+ * Both modules' notifications carry a `context` snapshot (joined goal /
+ * expense / transaction fields) baked in by the API — so the bell doesn't
+ * need to fetch goals/expenses/transactions separately to render. We pass
+ * `undefined` for the legacy domain-object fields on the FeedItem; the
+ * visuals helpers fall back to `notif.context`.
  */
 export function NotificationBell() {
   const expenseNotifs = useNotifications();
-  const [marsaNotifs, setMarsaNotifs] =
-    useState<MarsaNotificationVM[]>(MOCK_MARASI_NOTIFICATIONS);
+  const marsaNotifs = useMarasiNotifications();
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   // ── Merge into one chronological feed ──────────────────────
   const items: NotificationFeedItem[] = useMemo(() => {
-    const marasiById = new Map(MOCK_MARASI.map((m) => [m.id, m]));
-    const marasiTxById = new Map(
-      MOCK_MARASI_TRANSACTIONS.map((t) => [t.id, t]),
-    );
-
     const fromExpenses: NotificationFeedItem[] = expenseNotifs.data.map((n) => ({
       source: 'expenses',
       notification: n,
@@ -51,15 +36,15 @@ export function NotificationBell() {
       transaction: undefined,
     }));
 
-    const fromMarasi: NotificationFeedItem[] = marsaNotifs.map((n) => ({
+    const fromMarasi: NotificationFeedItem[] = marsaNotifs.data.map((n) => ({
       source: 'marasi',
       notification: n,
-      marsa: n.marsaId ? marasiById.get(n.marsaId) : undefined,
-      transaction: n.transactionId ? marasiTxById.get(n.transactionId) : undefined,
+      marsa: undefined,
+      transaction: undefined,
     }));
 
     return [...fromExpenses, ...fromMarasi].sort(compareFeedItemsDesc);
-  }, [expenseNotifs.data, marsaNotifs]);
+  }, [expenseNotifs.data, marsaNotifs.data]);
 
   const unreadCount = useMemo(
     () => items.filter((i) => !i.notification.readAt).length,
@@ -73,20 +58,14 @@ export function NotificationBell() {
     if (item.source === 'expenses') {
       void expenseNotifs.markRead(id);
     } else {
-      const now = nowClientTimestamptz();
-      setMarsaNotifs((list) =>
-        list.map((n) => (n.id === id && !n.readAt ? { ...n, readAt: now } : n)),
-      );
+      void marsaNotifs.markRead(id);
     }
     setOpen(false);
   };
 
   const handleMarkAllRead = () => {
     void expenseNotifs.markAllRead();
-    const now = nowClientTimestamptz();
-    setMarsaNotifs((list) =>
-      list.map((n) => (n.readAt ? n : { ...n, readAt: now })),
-    );
+    void marsaNotifs.markAllRead();
   };
 
   return (

@@ -1,0 +1,82 @@
+{
+  "user_id": "CUST001",
+  "full_name": "Ahmed Al-Farsi",
+  "email": "ahmed@example.com",
+  "phone": "+966501234567",
+  "accounts": [
+    {
+      "account_id": "ACC001",
+      "bank_id": "rajhi_bank",
+      "bank_name": "Al Rajhi Bank",
+      "account_type": "salary",
+      "account_number": "SA0380000000608010167519",
+      "current_balance": -9695.85,
+      "available_balance": -9695.85,
+      "currency": "SAR",
+      "status": "active"
+    },
+    {
+      "account_id": "ACC002",
+      "bank_id": "rajhi_bank",
+      "bank_name": "Al Rajhi Bank",
+      "account_type": "savings",
+      "account_number": "SA0380000000608010167520",
+      "current_balance": 45021.38,
+      "available_balance": 45021.38,
+      "currency": "SAR",
+      "status": "active"
+    },
+    {
+      "account_id": "ACC003",
+      "bank_id": "snb_bank",
+      "bank_name": "Saudi National Bank",
+      "account_type": "current",
+      "account_number": "SA0310000000123456789012",
+      "current_balance": -12606.77,
+      "available_balance": -12606.77,
+      "currency": "SAR",
+      "status": "active"
+    }
+  ],
+  "financial_summary": {
+    "total_net_worth": 22718.76,
+    "monthly_income": 3478.61,
+    "monthly_expenses": 5349.71,
+    "current_savings": 45021.38,
+    "available_cash": -22302.62,
+    "total_debt": 0,
+    "savings_rate": -53.79
+  },
+  "savings_goals": [
+    {
+      "goal_id": "goal_1",
+      "name": "Car Purchase",
+      "description": "Save for new car",
+      "target_amount": 30000,
+      "current_amount": 15000,
+      "monthly_contribution": 2000,
+      "target_date": "2027-01-01",
+      "progress_percentage": 50,
+      "status": "active"
+    },
+    {
+      "goal_id": "goal_2",
+      "name": "Emergency Fund",
+      "description": "6 months expenses",
+      "target_amount": 20000,
+      "current_amount": 10000,
+      "monthly_contribution": 500,
+      "target_date": "2026-12-01",
+      "progress_percentage": 50,
+      "status": "active"
+    }
+  ],
+  "zakah_info": {
+    "net_worth_for_zakah": 22718.76,
+    "zakah_due": 567.97,
+    "nisab_threshold": 7480,
+    "is_due": true,
+    "last_paid": "2025-04-01",
+    "next_due": "2026-04-01"
+  }
+}

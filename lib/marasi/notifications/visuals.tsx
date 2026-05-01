@@ -37,23 +37,34 @@ export interface NotificationDisplay {
 }
 
 /**
- * Build the Arabic title/body for a marasi notification given the linked
- * Marsa + transaction.
+ * Build the Arabic title/body for a marasi notification.
+ * Prefers the joined `notif.context` (set by the API), falls back to the
+ * passed-in marsa + transaction (used by the cross-module bell while we
+ * still resolve them client-side from mock data).
  */
 export function buildMarsaNotificationDisplay(
   notif: MarsaNotificationVM,
-  marsa: MarsaVM | undefined,
-  tx: MarsaTransactionVM | undefined,
+  marsa?: MarsaVM,
+  tx?: MarsaTransactionVM,
 ): NotificationDisplay {
-  const goalTitle = marsa?.title ?? 'مدخر';
-  const txAmount = tx?.amount ?? marsa?.periodicAmount ?? null;
+  const ctx = notif.context;
+  const goalTitle = ctx?.marsaTitle ?? marsa?.title ?? 'مدخر';
+  const targetAmount = ctx?.marsaTargetAmount ?? marsa?.targetAmount ?? null;
+  const txAmount = ctx?.txAmount ?? tx?.amount ?? marsa?.periodicAmount ?? null;
+  const failureReason = ctx?.txFailureReason ?? tx?.failureReason ?? null;
+  const progressPct = (() => {
+    const target = ctx?.marsaTargetAmount ?? marsa?.targetAmount;
+    const current = ctx?.marsaCurrentBalance ?? marsa?.currentBalance;
+    if (!target || !current) return null;
+    return marsaProgress({ targetAmount: target, currentBalance: current });
+  })();
 
   switch (notif.type) {
     case 'deposit_failed':
       return {
         title: `فشل إيداع ${goalTitle}`,
-        body: tx?.failureReason
-          ? `السبب: ${tx.failureReason}. سنُعيد المحاولة تلقائياً.`
+        body: failureReason
+          ? `السبب: ${failureReason}. سنُعيد المحاولة تلقائياً.`
           : 'سنُعيد المحاولة تلقائياً خلال الساعات القادمة.',
       };
     case 'all_retries_exhausted':
@@ -64,14 +75,14 @@ export function buildMarsaNotificationDisplay(
     case 'goal_reached':
       return {
         title: `${goalTitle} اكتمل`,
-        body: marsa ? (
-          <>بلغ رصيدك <Money amount={marsa.targetAmount} />. يمكنك تحويله إلى أي حساب.</>
+        body: targetAmount ? (
+          <>بلغ رصيدك <Money amount={targetAmount} />. يمكنك تحويله إلى أي حساب.</>
         ) : (
           'تهانينا! بلغت هدفك.'
         ),
       };
     case 'milestone_reached': {
-      const pct = marsa ? Math.floor(marsaProgress(marsa) / 25) * 25 : null;
+      const pct = progressPct != null ? Math.floor(progressPct / 25) * 25 : null;
       return {
         title: `${goalTitle} تجاوز ${pct ?? 25}%`,
         body: 'الادخار يسير في الموعد — تابع كما أنت.',

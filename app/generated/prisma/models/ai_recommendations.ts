@@ -33,6 +33,10 @@ export type Ai_recommendationsMinAggregateOutputType = {
   priority: string | null
   is_dismissed: boolean | null
   created_at: Date | null
+  message: string | null
+  action: string | null
+  is_applied: boolean | null
+  applied_at: Date | null
 }
 
 export type Ai_recommendationsMaxAggregateOutputType = {
@@ -44,6 +48,10 @@ export type Ai_recommendationsMaxAggregateOutputType = {
   priority: string | null
   is_dismissed: boolean | null
   created_at: Date | null
+  message: string | null
+  action: string | null
+  is_applied: boolean | null
+  applied_at: Date | null
 }
 
 export type Ai_recommendationsCountAggregateOutputType = {
@@ -55,6 +63,11 @@ export type Ai_recommendationsCountAggregateOutputType = {
   priority: number
   is_dismissed: number
   created_at: number
+  message: number
+  action: number
+  action_params: number
+  is_applied: number
+  applied_at: number
   _all: number
 }
 
@@ -68,6 +81,10 @@ export type Ai_recommendationsMinAggregateInputType = {
   priority?: true
   is_dismissed?: true
   created_at?: true
+  message?: true
+  action?: true
+  is_applied?: true
+  applied_at?: true
 }
 
 export type Ai_recommendationsMaxAggregateInputType = {
@@ -79,6 +96,10 @@ export type Ai_recommendationsMaxAggregateInputType = {
   priority?: true
   is_dismissed?: true
   created_at?: true
+  message?: true
+  action?: true
+  is_applied?: true
+  applied_at?: true
 }
 
 export type Ai_recommendationsCountAggregateInputType = {
@@ -90,6 +111,11 @@ export type Ai_recommendationsCountAggregateInputType = {
   priority?: true
   is_dismissed?: true
   created_at?: true
+  message?: true
+  action?: true
+  action_params?: true
+  is_applied?: true
+  applied_at?: true
   _all?: true
 }
 
@@ -174,6 +200,11 @@ export type Ai_recommendationsGroupByOutputType = {
   priority: string
   is_dismissed: boolean
   created_at: Date
+  message: string | null
+  action: string | null
+  action_params: runtime.JsonValue | null
+  is_applied: boolean | null
+  applied_at: Date | null
   _count: Ai_recommendationsCountAggregateOutputType | null
   _min: Ai_recommendationsMinAggregateOutputType | null
   _max: Ai_recommendationsMaxAggregateOutputType | null
@@ -206,6 +237,11 @@ export type ai_recommendationsWhereInput = {
   priority?: Prisma.StringFilter<"ai_recommendations"> | string
   is_dismissed?: Prisma.BoolFilter<"ai_recommendations"> | boolean
   created_at?: Prisma.DateTimeFilter<"ai_recommendations"> | Date | string
+  message?: Prisma.StringNullableFilter<"ai_recommendations"> | string | null
+  action?: Prisma.StringNullableFilter<"ai_recommendations"> | string | null
+  action_params?: Prisma.JsonNullableFilter<"ai_recommendations">
+  is_applied?: Prisma.BoolNullableFilter<"ai_recommendations"> | boolean | null
+  applied_at?: Prisma.DateTimeNullableFilter<"ai_recommendations"> | Date | string | null
   users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>
 }
 
@@ -218,6 +254,11 @@ export type ai_recommendationsOrderByWithRelationInput = {
   priority?: Prisma.SortOrder
   is_dismissed?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  message?: Prisma.SortOrderInput | Prisma.SortOrder
+  action?: Prisma.SortOrderInput | Prisma.SortOrder
+  action_params?: Prisma.SortOrderInput | Prisma.SortOrder
+  is_applied?: Prisma.SortOrderInput | Prisma.SortOrder
+  applied_at?: Prisma.SortOrderInput | Prisma.SortOrder
   users?: Prisma.usersOrderByWithRelationInput
 }
 
@@ -233,6 +274,11 @@ export type ai_recommendationsWhereUniqueInput = Prisma.AtLeast<{
   priority?: Prisma.StringFilter<"ai_recommendations"> | string
   is_dismissed?: Prisma.BoolFilter<"ai_recommendations"> | boolean
   created_at?: Prisma.DateTimeFilter<"ai_recommendations"> | Date | string
+  message?: Prisma.StringNullableFilter<"ai_recommendations"> | string | null
+  action?: Prisma.StringNullableFilter<"ai_recommendations"> | string | null
+  action_params?: Prisma.JsonNullableFilter<"ai_recommendations">
+  is_applied?: Prisma.BoolNullableFilter<"ai_recommendations"> | boolean | null
+  applied_at?: Prisma.DateTimeNullableFilter<"ai_recommendations"> | Date | string | null
   users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>
 }, "id">
 
@@ -245,6 +291,11 @@ export type ai_recommendationsOrderByWithAggregationInput = {
   priority?: Prisma.SortOrder
   is_dismissed?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  message?: Prisma.SortOrderInput | Prisma.SortOrder
+  action?: Prisma.SortOrderInput | Prisma.SortOrder
+  action_params?: Prisma.SortOrderInput | Prisma.SortOrder
+  is_applied?: Prisma.SortOrderInput | Prisma.SortOrder
+  applied_at?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ai_recommendationsCountOrderByAggregateInput
   _max?: Prisma.ai_recommendationsMaxOrderByAggregateInput
   _min?: Prisma.ai_recommendationsMinOrderByAggregateInput
@@ -262,6 +313,11 @@ export type ai_recommendationsScalarWhereWithAggregatesInput = {
   priority?: Prisma.StringWithAggregatesFilter<"ai_recommendations"> | string
   is_dismissed?: Prisma.BoolWithAggregatesFilter<"ai_recommendations"> | boolean
   created_at?: Prisma.DateTimeWithAggregatesFilter<"ai_recommendations"> | Date | string
+  message?: Prisma.StringNullableWithAggregatesFilter<"ai_recommendations"> | string | null
+  action?: Prisma.StringNullableWithAggregatesFilter<"ai_recommendations"> | string | null
+  action_params?: Prisma.JsonNullableWithAggregatesFilter<"ai_recommendations">
+  is_applied?: Prisma.BoolNullableWithAggregatesFilter<"ai_recommendations"> | boolean | null
+  applied_at?: Prisma.DateTimeNullableWithAggregatesFilter<"ai_recommendations"> | Date | string | null
 }
 
 export type ai_recommendationsCreateInput = {
@@ -272,6 +328,11 @@ export type ai_recommendationsCreateInput = {
   priority: string
   is_dismissed?: boolean
   created_at?: Date | string
+  message?: string | null
+  action?: string | null
+  action_params?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  is_applied?: boolean | null
+  applied_at?: Date | string | null
   users: Prisma.usersCreateNestedOneWithoutAi_recommendationsInput
 }
 
@@ -284,6 +345,11 @@ export type ai_recommendationsUncheckedCreateInput = {
   priority: string
   is_dismissed?: boolean
   created_at?: Date | string
+  message?: string | null
+  action?: string | null
+  action_params?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  is_applied?: boolean | null
+  applied_at?: Date | string | null
 }
 
 export type ai_recommendationsUpdateInput = {
@@ -294,6 +360,11 @@ export type ai_recommendationsUpdateInput = {
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   is_dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action_params?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  is_applied?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  applied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.usersUpdateOneRequiredWithoutAi_recommendationsNestedInput
 }
 
@@ -306,6 +377,11 @@ export type ai_recommendationsUncheckedUpdateInput = {
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   is_dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action_params?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  is_applied?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  applied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ai_recommendationsCreateManyInput = {
@@ -317,6 +393,11 @@ export type ai_recommendationsCreateManyInput = {
   priority: string
   is_dismissed?: boolean
   created_at?: Date | string
+  message?: string | null
+  action?: string | null
+  action_params?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  is_applied?: boolean | null
+  applied_at?: Date | string | null
 }
 
 export type ai_recommendationsUpdateManyMutationInput = {
@@ -327,6 +408,11 @@ export type ai_recommendationsUpdateManyMutationInput = {
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   is_dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action_params?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  is_applied?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  applied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ai_recommendationsUncheckedUpdateManyInput = {
@@ -338,6 +424,11 @@ export type ai_recommendationsUncheckedUpdateManyInput = {
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   is_dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action_params?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  is_applied?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  applied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ai_recommendationsCountOrderByAggregateInput = {
@@ -349,6 +440,11 @@ export type ai_recommendationsCountOrderByAggregateInput = {
   priority?: Prisma.SortOrder
   is_dismissed?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  message?: Prisma.SortOrder
+  action?: Prisma.SortOrder
+  action_params?: Prisma.SortOrder
+  is_applied?: Prisma.SortOrder
+  applied_at?: Prisma.SortOrder
 }
 
 export type ai_recommendationsMaxOrderByAggregateInput = {
@@ -360,6 +456,10 @@ export type ai_recommendationsMaxOrderByAggregateInput = {
   priority?: Prisma.SortOrder
   is_dismissed?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  message?: Prisma.SortOrder
+  action?: Prisma.SortOrder
+  is_applied?: Prisma.SortOrder
+  applied_at?: Prisma.SortOrder
 }
 
 export type ai_recommendationsMinOrderByAggregateInput = {
@@ -371,6 +471,10 @@ export type ai_recommendationsMinOrderByAggregateInput = {
   priority?: Prisma.SortOrder
   is_dismissed?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  message?: Prisma.SortOrder
+  action?: Prisma.SortOrder
+  is_applied?: Prisma.SortOrder
+  applied_at?: Prisma.SortOrder
 }
 
 export type Ai_recommendationsListRelationFilter = {
@@ -381,6 +485,14 @@ export type Ai_recommendationsListRelationFilter = {
 
 export type ai_recommendationsOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type ai_recommendationsCreateNestedManyWithoutUsersInput = {
@@ -433,6 +545,11 @@ export type ai_recommendationsCreateWithoutUsersInput = {
   priority: string
   is_dismissed?: boolean
   created_at?: Date | string
+  message?: string | null
+  action?: string | null
+  action_params?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  is_applied?: boolean | null
+  applied_at?: Date | string | null
 }
 
 export type ai_recommendationsUncheckedCreateWithoutUsersInput = {
@@ -443,6 +560,11 @@ export type ai_recommendationsUncheckedCreateWithoutUsersInput = {
   priority: string
   is_dismissed?: boolean
   created_at?: Date | string
+  message?: string | null
+  action?: string | null
+  action_params?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  is_applied?: boolean | null
+  applied_at?: Date | string | null
 }
 
 export type ai_recommendationsCreateOrConnectWithoutUsersInput = {
@@ -483,6 +605,11 @@ export type ai_recommendationsScalarWhereInput = {
   priority?: Prisma.StringFilter<"ai_recommendations"> | string
   is_dismissed?: Prisma.BoolFilter<"ai_recommendations"> | boolean
   created_at?: Prisma.DateTimeFilter<"ai_recommendations"> | Date | string
+  message?: Prisma.StringNullableFilter<"ai_recommendations"> | string | null
+  action?: Prisma.StringNullableFilter<"ai_recommendations"> | string | null
+  action_params?: Prisma.JsonNullableFilter<"ai_recommendations">
+  is_applied?: Prisma.BoolNullableFilter<"ai_recommendations"> | boolean | null
+  applied_at?: Prisma.DateTimeNullableFilter<"ai_recommendations"> | Date | string | null
 }
 
 export type ai_recommendationsCreateManyUsersInput = {
@@ -493,6 +620,11 @@ export type ai_recommendationsCreateManyUsersInput = {
   priority: string
   is_dismissed?: boolean
   created_at?: Date | string
+  message?: string | null
+  action?: string | null
+  action_params?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  is_applied?: boolean | null
+  applied_at?: Date | string | null
 }
 
 export type ai_recommendationsUpdateWithoutUsersInput = {
@@ -503,6 +635,11 @@ export type ai_recommendationsUpdateWithoutUsersInput = {
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   is_dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action_params?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  is_applied?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  applied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ai_recommendationsUncheckedUpdateWithoutUsersInput = {
@@ -513,6 +650,11 @@ export type ai_recommendationsUncheckedUpdateWithoutUsersInput = {
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   is_dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action_params?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  is_applied?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  applied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ai_recommendationsUncheckedUpdateManyWithoutUsersInput = {
@@ -523,6 +665,11 @@ export type ai_recommendationsUncheckedUpdateManyWithoutUsersInput = {
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   is_dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action_params?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  is_applied?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  applied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -536,6 +683,11 @@ export type ai_recommendationsSelect<ExtArgs extends runtime.Types.Extensions.In
   priority?: boolean
   is_dismissed?: boolean
   created_at?: boolean
+  message?: boolean
+  action?: boolean
+  action_params?: boolean
+  is_applied?: boolean
+  applied_at?: boolean
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ai_recommendations"]>
 
@@ -548,6 +700,11 @@ export type ai_recommendationsSelectCreateManyAndReturn<ExtArgs extends runtime.
   priority?: boolean
   is_dismissed?: boolean
   created_at?: boolean
+  message?: boolean
+  action?: boolean
+  action_params?: boolean
+  is_applied?: boolean
+  applied_at?: boolean
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ai_recommendations"]>
 
@@ -560,6 +717,11 @@ export type ai_recommendationsSelectUpdateManyAndReturn<ExtArgs extends runtime.
   priority?: boolean
   is_dismissed?: boolean
   created_at?: boolean
+  message?: boolean
+  action?: boolean
+  action_params?: boolean
+  is_applied?: boolean
+  applied_at?: boolean
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ai_recommendations"]>
 
@@ -572,9 +734,14 @@ export type ai_recommendationsSelectScalar = {
   priority?: boolean
   is_dismissed?: boolean
   created_at?: boolean
+  message?: boolean
+  action?: boolean
+  action_params?: boolean
+  is_applied?: boolean
+  applied_at?: boolean
 }
 
-export type ai_recommendationsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "recommendation_type" | "title" | "description" | "priority" | "is_dismissed" | "created_at", ExtArgs["result"]["ai_recommendations"]>
+export type ai_recommendationsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "recommendation_type" | "title" | "description" | "priority" | "is_dismissed" | "created_at" | "message" | "action" | "action_params" | "is_applied" | "applied_at", ExtArgs["result"]["ai_recommendations"]>
 export type ai_recommendationsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.usersDefaultArgs<ExtArgs>
 }
@@ -599,6 +766,11 @@ export type $ai_recommendationsPayload<ExtArgs extends runtime.Types.Extensions.
     priority: string
     is_dismissed: boolean
     created_at: Date
+    message: string | null
+    action: string | null
+    action_params: runtime.JsonValue | null
+    is_applied: boolean | null
+    applied_at: Date | null
   }, ExtArgs["result"]["ai_recommendations"]>
   composites: {}
 }
@@ -1031,6 +1203,11 @@ export interface ai_recommendationsFieldRefs {
   readonly priority: Prisma.FieldRef<"ai_recommendations", 'String'>
   readonly is_dismissed: Prisma.FieldRef<"ai_recommendations", 'Boolean'>
   readonly created_at: Prisma.FieldRef<"ai_recommendations", 'DateTime'>
+  readonly message: Prisma.FieldRef<"ai_recommendations", 'String'>
+  readonly action: Prisma.FieldRef<"ai_recommendations", 'String'>
+  readonly action_params: Prisma.FieldRef<"ai_recommendations", 'Json'>
+  readonly is_applied: Prisma.FieldRef<"ai_recommendations", 'Boolean'>
+  readonly applied_at: Prisma.FieldRef<"ai_recommendations", 'DateTime'>
 }
     
 

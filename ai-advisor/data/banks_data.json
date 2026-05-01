@@ -1,0 +1,216 @@
+{
+  "banks": [
+    {
+      "bank_id": "rajhi_bank",
+      "bank_name": "Al Rajhi Bank",
+      "bank_name_ar": "مصرف الراجحي",
+      "bank_code": "RJHI",
+      "swift_code": "RJHISARI",
+      "country": "SA",
+      "type": "Islamic",
+      "founded": "1957",
+      "website": "https://www.alrajhibank.com.sa",
+      "is_user_connected": true,
+      "customers": [
+        {
+          "customer_id": "CUST001",
+          "full_name": "Ahmed Al-Farsi",
+          "username": "ahmed.alfarsi",
+          "email": "ahmed@example.com",
+          "phone": "+966501234567",
+          "national_id": "1234567890",
+          "status": "active",
+          "customer_since": "2020-01-15",
+          "accounts": [
+            {
+              "account_id": "ACC001",
+              "account_number": "SA0380000000608010167519",
+              "iban": "SA0380000000608010167519",
+              "account_type": "salary",
+              "account_name": "Salary Account",
+              "currency": "SAR",
+              "balance": 12450.3,
+              "available_balance": 12450.3,
+              "status": "active",
+              "opened_date": "2020-01-15",
+              "is_primary": true,
+              "monthly_limit": 50000,
+              "daily_limit": 10000
+            },
+            {
+              "account_id": "ACC002",
+              "account_number": "SA0380000000608010167520",
+              "iban": "SA0380000000608010167520",
+              "account_type": "savings",
+              "account_name": "Savings Account",
+              "currency": "SAR",
+              "balance": 38200.0,
+              "available_balance": 38200.0,
+              "status": "active",
+              "opened_date": "2020-01-15",
+              "is_primary": false,
+              "interest_rate": 0,
+              "monthly_limit": 20000,
+              "daily_limit": 5000
+            }
+          ],
+          "total_balance": 50650.3
+        }
+      ]
+    },
+    {
+      "bank_id": "snb_bank",
+      "bank_name": "Saudi National Bank",
+      "bank_name_ar": "البنك الأهلي السعودي",
+      "bank_code": "SNB",
+      "swift_code": "NCBKSAJE",
+      "country": "SA",
+      "type": "Commercial",
+      "founded": "1953",
+      "website": "https://www.alahli.com",
+      "is_user_connected": true,
+      "customers": [
+        {
+          "customer_id": "CUST001",
+          "full_name": "Ahmed Al-Farsi",
+          "username": "ahmed.alfarsi",
+          "email": "ahmed@example.com",
+          "phone": "+966501234567",
+          "national_id": "1234567890",
+          "status": "active",
+          "customer_since": "2019-03-20",
+          "accounts": [
+            {
+              "account_id": "ACC003",
+              "account_number": "SA0310000000123456789012",
+              "iban": "SA0310000000123456789012",
+              "account_type": "current",
+              "account_name": "Current Account",
+              "currency": "SAR",
+              "balance": 8200.0,
+              "available_balance": 8200.0,
+              "status": "active",
+              "opened_date": "2019-03-20",
+              "is_primary": false,
+              "monthly_limit": 30000,
+              "daily_limit": 8000
+            }
+          ],
+          "total_balance": 8200.0
+        }
+      ]
+    },
+    {
+      "bank_id": "riyad_bank",
+      "bank_name": "Riyad Bank",
+      "bank_name_ar": "بنك الرياض",
+      "bank_code": "RIBL",
+      "swift_code": "RIBLSARI",
+      "country": "SA",
+      "type": "Commercial",
+      "founded": "1957",
+      "website": "https://www.riyadbank.com",
+      "is_user_connected": false,
+      "customers": []
+    },
+    {
+      "bank_id": "banque_saudi_fransi",
+      "bank_name": "Banque Saudi Fransi",
+      "bank_name_ar": "البنك السعودي الفرنسي",
+      "bank_code": "BSFR",
+      "swift_code": "BSFRSARI",
+      "country": "SA",
+      "type": "Commercial",
+      "founded": "1977",
+      "website": "https://www.alfransi.com.sa",
+      "is_user_connected": false,
+      "customers": []
+    },
+    {
+      "bank_id": "saib_bank",
+      "bank_name": "Saudi Investment Bank",
+      "bank_name_ar": "البنك السعودي للاستثمار",
+      "bank_code": "SAIB",
+      "swift_code": "SIBCSARI",
+      "country": "SA",
+      "type": "Commercial",
+      "founded": "1976",
+      "website": "https://www.saib.com.sa",
+      "is_user_connected": false,
+      "customers": []
+    },
+    {
+      "bank_id": "alinma_bank",
+      "bank_name": "Alinma Bank",
+      "bank_name_ar": "مصرف الإنماء",
+      "bank_code": "ALIN",
+      "swift_code": "INMASARI",
+      "country": "SA",
+      "type": "Islamic",
+      "founded": "2006",
+      "website": "https://www.alinma.com",
+      "is_user_connected": false,
+      "customers": []
+    },
+    {
+      "bank_id": "aljazira_bank",
+      "bank_name": "Bank AlJazira",
+      "bank_name_ar": "بنك الجزيرة",
+      "bank_code": "BAJA",
+      "swift_code": "BJAZSAR",
+      "country": "SA",
+      "type": "Islamic",
+      "founded": "1975",
+      "website": "https://www.baj.com.sa",
+      "is_user_connected": false,
+      "customers": []
+    },
+    {
+      "bank_id": "sabb_bank",
+      "bank_name": "Saudi British Bank",
+      "bank_name_ar": "البنك السعودي البريطاني",
+      "bank_code": "SABB",
+      "swift_code": "SABBSARI",
+      "country": "SA",
+      "type": "Commercial",
+      "founded": "1978",
+      "website": "https://www.sabb.com",
+      "is_user_connected": false,
+      "customers": []
+    },
+    {
+      "bank_id": "anb_bank",
+      "bank_name": "Arab National Bank",
+      "bank_name_ar": "البنك العربي الوطني",
+      "bank_code": "ARNB",
+      "swift_code": "ARNBSARI",
+      "country": "SA",
+      "type": "Commercial",
+      "founded": "1979",
+      "website": "https://www.anb.com.sa",
+      "is_user_connected": false,
+      "customers": []
+    },
+    {
+      "bank_id": "albilad_bank",
+      "bank_name": "Bank AlBilad",
+      "bank_name_ar": "بنك البلاد",
+      "bank_code": "ALBI",
+      "swift_code": "ALBISARI",
+      "country": "SA",
+      "type": "Islamic",
+      "founded": "2004",
+      "website": "https://www.bankalbilad.com",
+      "is_user_connected": false,
+      "customers": []
+    }
+  ],
+  "metadata": {
+    "total_banks": 10,
+    "connected_banks": 2,
+    "total_accounts": 3,
+    "last_updated": "2026-04-28",
+    "country": "Saudi Arabia",
+    "currency": "SAR"
+  }
+}

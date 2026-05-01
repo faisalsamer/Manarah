@@ -53,9 +53,14 @@ export const calcPlan = (
   if (diffDays < 1) return null;
 
   const periodDays = DAYS_PER_PERIOD[frequency];
+  const firstDeposit = new Date(today.getTime() + periodDays * MS_PER_DAY);
+  // The first auto-debit lands one period after creation. If that's already
+  // past target_date, no auto-debit can run before the deadline and the
+  // orchestrator would never materialize anything — refuse the plan.
+  if (firstDeposit > end) return null;
+
   const cycles = Math.max(1, Math.ceil(diffDays / periodDays));
   const periodicAmount = remaining / cycles;
-  const firstDeposit = new Date(today.getTime() + periodDays * MS_PER_DAY);
 
   return {
     periodicAmount,
@@ -64,6 +69,9 @@ export const calcPlan = (
     firstDepositDate: toIsoDate(firstDeposit),
   };
 };
+
+// ─── Frequency cadence (re-exported for the wizard's date-min math) ──
+export const daysPerPeriod = (f: MarsaFrequency): number => DAYS_PER_PERIOD[f];
 
 // ─── Marsa derivations ───────────────────────────────────────
 export const marsaProgress = (m: Pick<MarsaVM, 'currentBalance' | 'targetAmount'>): number => {

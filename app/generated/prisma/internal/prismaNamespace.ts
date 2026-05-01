@@ -2178,7 +2178,8 @@ export const AccountsScalarFieldEnum = {
   created_at: 'created_at',
   account_name: 'account_name',
   iban: 'iban',
-  is_primary: 'is_primary'
+  is_primary: 'is_primary',
+  is_active: 'is_active'
 } as const
 
 export type AccountsScalarFieldEnum = (typeof AccountsScalarFieldEnum)[keyof typeof AccountsScalarFieldEnum]
@@ -2192,7 +2193,12 @@ export const Ai_recommendationsScalarFieldEnum = {
   description: 'description',
   priority: 'priority',
   is_dismissed: 'is_dismissed',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  message: 'message',
+  action: 'action',
+  action_params: 'action_params',
+  is_applied: 'is_applied',
+  applied_at: 'applied_at'
 } as const
 
 export type Ai_recommendationsScalarFieldEnum = (typeof Ai_recommendationsScalarFieldEnum)[keyof typeof Ai_recommendationsScalarFieldEnum]
@@ -2264,7 +2270,10 @@ export const MarasiScalarFieldEnum = {
   reached_at: 'reached_at',
   cancelled_at: 'cancelled_at',
   created_at: 'created_at',
-  updated_at: 'updated_at'
+  updated_at: 'updated_at',
+  withdrawn: 'withdrawn',
+  withdrawn_at: 'withdrawn_at',
+  release_account_id: 'release_account_id'
 } as const
 
 export type MarasiScalarFieldEnum = (typeof MarasiScalarFieldEnum)[keyof typeof MarasiScalarFieldEnum]
@@ -2669,6 +2678,20 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
  * Reference to a field of type 'expense_notification_type'
  */
 export type Enumexpense_notification_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'expense_notification_type'>
@@ -2749,20 +2772,6 @@ export type Enummarsa_attempt_statusFieldRefInput<$PrismaModel> = FieldRefInputT
  * Reference to a field of type 'marsa_attempt_status[]'
  */
 export type ListEnummarsa_attempt_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'marsa_attempt_status[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 

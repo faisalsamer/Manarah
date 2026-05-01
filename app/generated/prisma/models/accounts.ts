@@ -46,6 +46,7 @@ export type AccountsMinAggregateOutputType = {
   account_name: string | null
   iban: string | null
   is_primary: boolean | null
+  is_active: boolean | null
 }
 
 export type AccountsMaxAggregateOutputType = {
@@ -60,6 +61,7 @@ export type AccountsMaxAggregateOutputType = {
   account_name: string | null
   iban: string | null
   is_primary: boolean | null
+  is_active: boolean | null
 }
 
 export type AccountsCountAggregateOutputType = {
@@ -74,6 +76,7 @@ export type AccountsCountAggregateOutputType = {
   account_name: number
   iban: number
   is_primary: number
+  is_active: number
   _all: number
 }
 
@@ -98,6 +101,7 @@ export type AccountsMinAggregateInputType = {
   account_name?: true
   iban?: true
   is_primary?: true
+  is_active?: true
 }
 
 export type AccountsMaxAggregateInputType = {
@@ -112,6 +116,7 @@ export type AccountsMaxAggregateInputType = {
   account_name?: true
   iban?: true
   is_primary?: true
+  is_active?: true
 }
 
 export type AccountsCountAggregateInputType = {
@@ -126,6 +131,7 @@ export type AccountsCountAggregateInputType = {
   account_name?: true
   iban?: true
   is_primary?: true
+  is_active?: true
   _all?: true
 }
 
@@ -227,6 +233,7 @@ export type AccountsGroupByOutputType = {
   account_name: string | null
   iban: string | null
   is_primary: boolean
+  is_active: boolean
   _count: AccountsCountAggregateOutputType | null
   _avg: AccountsAvgAggregateOutputType | null
   _sum: AccountsSumAggregateOutputType | null
@@ -264,8 +271,10 @@ export type accountsWhereInput = {
   account_name?: Prisma.StringNullableFilter<"accounts"> | string | null
   iban?: Prisma.StringNullableFilter<"accounts"> | string | null
   is_primary?: Prisma.BoolFilter<"accounts"> | boolean
+  is_active?: Prisma.BoolFilter<"accounts"> | boolean
   banks?: Prisma.XOR<Prisma.BanksScalarRelationFilter, Prisma.banksWhereInput>
   marasi?: Prisma.MarasiListRelationFilter
+  marasi_marasi_release_account_idToaccounts?: Prisma.MarasiListRelationFilter
   marasi_transactions?: Prisma.Marasi_transactionsListRelationFilter
   payment_transactions?: Prisma.Payment_transactionsListRelationFilter
   recurring_expenses?: Prisma.Recurring_expensesListRelationFilter
@@ -284,8 +293,10 @@ export type accountsOrderByWithRelationInput = {
   account_name?: Prisma.SortOrderInput | Prisma.SortOrder
   iban?: Prisma.SortOrderInput | Prisma.SortOrder
   is_primary?: Prisma.SortOrder
+  is_active?: Prisma.SortOrder
   banks?: Prisma.banksOrderByWithRelationInput
   marasi?: Prisma.marasiOrderByRelationAggregateInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiOrderByRelationAggregateInput
   marasi_transactions?: Prisma.marasi_transactionsOrderByRelationAggregateInput
   payment_transactions?: Prisma.payment_transactionsOrderByRelationAggregateInput
   recurring_expenses?: Prisma.recurring_expensesOrderByRelationAggregateInput
@@ -307,8 +318,10 @@ export type accountsWhereUniqueInput = Prisma.AtLeast<{
   account_name?: Prisma.StringNullableFilter<"accounts"> | string | null
   iban?: Prisma.StringNullableFilter<"accounts"> | string | null
   is_primary?: Prisma.BoolFilter<"accounts"> | boolean
+  is_active?: Prisma.BoolFilter<"accounts"> | boolean
   banks?: Prisma.XOR<Prisma.BanksScalarRelationFilter, Prisma.banksWhereInput>
   marasi?: Prisma.MarasiListRelationFilter
+  marasi_marasi_release_account_idToaccounts?: Prisma.MarasiListRelationFilter
   marasi_transactions?: Prisma.Marasi_transactionsListRelationFilter
   payment_transactions?: Prisma.Payment_transactionsListRelationFilter
   recurring_expenses?: Prisma.Recurring_expensesListRelationFilter
@@ -327,6 +340,7 @@ export type accountsOrderByWithAggregationInput = {
   account_name?: Prisma.SortOrderInput | Prisma.SortOrder
   iban?: Prisma.SortOrderInput | Prisma.SortOrder
   is_primary?: Prisma.SortOrder
+  is_active?: Prisma.SortOrder
   _count?: Prisma.accountsCountOrderByAggregateInput
   _avg?: Prisma.accountsAvgOrderByAggregateInput
   _max?: Prisma.accountsMaxOrderByAggregateInput
@@ -349,6 +363,7 @@ export type accountsScalarWhereWithAggregatesInput = {
   account_name?: Prisma.StringNullableWithAggregatesFilter<"accounts"> | string | null
   iban?: Prisma.StringNullableWithAggregatesFilter<"accounts"> | string | null
   is_primary?: Prisma.BoolWithAggregatesFilter<"accounts"> | boolean
+  is_active?: Prisma.BoolWithAggregatesFilter<"accounts"> | boolean
 }
 
 export type accountsCreateInput = {
@@ -362,8 +377,10 @@ export type accountsCreateInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
   banks: Prisma.banksCreateNestedOneWithoutAccountsInput
   marasi?: Prisma.marasiCreateNestedManyWithoutAccountsInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesCreateNestedManyWithoutAccountsInput
@@ -382,7 +399,9 @@ export type accountsUncheckedCreateInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
   marasi?: Prisma.marasiUncheckedCreateNestedManyWithoutAccountsInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedCreateNestedManyWithoutAccountsInput
@@ -400,8 +419,10 @@ export type accountsUpdateInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   banks?: Prisma.banksUpdateOneRequiredWithoutAccountsNestedInput
   marasi?: Prisma.marasiUpdateManyWithoutAccountsNestedInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUpdateManyWithoutAccountsNestedInput
@@ -420,7 +441,9 @@ export type accountsUncheckedUpdateInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUncheckedUpdateManyWithoutAccountsNestedInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedUpdateManyWithoutAccountsNestedInput
@@ -439,6 +462,7 @@ export type accountsCreateManyInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
 }
 
 export type accountsUpdateManyMutationInput = {
@@ -452,6 +476,7 @@ export type accountsUpdateManyMutationInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type accountsUncheckedUpdateManyInput = {
@@ -466,6 +491,7 @@ export type accountsUncheckedUpdateManyInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type accountsCountOrderByAggregateInput = {
@@ -480,6 +506,7 @@ export type accountsCountOrderByAggregateInput = {
   account_name?: Prisma.SortOrder
   iban?: Prisma.SortOrder
   is_primary?: Prisma.SortOrder
+  is_active?: Prisma.SortOrder
 }
 
 export type accountsAvgOrderByAggregateInput = {
@@ -498,6 +525,7 @@ export type accountsMaxOrderByAggregateInput = {
   account_name?: Prisma.SortOrder
   iban?: Prisma.SortOrder
   is_primary?: Prisma.SortOrder
+  is_active?: Prisma.SortOrder
 }
 
 export type accountsMinOrderByAggregateInput = {
@@ -512,6 +540,7 @@ export type accountsMinOrderByAggregateInput = {
   account_name?: Prisma.SortOrder
   iban?: Prisma.SortOrder
   is_primary?: Prisma.SortOrder
+  is_active?: Prisma.SortOrder
 }
 
 export type accountsSumOrderByAggregateInput = {
@@ -610,12 +639,28 @@ export type accountsCreateNestedOneWithoutMarasiInput = {
   connect?: Prisma.accountsWhereUniqueInput
 }
 
+export type accountsCreateNestedOneWithoutMarasi_marasi_release_account_idToaccountsInput = {
+  create?: Prisma.XOR<Prisma.accountsCreateWithoutMarasi_marasi_release_account_idToaccountsInput, Prisma.accountsUncheckedCreateWithoutMarasi_marasi_release_account_idToaccountsInput>
+  connectOrCreate?: Prisma.accountsCreateOrConnectWithoutMarasi_marasi_release_account_idToaccountsInput
+  connect?: Prisma.accountsWhereUniqueInput
+}
+
 export type accountsUpdateOneRequiredWithoutMarasiNestedInput = {
   create?: Prisma.XOR<Prisma.accountsCreateWithoutMarasiInput, Prisma.accountsUncheckedCreateWithoutMarasiInput>
   connectOrCreate?: Prisma.accountsCreateOrConnectWithoutMarasiInput
   upsert?: Prisma.accountsUpsertWithoutMarasiInput
   connect?: Prisma.accountsWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.accountsUpdateToOneWithWhereWithoutMarasiInput, Prisma.accountsUpdateWithoutMarasiInput>, Prisma.accountsUncheckedUpdateWithoutMarasiInput>
+}
+
+export type accountsUpdateOneWithoutMarasi_marasi_release_account_idToaccountsNestedInput = {
+  create?: Prisma.XOR<Prisma.accountsCreateWithoutMarasi_marasi_release_account_idToaccountsInput, Prisma.accountsUncheckedCreateWithoutMarasi_marasi_release_account_idToaccountsInput>
+  connectOrCreate?: Prisma.accountsCreateOrConnectWithoutMarasi_marasi_release_account_idToaccountsInput
+  upsert?: Prisma.accountsUpsertWithoutMarasi_marasi_release_account_idToaccountsInput
+  disconnect?: Prisma.accountsWhereInput | boolean
+  delete?: Prisma.accountsWhereInput | boolean
+  connect?: Prisma.accountsWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.accountsUpdateToOneWithWhereWithoutMarasi_marasi_release_account_idToaccountsInput, Prisma.accountsUpdateWithoutMarasi_marasi_release_account_idToaccountsInput>, Prisma.accountsUncheckedUpdateWithoutMarasi_marasi_release_account_idToaccountsInput>
 }
 
 export type accountsCreateNestedOneWithoutMarasi_transactionsInput = {
@@ -687,7 +732,9 @@ export type accountsCreateWithoutBanksInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
   marasi?: Prisma.marasiCreateNestedManyWithoutAccountsInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesCreateNestedManyWithoutAccountsInput
@@ -705,7 +752,9 @@ export type accountsUncheckedCreateWithoutBanksInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
   marasi?: Prisma.marasiUncheckedCreateNestedManyWithoutAccountsInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedCreateNestedManyWithoutAccountsInput
@@ -753,6 +802,7 @@ export type accountsScalarWhereInput = {
   account_name?: Prisma.StringNullableFilter<"accounts"> | string | null
   iban?: Prisma.StringNullableFilter<"accounts"> | string | null
   is_primary?: Prisma.BoolFilter<"accounts"> | boolean
+  is_active?: Prisma.BoolFilter<"accounts"> | boolean
 }
 
 export type accountsCreateWithoutMarasiInput = {
@@ -766,7 +816,9 @@ export type accountsCreateWithoutMarasiInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
   banks: Prisma.banksCreateNestedOneWithoutAccountsInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesCreateNestedManyWithoutAccountsInput
@@ -785,6 +837,8 @@ export type accountsUncheckedCreateWithoutMarasiInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedCreateNestedManyWithoutAccountsInput
@@ -794,6 +848,51 @@ export type accountsUncheckedCreateWithoutMarasiInput = {
 export type accountsCreateOrConnectWithoutMarasiInput = {
   where: Prisma.accountsWhereUniqueInput
   create: Prisma.XOR<Prisma.accountsCreateWithoutMarasiInput, Prisma.accountsUncheckedCreateWithoutMarasiInput>
+}
+
+export type accountsCreateWithoutMarasi_marasi_release_account_idToaccountsInput = {
+  id?: string
+  account_id: string
+  account_number: string
+  account_type: string
+  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
+  is_active?: boolean
+  banks: Prisma.banksCreateNestedOneWithoutAccountsInput
+  marasi?: Prisma.marasiCreateNestedManyWithoutAccountsInput
+  marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutAccountsInput
+  payment_transactions?: Prisma.payment_transactionsCreateNestedManyWithoutAccountsInput
+  recurring_expenses?: Prisma.recurring_expensesCreateNestedManyWithoutAccountsInput
+  zakat_payments?: Prisma.zakat_paymentsCreateNestedManyWithoutAccountsInput
+}
+
+export type accountsUncheckedCreateWithoutMarasi_marasi_release_account_idToaccountsInput = {
+  id?: string
+  bank_id: string
+  account_id: string
+  account_number: string
+  account_type: string
+  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  created_at?: Date | string
+  account_name?: string | null
+  iban?: string | null
+  is_primary?: boolean
+  is_active?: boolean
+  marasi?: Prisma.marasiUncheckedCreateNestedManyWithoutAccountsInput
+  marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutAccountsInput
+  payment_transactions?: Prisma.payment_transactionsUncheckedCreateNestedManyWithoutAccountsInput
+  recurring_expenses?: Prisma.recurring_expensesUncheckedCreateNestedManyWithoutAccountsInput
+  zakat_payments?: Prisma.zakat_paymentsUncheckedCreateNestedManyWithoutAccountsInput
+}
+
+export type accountsCreateOrConnectWithoutMarasi_marasi_release_account_idToaccountsInput = {
+  where: Prisma.accountsWhereUniqueInput
+  create: Prisma.XOR<Prisma.accountsCreateWithoutMarasi_marasi_release_account_idToaccountsInput, Prisma.accountsUncheckedCreateWithoutMarasi_marasi_release_account_idToaccountsInput>
 }
 
 export type accountsUpsertWithoutMarasiInput = {
@@ -818,7 +917,9 @@ export type accountsUpdateWithoutMarasiInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   banks?: Prisma.banksUpdateOneRequiredWithoutAccountsNestedInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUpdateManyWithoutAccountsNestedInput
@@ -837,6 +938,59 @@ export type accountsUncheckedUpdateWithoutMarasiInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
+  marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
+  payment_transactions?: Prisma.payment_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
+  recurring_expenses?: Prisma.recurring_expensesUncheckedUpdateManyWithoutAccountsNestedInput
+  zakat_payments?: Prisma.zakat_paymentsUncheckedUpdateManyWithoutAccountsNestedInput
+}
+
+export type accountsUpsertWithoutMarasi_marasi_release_account_idToaccountsInput = {
+  update: Prisma.XOR<Prisma.accountsUpdateWithoutMarasi_marasi_release_account_idToaccountsInput, Prisma.accountsUncheckedUpdateWithoutMarasi_marasi_release_account_idToaccountsInput>
+  create: Prisma.XOR<Prisma.accountsCreateWithoutMarasi_marasi_release_account_idToaccountsInput, Prisma.accountsUncheckedCreateWithoutMarasi_marasi_release_account_idToaccountsInput>
+  where?: Prisma.accountsWhereInput
+}
+
+export type accountsUpdateToOneWithWhereWithoutMarasi_marasi_release_account_idToaccountsInput = {
+  where?: Prisma.accountsWhereInput
+  data: Prisma.XOR<Prisma.accountsUpdateWithoutMarasi_marasi_release_account_idToaccountsInput, Prisma.accountsUncheckedUpdateWithoutMarasi_marasi_release_account_idToaccountsInput>
+}
+
+export type accountsUpdateWithoutMarasi_marasi_release_account_idToaccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  account_id?: Prisma.StringFieldUpdateOperationsInput | string
+  account_number?: Prisma.StringFieldUpdateOperationsInput | string
+  account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banks?: Prisma.banksUpdateOneRequiredWithoutAccountsNestedInput
+  marasi?: Prisma.marasiUpdateManyWithoutAccountsNestedInput
+  marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutAccountsNestedInput
+  payment_transactions?: Prisma.payment_transactionsUpdateManyWithoutAccountsNestedInput
+  recurring_expenses?: Prisma.recurring_expensesUpdateManyWithoutAccountsNestedInput
+  zakat_payments?: Prisma.zakat_paymentsUpdateManyWithoutAccountsNestedInput
+}
+
+export type accountsUncheckedUpdateWithoutMarasi_marasi_release_account_idToaccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  bank_id?: Prisma.StringFieldUpdateOperationsInput | string
+  account_id?: Prisma.StringFieldUpdateOperationsInput | string
+  account_number?: Prisma.StringFieldUpdateOperationsInput | string
+  account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marasi?: Prisma.marasiUncheckedUpdateManyWithoutAccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedUpdateManyWithoutAccountsNestedInput
@@ -854,8 +1008,10 @@ export type accountsCreateWithoutMarasi_transactionsInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
   banks: Prisma.banksCreateNestedOneWithoutAccountsInput
   marasi?: Prisma.marasiCreateNestedManyWithoutAccountsInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   payment_transactions?: Prisma.payment_transactionsCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesCreateNestedManyWithoutAccountsInput
   zakat_payments?: Prisma.zakat_paymentsCreateNestedManyWithoutAccountsInput
@@ -873,7 +1029,9 @@ export type accountsUncheckedCreateWithoutMarasi_transactionsInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
   marasi?: Prisma.marasiUncheckedCreateNestedManyWithoutAccountsInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   payment_transactions?: Prisma.payment_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedCreateNestedManyWithoutAccountsInput
   zakat_payments?: Prisma.zakat_paymentsUncheckedCreateNestedManyWithoutAccountsInput
@@ -906,8 +1064,10 @@ export type accountsUpdateWithoutMarasi_transactionsInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   banks?: Prisma.banksUpdateOneRequiredWithoutAccountsNestedInput
   marasi?: Prisma.marasiUpdateManyWithoutAccountsNestedInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUpdateManyWithoutAccountsNestedInput
   zakat_payments?: Prisma.zakat_paymentsUpdateManyWithoutAccountsNestedInput
@@ -925,7 +1085,9 @@ export type accountsUncheckedUpdateWithoutMarasi_transactionsInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUncheckedUpdateManyWithoutAccountsNestedInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedUpdateManyWithoutAccountsNestedInput
   zakat_payments?: Prisma.zakat_paymentsUncheckedUpdateManyWithoutAccountsNestedInput
@@ -942,8 +1104,10 @@ export type accountsCreateWithoutPayment_transactionsInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
   banks: Prisma.banksCreateNestedOneWithoutAccountsInput
   marasi?: Prisma.marasiCreateNestedManyWithoutAccountsInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesCreateNestedManyWithoutAccountsInput
   zakat_payments?: Prisma.zakat_paymentsCreateNestedManyWithoutAccountsInput
@@ -961,7 +1125,9 @@ export type accountsUncheckedCreateWithoutPayment_transactionsInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
   marasi?: Prisma.marasiUncheckedCreateNestedManyWithoutAccountsInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedCreateNestedManyWithoutAccountsInput
   zakat_payments?: Prisma.zakat_paymentsUncheckedCreateNestedManyWithoutAccountsInput
@@ -994,8 +1160,10 @@ export type accountsUpdateWithoutPayment_transactionsInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   banks?: Prisma.banksUpdateOneRequiredWithoutAccountsNestedInput
   marasi?: Prisma.marasiUpdateManyWithoutAccountsNestedInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUpdateManyWithoutAccountsNestedInput
   zakat_payments?: Prisma.zakat_paymentsUpdateManyWithoutAccountsNestedInput
@@ -1013,7 +1181,9 @@ export type accountsUncheckedUpdateWithoutPayment_transactionsInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUncheckedUpdateManyWithoutAccountsNestedInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedUpdateManyWithoutAccountsNestedInput
   zakat_payments?: Prisma.zakat_paymentsUncheckedUpdateManyWithoutAccountsNestedInput
@@ -1030,8 +1200,10 @@ export type accountsCreateWithoutRecurring_expensesInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
   banks: Prisma.banksCreateNestedOneWithoutAccountsInput
   marasi?: Prisma.marasiCreateNestedManyWithoutAccountsInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsCreateNestedManyWithoutAccountsInput
   zakat_payments?: Prisma.zakat_paymentsCreateNestedManyWithoutAccountsInput
@@ -1049,7 +1221,9 @@ export type accountsUncheckedCreateWithoutRecurring_expensesInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
   marasi?: Prisma.marasiUncheckedCreateNestedManyWithoutAccountsInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   zakat_payments?: Prisma.zakat_paymentsUncheckedCreateNestedManyWithoutAccountsInput
@@ -1082,8 +1256,10 @@ export type accountsUpdateWithoutRecurring_expensesInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   banks?: Prisma.banksUpdateOneRequiredWithoutAccountsNestedInput
   marasi?: Prisma.marasiUpdateManyWithoutAccountsNestedInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUpdateManyWithoutAccountsNestedInput
   zakat_payments?: Prisma.zakat_paymentsUpdateManyWithoutAccountsNestedInput
@@ -1101,7 +1277,9 @@ export type accountsUncheckedUpdateWithoutRecurring_expensesInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUncheckedUpdateManyWithoutAccountsNestedInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   zakat_payments?: Prisma.zakat_paymentsUncheckedUpdateManyWithoutAccountsNestedInput
@@ -1118,8 +1296,10 @@ export type accountsCreateWithoutZakat_paymentsInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
   banks: Prisma.banksCreateNestedOneWithoutAccountsInput
   marasi?: Prisma.marasiCreateNestedManyWithoutAccountsInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   marasi_transactions?: Prisma.marasi_transactionsCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesCreateNestedManyWithoutAccountsInput
@@ -1137,7 +1317,9 @@ export type accountsUncheckedCreateWithoutZakat_paymentsInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
   marasi?: Prisma.marasiUncheckedCreateNestedManyWithoutAccountsInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedCreateNestedManyWithoutAccounts_marasi_release_account_idToaccountsInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   payment_transactions?: Prisma.payment_transactionsUncheckedCreateNestedManyWithoutAccountsInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedCreateNestedManyWithoutAccountsInput
@@ -1170,8 +1352,10 @@ export type accountsUpdateWithoutZakat_paymentsInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   banks?: Prisma.banksUpdateOneRequiredWithoutAccountsNestedInput
   marasi?: Prisma.marasiUpdateManyWithoutAccountsNestedInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUpdateManyWithoutAccountsNestedInput
@@ -1189,7 +1373,9 @@ export type accountsUncheckedUpdateWithoutZakat_paymentsInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUncheckedUpdateManyWithoutAccountsNestedInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedUpdateManyWithoutAccountsNestedInput
@@ -1206,6 +1392,7 @@ export type accountsCreateManyBanksInput = {
   account_name?: string | null
   iban?: string | null
   is_primary?: boolean
+  is_active?: boolean
 }
 
 export type accountsUpdateWithoutBanksInput = {
@@ -1219,7 +1406,9 @@ export type accountsUpdateWithoutBanksInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUpdateManyWithoutAccountsNestedInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUpdateManyWithoutAccountsNestedInput
@@ -1237,7 +1426,9 @@ export type accountsUncheckedUpdateWithoutBanksInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   marasi?: Prisma.marasiUncheckedUpdateManyWithoutAccountsNestedInput
+  marasi_marasi_release_account_idToaccounts?: Prisma.marasiUncheckedUpdateManyWithoutAccounts_marasi_release_account_idToaccountsNestedInput
   marasi_transactions?: Prisma.marasi_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   payment_transactions?: Prisma.payment_transactionsUncheckedUpdateManyWithoutAccountsNestedInput
   recurring_expenses?: Prisma.recurring_expensesUncheckedUpdateManyWithoutAccountsNestedInput
@@ -1255,6 +1446,7 @@ export type accountsUncheckedUpdateManyWithoutBanksInput = {
   account_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   is_primary?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -1264,6 +1456,7 @@ export type accountsUncheckedUpdateManyWithoutBanksInput = {
 
 export type AccountsCountOutputType = {
   marasi: number
+  marasi_marasi_release_account_idToaccounts: number
   marasi_transactions: number
   payment_transactions: number
   recurring_expenses: number
@@ -1272,6 +1465,7 @@ export type AccountsCountOutputType = {
 
 export type AccountsCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   marasi?: boolean | AccountsCountOutputTypeCountMarasiArgs
+  marasi_marasi_release_account_idToaccounts?: boolean | AccountsCountOutputTypeCountMarasi_marasi_release_account_idToaccountsArgs
   marasi_transactions?: boolean | AccountsCountOutputTypeCountMarasi_transactionsArgs
   payment_transactions?: boolean | AccountsCountOutputTypeCountPayment_transactionsArgs
   recurring_expenses?: boolean | AccountsCountOutputTypeCountRecurring_expensesArgs
@@ -1292,6 +1486,13 @@ export type AccountsCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
  * AccountsCountOutputType without action
  */
 export type AccountsCountOutputTypeCountMarasiArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.marasiWhereInput
+}
+
+/**
+ * AccountsCountOutputType without action
+ */
+export type AccountsCountOutputTypeCountMarasi_marasi_release_account_idToaccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.marasiWhereInput
 }
 
@@ -1336,8 +1537,10 @@ export type accountsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   account_name?: boolean
   iban?: boolean
   is_primary?: boolean
+  is_active?: boolean
   banks?: boolean | Prisma.banksDefaultArgs<ExtArgs>
   marasi?: boolean | Prisma.accounts$marasiArgs<ExtArgs>
+  marasi_marasi_release_account_idToaccounts?: boolean | Prisma.accounts$marasi_marasi_release_account_idToaccountsArgs<ExtArgs>
   marasi_transactions?: boolean | Prisma.accounts$marasi_transactionsArgs<ExtArgs>
   payment_transactions?: boolean | Prisma.accounts$payment_transactionsArgs<ExtArgs>
   recurring_expenses?: boolean | Prisma.accounts$recurring_expensesArgs<ExtArgs>
@@ -1357,6 +1560,7 @@ export type accountsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   account_name?: boolean
   iban?: boolean
   is_primary?: boolean
+  is_active?: boolean
   banks?: boolean | Prisma.banksDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["accounts"]>
 
@@ -1372,6 +1576,7 @@ export type accountsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   account_name?: boolean
   iban?: boolean
   is_primary?: boolean
+  is_active?: boolean
   banks?: boolean | Prisma.banksDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["accounts"]>
 
@@ -1387,12 +1592,14 @@ export type accountsSelectScalar = {
   account_name?: boolean
   iban?: boolean
   is_primary?: boolean
+  is_active?: boolean
 }
 
-export type accountsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bank_id" | "account_id" | "account_number" | "account_type" | "balance" | "currency" | "created_at" | "account_name" | "iban" | "is_primary", ExtArgs["result"]["accounts"]>
+export type accountsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bank_id" | "account_id" | "account_number" | "account_type" | "balance" | "currency" | "created_at" | "account_name" | "iban" | "is_primary" | "is_active", ExtArgs["result"]["accounts"]>
 export type accountsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   banks?: boolean | Prisma.banksDefaultArgs<ExtArgs>
   marasi?: boolean | Prisma.accounts$marasiArgs<ExtArgs>
+  marasi_marasi_release_account_idToaccounts?: boolean | Prisma.accounts$marasi_marasi_release_account_idToaccountsArgs<ExtArgs>
   marasi_transactions?: boolean | Prisma.accounts$marasi_transactionsArgs<ExtArgs>
   payment_transactions?: boolean | Prisma.accounts$payment_transactionsArgs<ExtArgs>
   recurring_expenses?: boolean | Prisma.accounts$recurring_expensesArgs<ExtArgs>
@@ -1411,6 +1618,7 @@ export type $accountsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     banks: Prisma.$banksPayload<ExtArgs>
     marasi: Prisma.$marasiPayload<ExtArgs>[]
+    marasi_marasi_release_account_idToaccounts: Prisma.$marasiPayload<ExtArgs>[]
     marasi_transactions: Prisma.$marasi_transactionsPayload<ExtArgs>[]
     payment_transactions: Prisma.$payment_transactionsPayload<ExtArgs>[]
     recurring_expenses: Prisma.$recurring_expensesPayload<ExtArgs>[]
@@ -1428,6 +1636,7 @@ export type $accountsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     account_name: string | null
     iban: string | null
     is_primary: boolean
+    is_active: boolean
   }, ExtArgs["result"]["accounts"]>
   composites: {}
 }
@@ -1824,6 +2033,7 @@ export interface Prisma__accountsClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   banks<T extends Prisma.banksDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.banksDefaultArgs<ExtArgs>>): Prisma.Prisma__banksClient<runtime.Types.Result.GetResult<Prisma.$banksPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   marasi<T extends Prisma.accounts$marasiArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.accounts$marasiArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$marasiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  marasi_marasi_release_account_idToaccounts<T extends Prisma.accounts$marasi_marasi_release_account_idToaccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.accounts$marasi_marasi_release_account_idToaccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$marasiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   marasi_transactions<T extends Prisma.accounts$marasi_transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.accounts$marasi_transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$marasi_transactionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payment_transactions<T extends Prisma.accounts$payment_transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.accounts$payment_transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$payment_transactionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   recurring_expenses<T extends Prisma.accounts$recurring_expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.accounts$recurring_expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$recurring_expensesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1868,6 +2078,7 @@ export interface accountsFieldRefs {
   readonly account_name: Prisma.FieldRef<"accounts", 'String'>
   readonly iban: Prisma.FieldRef<"accounts", 'String'>
   readonly is_primary: Prisma.FieldRef<"accounts", 'Boolean'>
+  readonly is_active: Prisma.FieldRef<"accounts", 'Boolean'>
 }
     
 
@@ -2272,6 +2483,30 @@ export type accountsDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
  * accounts.marasi
  */
 export type accounts$marasiArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the marasi
+   */
+  select?: Prisma.marasiSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the marasi
+   */
+  omit?: Prisma.marasiOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.marasiInclude<ExtArgs> | null
+  where?: Prisma.marasiWhereInput
+  orderBy?: Prisma.marasiOrderByWithRelationInput | Prisma.marasiOrderByWithRelationInput[]
+  cursor?: Prisma.marasiWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MarasiScalarFieldEnum | Prisma.MarasiScalarFieldEnum[]
+}
+
+/**
+ * accounts.marasi_marasi_release_account_idToaccounts
+ */
+export type accounts$marasi_marasi_release_account_idToaccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the marasi
    */

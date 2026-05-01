@@ -39,6 +39,11 @@ const TAREQ = {
 // The customer_id in `banks_data.json` that represents Tareq across banks.
 const CUSTOMER_ID = 'CUST001';
 
+// Which banks to link to the user. CUST001 exists at multiple banks in the
+// dummy data, but the seed only links the subset listed here — keeps the
+// demo focused on one bank/account so the picker stays simple.
+const LINKED_BANK_IDS = ['snb_bank'] as const;
+
 // ─── JSON shape (only the fields we read) ────────────────────
 interface BankFileAccount {
   account_id: string;
@@ -94,8 +99,10 @@ async function seedUserAndBanks(): Promise<{ userId: string; accountUuidByExtern
   });
   console.log(`  user.id = ${user.id}`);
 
-  const linkedBanks = data.banks.filter((b) =>
-    b.customers.some((c) => c.customer_id === CUSTOMER_ID),
+  const linkedBanks = data.banks.filter(
+    (b) =>
+      LINKED_BANK_IDS.includes(b.bank_id as (typeof LINKED_BANK_IDS)[number]) &&
+      b.customers.some((c) => c.customer_id === CUSTOMER_ID),
   );
   if (linkedBanks.length === 0) {
     console.warn(
@@ -232,8 +239,8 @@ const fixtures: ExpenseFixture[] = [
   {
     title: 'اشتراك Netflix',
     description: 'باقة العائلة',
-    bankExternalId: 'rajhi_bank',
-    accountExternalId: 'ACC001',
+    bankExternalId: 'snb_bank',
+    accountExternalId: 'ACC003',
     amountType: 'fixed',
     amount: '55.90',
     unit: 'month',
@@ -249,12 +256,12 @@ const fixtures: ExpenseFixture[] = [
         amount: '55.90',
         status: 'succeeded',
         retryCount: 0,
-        bankRef: 'RJH-2026020500088',
+        bankRef: 'SNB-2026020500088',
         failureReason: null,
         note: null,
         resolvedManually: false,
         attempts: [
-          { status: 'succeeded', message: 'تم تفويض الدفع من مصرف الراجحي · المرجع RJH-2026020500088', offsetMinutes: 0 },
+          { status: 'succeeded', message: 'تم تفويض الدفع من البنك الأهلي · المرجع SNB-2026020500088', offsetMinutes: 0 },
         ],
       },
       {
@@ -263,13 +270,13 @@ const fixtures: ExpenseFixture[] = [
         amount: '55.90',
         status: 'succeeded',
         retryCount: 1,
-        bankRef: 'RJH-2026030512012',
+        bankRef: 'SNB-2026030512012',
         failureReason: null,
         note: 'نجح في المحاولة الثانية',
         resolvedManually: false,
         attempts: [
           { status: 'failed', message: 'انتهت مهلة بوابة البنك — لا استجابة خلال 30 ثانية', offsetMinutes: 0 },
-          { status: 'succeeded', message: 'إعادة محاولة 1/3 — تم تفويض الدفع · المرجع RJH-2026030512012', offsetMinutes: 181 },
+          { status: 'succeeded', message: 'إعادة محاولة 1/3 — تم تفويض الدفع · المرجع SNB-2026030512012', offsetMinutes: 181 },
         ],
       },
       {
@@ -278,12 +285,12 @@ const fixtures: ExpenseFixture[] = [
         amount: '55.90',
         status: 'succeeded',
         retryCount: 0,
-        bankRef: 'RJH-2026040500142',
+        bankRef: 'SNB-2026040500142',
         failureReason: null,
         note: null,
         resolvedManually: false,
         attempts: [
-          { status: 'succeeded', message: 'تم تفويض الدفع من مصرف الراجحي · المرجع RJH-2026040500142', offsetMinutes: 0 },
+          { status: 'succeeded', message: 'تم تفويض الدفع من البنك الأهلي · المرجع SNB-2026040500142', offsetMinutes: 0 },
         ],
       },
       {
@@ -450,8 +457,8 @@ const fixtures: ExpenseFixture[] = [
   {
     title: 'اشتراك Spotify',
     description: 'باقة فردية',
-    bankExternalId: 'rajhi_bank',
-    accountExternalId: 'ACC001',
+    bankExternalId: 'snb_bank',
+    accountExternalId: 'ACC003',
     amountType: 'fixed',
     amount: '14.90',
     unit: 'month',
@@ -467,12 +474,12 @@ const fixtures: ExpenseFixture[] = [
         amount: '14.90',
         status: 'succeeded',
         retryCount: 0,
-        bankRef: 'RJH-2026021200122',
+        bankRef: 'SNB-2026021200122',
         failureReason: null,
         note: null,
         resolvedManually: false,
         attempts: [
-          { status: 'succeeded', message: 'تم تفويض الدفع من مصرف الراجحي · المرجع RJH-2026021200122', offsetMinutes: 0 },
+          { status: 'succeeded', message: 'تم تفويض الدفع من البنك الأهلي · المرجع SNB-2026021200122', offsetMinutes: 0 },
         ],
       },
       {
@@ -481,12 +488,12 @@ const fixtures: ExpenseFixture[] = [
         amount: '14.90',
         status: 'succeeded',
         retryCount: 0,
-        bankRef: 'RJH-2026031200077',
+        bankRef: 'SNB-2026031200077',
         failureReason: null,
         note: null,
         resolvedManually: false,
         attempts: [
-          { status: 'succeeded', message: 'تم تفويض الدفع من مصرف الراجحي · المرجع RJH-2026031200077', offsetMinutes: 0 },
+          { status: 'succeeded', message: 'تم تفويض الدفع من البنك الأهلي · المرجع SNB-2026031200077', offsetMinutes: 0 },
         ],
       },
       {
@@ -500,7 +507,7 @@ const fixtures: ExpenseFixture[] = [
         note: 'إعادة المحاولة 2 من 3 مجدولة الساعة 15:00',
         resolvedManually: false,
         attempts: [
-          { status: 'failed', message: 'رفض من مصرف الراجحي: انتهت مهلة البوابة', offsetMinutes: 0 },
+          { status: 'failed', message: 'رفض من البنك الأهلي: انتهت مهلة البوابة', offsetMinutes: 0 },
           { status: 'failed', message: 'إعادة محاولة 1/3 — رفض: انتهت المهلة. الإعادة التالية الساعة 15:00.', offsetMinutes: 180 },
         ],
       },
@@ -521,8 +528,8 @@ const fixtures: ExpenseFixture[] = [
   {
     title: 'تبرع شهري للجمعية',
     description: 'تأكيد قبل التحويل',
-    bankExternalId: 'rajhi_bank',
-    accountExternalId: 'ACC001',
+    bankExternalId: 'snb_bank',
+    accountExternalId: 'ACC003',
     amountType: 'fixed',
     amount: '200.00',
     unit: 'month',
@@ -553,13 +560,13 @@ const fixtures: ExpenseFixture[] = [
         amount: '200.00',
         status: 'succeeded',
         retryCount: 0,
-        bankRef: 'RJH-2026031514220',
+        bankRef: 'SNB-2026031514220',
         failureReason: null,
         note: 'تمت الموافقة يدوياً',
         resolvedManually: false,
         attempts: [
           { status: 'info', message: 'بدأت الدورة — بانتظار موافقة المستخدم', offsetMinutes: 0 },
-          { status: 'succeeded', message: 'وافق المستخدم · تم تفويض الدفع من مصرف الراجحي · المرجع RJH-2026031514220', offsetMinutes: 202 },
+          { status: 'succeeded', message: 'وافق المستخدم · تم تفويض الدفع من البنك الأهلي · المرجع SNB-2026031514220', offsetMinutes: 202 },
         ],
       },
       {
@@ -748,6 +755,586 @@ async function seedExpenseFixtures(
   console.log(`  ${notifCount} notification(s) seeded.`);
 }
 
+// ═════════════════════════════════════════════════════════════
+// MARASI (savings goals) FIXTURES
+// ═════════════════════════════════════════════════════════════
+
+type MarsaStatusKind = 'active' | 'reached' | 'cancelled';
+type MarsaFreqKind = 'weekly' | 'biweekly' | 'monthly';
+type MarsaTxTypeKind = 'auto_debit' | 'manual_topup' | 'release';
+type MarsaTxStatusKind =
+  | 'scheduled'
+  | 'processing'
+  | 'retrying'
+  | 'succeeded'
+  | 'failed'
+  | 'cancelled';
+type MarsaAttemptKind = 'info' | 'succeeded' | 'failed';
+type MarsaNotifKind =
+  | 'deposit_failed'
+  | 'all_retries_exhausted'
+  | 'goal_reached'
+  | 'milestone_reached'
+  | 'upcoming_deposit';
+
+interface MarsaAttemptFixture {
+  status: MarsaAttemptKind;
+  message: string;
+  /** Minutes from `scheduledFor`. Negative = before, positive = after. */
+  offsetMinutes: number;
+}
+
+interface MarsaTxFixture {
+  type: MarsaTxTypeKind;
+  scheduledFor: Date;
+  executedAt: Date | null;
+  amount: string;
+  status: MarsaTxStatusKind;
+  retryCount: number;
+  bankRef: string | null;
+  failureReason: string | null;
+  note: string | null;
+  /** For `release` rows: destination account (where the money was sent).
+   *  For inflows: leave undefined; the goal's source account is used. */
+  destinationBankExternalId?: string;
+  destinationAccountExternalId?: string;
+  attempts: MarsaAttemptFixture[];
+}
+
+interface MarsaFixture {
+  title: string;
+  /** Funding source — auto-debits pull from here, top-ups debit here. */
+  bankExternalId: string;
+  accountExternalId: string;
+  targetAmount: string;
+  periodicAmount: string;
+  frequency: MarsaFreqKind;
+  /** DATE column — only year/month/day matter. */
+  targetDate: Date;
+  createdAt: Date;
+  currentBalance: string;
+  status: MarsaStatusKind;
+  failedAttempts: number;
+  /** Pre-computed timestamp of the next auto-debit. NULL when not active. */
+  nextDepositAt: Date | null;
+  reachedAt: Date | null;
+  cancelledAt: Date | null;
+  withdrawn: boolean;
+  withdrawnAt: Date | null;
+  /** Where the released funds went. Required iff withdrawn=true. */
+  releaseBankExternalId: string | null;
+  releaseAccountExternalId: string | null;
+  transactions: MarsaTxFixture[];
+}
+
+interface MarsaNotificationFixture {
+  marsaTitle: string;
+  /** When set, anchors to a specific tx so we can resolve transaction_id. */
+  txScheduledFor?: Date;
+  type: MarsaNotifKind;
+  sentAt: Date;
+  readAt?: Date;
+}
+
+const marasiFixtures: MarsaFixture[] = [
+  // ─── 1. ACTIVE — Hajj (steady progress) ─────────────────────
+  {
+    title: 'رحلة الحج',
+    bankExternalId: 'snb_bank',
+    accountExternalId: 'ACC003',
+    targetAmount: '25000.00',
+    periodicAmount: '1562.50',
+    frequency: 'monthly',
+    targetDate: new Date(2027, 5, 1), // 2027-06-01
+    createdAt: at(Y, 1, 15, '08:00'),
+    currentBalance: '5187.50', // 3 succeeded debits + 1 manual top-up
+    status: 'active',
+    failedAttempts: 0,
+    nextDepositAt: at(Y, 5, 15, '09:00'),
+    reachedAt: null,
+    cancelledAt: null,
+    withdrawn: false,
+    withdrawnAt: null,
+    releaseBankExternalId: null,
+    releaseAccountExternalId: null,
+    transactions: [
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 2, 15, '09:00'),
+        executedAt: at(Y, 2, 15, '09:00'),
+        amount: '1562.50',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026021500099',
+        failureReason: null,
+        note: null,
+        attempts: [
+          { status: 'succeeded', message: 'تم تفويض الإيداع من البنك الأهلي · المرجع SNB-2026021500099', offsetMinutes: 0 },
+        ],
+      },
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 3, 15, '09:00'),
+        executedAt: at(Y, 3, 15, '09:00'),
+        amount: '1562.50',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026031500142',
+        failureReason: null,
+        note: null,
+        attempts: [
+          { status: 'succeeded', message: 'تم تفويض الإيداع من البنك الأهلي · المرجع SNB-2026031500142', offsetMinutes: 0 },
+        ],
+      },
+      {
+        type: 'manual_topup',
+        scheduledFor: at(Y, 3, 28, '14:32'),
+        executedAt: at(Y, 3, 28, '14:32'),
+        amount: '500.00',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026032814322',
+        failureReason: null,
+        note: 'مكافأة شهرية',
+        attempts: [
+          { status: 'succeeded', message: 'تم تفويض الإيداع اليدوي من البنك الأهلي · المرجع SNB-2026032814322', offsetMinutes: 0 },
+        ],
+      },
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 4, 15, '09:00'),
+        executedAt: at(Y, 4, 15, '09:00'),
+        amount: '1562.50',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026041500111',
+        failureReason: null,
+        note: null,
+        attempts: [
+          { status: 'succeeded', message: 'تم تفويض الإيداع من البنك الأهلي · المرجع SNB-2026041500111', offsetMinutes: 0 },
+        ],
+      },
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 5, 15, '09:00'),
+        executedAt: null,
+        amount: '1562.50',
+        status: 'scheduled',
+        retryCount: 0,
+        bankRef: null,
+        failureReason: null,
+        note: null,
+        attempts: [],
+      },
+    ],
+  },
+
+  // ─── 2. ACTIVE + FAILING — Tokyo (insufficient_funds) ────────
+  {
+    title: 'رحلة طوكيو الربيعية',
+    bankExternalId: 'snb_bank',
+    accountExternalId: 'ACC003',
+    targetAmount: '8000.00',
+    periodicAmount: '200.00',
+    frequency: 'weekly',
+    targetDate: new Date(2026, 9, 15), // 2026-10-15
+    createdAt: at(Y, 2, 1, '08:00'),
+    currentBalance: '1600.00',
+    status: 'active',
+    failedAttempts: 2,
+    nextDepositAt: at(Y, 5, 6, '09:00'),
+    reachedAt: null,
+    cancelledAt: null,
+    withdrawn: false,
+    withdrawnAt: null,
+    releaseBankExternalId: null,
+    releaseAccountExternalId: null,
+    transactions: [
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 4, 8, '09:00'),
+        executedAt: at(Y, 4, 8, '09:00'),
+        amount: '200.00',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026040800099',
+        failureReason: null,
+        note: null,
+        attempts: [
+          { status: 'succeeded', message: 'تم تفويض الإيداع من البنك الأهلي · المرجع SNB-2026040800099', offsetMinutes: 0 },
+        ],
+      },
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 4, 15, '09:00'),
+        executedAt: at(Y, 4, 15, '09:00'),
+        amount: '200.00',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026041500111',
+        failureReason: null,
+        note: null,
+        attempts: [
+          { status: 'succeeded', message: 'تم تفويض الإيداع من البنك الأهلي · المرجع SNB-2026041500111', offsetMinutes: 0 },
+        ],
+      },
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 4, 22, '09:00'),
+        executedAt: at(Y, 4, 22, '09:00'),
+        amount: '200.00',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026042200143',
+        failureReason: null,
+        note: null,
+        attempts: [
+          { status: 'succeeded', message: 'تم تفويض الإيداع من البنك الأهلي · المرجع SNB-2026042200143', offsetMinutes: 0 },
+        ],
+      },
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 4, 29, '09:00'),
+        executedAt: null,
+        amount: '200.00',
+        status: 'retrying',
+        retryCount: 2,
+        bankRef: null,
+        failureReason: 'الرصيد غير كافٍ في الحساب المصدر.',
+        note: 'فشلت محاولتان متتاليتان — يحتاج إعادة محاولة',
+        attempts: [
+          { status: 'failed', message: 'رفض من البنك الأهلي السعودي: الرصيد غير كافٍ.', offsetMinutes: 18 },
+          { status: 'failed', message: 'إعادة محاولة 1/3 — رفض: الرصيد غير كافٍ.', offsetMinutes: 180 },
+        ],
+      },
+    ],
+  },
+
+  // ─── 3. REACHED (not yet withdrawn) — Emergency reserve ─────
+  {
+    title: 'صندوق الطوارئ',
+    bankExternalId: 'snb_bank',
+    accountExternalId: 'ACC003',
+    targetAmount: '15000.00',
+    periodicAmount: '1500.00',
+    frequency: 'monthly',
+    targetDate: new Date(2026, 7, 1), // 2026-08-01
+    createdAt: at(2025, 8, 1, '08:00'),
+    currentBalance: '15000.00',
+    status: 'reached',
+    failedAttempts: 0,
+    nextDepositAt: null,
+    reachedAt: at(Y, 4, 15, '09:00'),
+    cancelledAt: null,
+    withdrawn: false,
+    withdrawnAt: null,
+    releaseBankExternalId: null,
+    releaseAccountExternalId: null,
+    transactions: [
+      // Truncated history — show 4 of the 10 cycles for brevity
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 1, 15, '09:00'),
+        executedAt: at(Y, 1, 15, '09:00'),
+        amount: '1500.00',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026011500099',
+        failureReason: null,
+        note: null,
+        attempts: [
+          { status: 'succeeded', message: 'تم تفويض الإيداع من البنك الأهلي · المرجع SNB-2026011500099', offsetMinutes: 0 },
+        ],
+      },
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 2, 15, '09:00'),
+        executedAt: at(Y, 2, 15, '09:00'),
+        amount: '1500.00',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026021500088',
+        failureReason: null,
+        note: null,
+        attempts: [
+          { status: 'succeeded', message: 'تم تفويض الإيداع من البنك الأهلي · المرجع SNB-2026021500088', offsetMinutes: 0 },
+        ],
+      },
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 3, 15, '09:00'),
+        executedAt: at(Y, 3, 15, '09:00'),
+        amount: '1500.00',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026031500122',
+        failureReason: null,
+        note: null,
+        attempts: [
+          { status: 'succeeded', message: 'تم تفويض الإيداع من البنك الأهلي · المرجع SNB-2026031500122', offsetMinutes: 0 },
+        ],
+      },
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 4, 15, '09:00'),
+        executedAt: at(Y, 4, 15, '09:00'),
+        amount: '1500.00',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026041500099',
+        failureReason: null,
+        note: 'الدفعة التي بلغ بها الهدف.',
+        attempts: [
+          { status: 'succeeded', message: 'تم تفويض الإيداع من البنك الأهلي · المرجع SNB-2026041500099', offsetMinutes: 0 },
+        ],
+      },
+    ],
+  },
+
+  // ─── 4. CANCELLED + WITHDRAWN — Phone (terminated early) ─────
+  {
+    title: 'هاتف جديد',
+    bankExternalId: 'snb_bank',
+    accountExternalId: 'ACC003',
+    targetAmount: '4500.00',
+    periodicAmount: '281.25',
+    frequency: 'biweekly',
+    targetDate: new Date(2026, 8, 1), // 2026-09-01
+    createdAt: at(Y, 1, 5, '08:00'),
+    currentBalance: '0.00',
+    status: 'cancelled',
+    failedAttempts: 0,
+    nextDepositAt: null,
+    reachedAt: null,
+    cancelledAt: at(Y, 4, 10, '11:30'),
+    withdrawn: true,
+    withdrawnAt: at(Y, 4, 10, '11:30'),
+    releaseBankExternalId: 'snb_bank',
+    releaseAccountExternalId: 'ACC003',
+    transactions: [
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 2, 19, '09:00'),
+        executedAt: at(Y, 2, 19, '09:00'),
+        amount: '281.25',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026021900145',
+        failureReason: null,
+        note: null,
+        attempts: [
+          { status: 'succeeded', message: 'تم تفويض الإيداع من البنك الأهلي · المرجع SNB-2026021900145', offsetMinutes: 0 },
+        ],
+      },
+      {
+        type: 'auto_debit',
+        scheduledFor: at(Y, 3, 5, '09:00'),
+        executedAt: at(Y, 3, 5, '09:00'),
+        amount: '281.25',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026030500088',
+        failureReason: null,
+        note: null,
+        attempts: [
+          { status: 'succeeded', message: 'تم تفويض الإيداع من البنك الأهلي · المرجع SNB-2026030500088', offsetMinutes: 0 },
+        ],
+      },
+      {
+        type: 'release',
+        scheduledFor: at(Y, 4, 10, '11:30'),
+        executedAt: at(Y, 4, 10, '11:30'),
+        amount: '562.50',
+        status: 'succeeded',
+        retryCount: 0,
+        bankRef: 'SNB-2026041011300',
+        failureReason: null,
+        note: 'إنهاء المدخر وتحويل الرصيد المتبقي.',
+        destinationBankExternalId: 'snb_bank',
+        destinationAccountExternalId: 'ACC003',
+        attempts: [
+          { status: 'succeeded', message: 'تم تحويل الرصيد إلى البنك الأهلي · المرجع SNB-2026041011300', offsetMinutes: 0 },
+        ],
+      },
+    ],
+  },
+];
+
+const marasiNotificationFixtures: MarsaNotificationFixture[] = [
+  // Most recent first — Tokyo's failing retries
+  {
+    marsaTitle: 'رحلة طوكيو الربيعية',
+    txScheduledFor: at(Y, 4, 29, '09:00'),
+    type: 'all_retries_exhausted',
+    sentAt: at(Y, 4, 29, '14:00'),
+  },
+  {
+    marsaTitle: 'رحلة طوكيو الربيعية',
+    txScheduledFor: at(Y, 4, 29, '09:00'),
+    type: 'deposit_failed',
+    sentAt: at(Y, 4, 29, '09:00'),
+    readAt: at(Y, 4, 29, '19:42'),
+  },
+  // Emergency reserve hit the target
+  {
+    marsaTitle: 'صندوق الطوارئ',
+    txScheduledFor: at(Y, 4, 15, '09:00'),
+    type: 'goal_reached',
+    sentAt: at(Y, 4, 15, '09:00'),
+  },
+  // Hajj milestone (after the 4th successful debit)
+  {
+    marsaTitle: 'رحلة الحج',
+    txScheduledFor: at(Y, 4, 15, '09:00'),
+    type: 'milestone_reached',
+    sentAt: at(Y, 4, 15, '09:01'),
+    readAt: at(Y, 4, 15, '20:18'),
+  },
+  // Hajj — upcoming next deposit (queued ahead of the May 15 cycle)
+  {
+    marsaTitle: 'رحلة الحج',
+    txScheduledFor: at(Y, 5, 15, '09:00'),
+    type: 'upcoming_deposit',
+    sentAt: at(Y, 4, 30, '09:00'),
+  },
+];
+
+// ─── Seed marasi fixtures ────────────────────────────────────
+async function seedMarasiFixtures(
+  userId: string,
+  accountUuidByExternal: Map<string, string>,
+): Promise<void> {
+  const existingCount = await prisma.marasi.count({ where: { user_id: userId } });
+  if (existingCount > 0) {
+    console.log(
+      `Found ${existingCount} existing marasi for the user — skipping fixtures. Run with --clean to wipe and re-seed.`,
+    );
+    return;
+  }
+
+  console.log(`Seeding ${marasiFixtures.length} marasi fixture(s)…`);
+
+  // (marsaTitle::txScheduledForISO) → tx uuid, for notification anchoring.
+  const txByKey = new Map<string, string>();
+  let txCount = 0;
+  let attemptCount = 0;
+
+  for (const fx of marasiFixtures) {
+    const sourceAccountId = accountUuidByExternal.get(
+      `${fx.bankExternalId}:${fx.accountExternalId}`,
+    );
+    if (!sourceAccountId) {
+      console.warn(
+        `  Skipping "${fx.title}" — no linked account for ${fx.bankExternalId}/${fx.accountExternalId}`,
+      );
+      continue;
+    }
+
+    const releaseAccountId =
+      fx.releaseBankExternalId && fx.releaseAccountExternalId
+        ? accountUuidByExternal.get(
+            `${fx.releaseBankExternalId}:${fx.releaseAccountExternalId}`,
+          )
+        : null;
+
+    const goal = await prisma.marasi.create({
+      data: {
+        user_id: userId,
+        account_id: sourceAccountId,
+        title: fx.title,
+        target_amount: fx.targetAmount,
+        periodic_amount: fx.periodicAmount,
+        frequency: fx.frequency,
+        target_date: fx.targetDate,
+        current_balance: fx.currentBalance,
+        status: fx.status,
+        failed_attempts: fx.failedAttempts,
+        next_deposit_at: fx.nextDepositAt,
+        reached_at: fx.reachedAt,
+        cancelled_at: fx.cancelledAt,
+        withdrawn: fx.withdrawn,
+        withdrawn_at: fx.withdrawnAt,
+        release_account_id: releaseAccountId ?? null,
+        created_at: fx.createdAt,
+      },
+    });
+
+    for (const tx of fx.transactions) {
+      // For releases, account_id IS the destination. For inflows, it's the source.
+      const txAccountId =
+        tx.type === 'release' && tx.destinationBankExternalId && tx.destinationAccountExternalId
+          ? accountUuidByExternal.get(
+              `${tx.destinationBankExternalId}:${tx.destinationAccountExternalId}`,
+            ) ?? sourceAccountId
+          : sourceAccountId;
+
+      const created = await prisma.marasi_transactions.create({
+        data: {
+          marsa_id: goal.id,
+          user_id: userId,
+          account_id: txAccountId,
+          type: tx.type,
+          amount: tx.amount,
+          scheduled_for: tx.scheduledFor,
+          executed_at: tx.executedAt,
+          status: tx.status,
+          retry_count: tx.retryCount,
+          bank_ref: tx.bankRef,
+          failure_reason: tx.failureReason,
+          note: tx.note,
+        },
+      });
+      txCount++;
+      txByKey.set(`${fx.title}::${tx.scheduledFor.toISOString()}`, created.id);
+
+      for (let i = 0; i < tx.attempts.length; i++) {
+        const a = tx.attempts[i];
+        await prisma.marasi_attempts.create({
+          data: {
+            transaction_id: created.id,
+            attempt_number: i + 1,
+            at: offsetMinutes(tx.scheduledFor, a.offsetMinutes),
+            status: a.status,
+            message: a.message,
+          },
+        });
+        attemptCount++;
+      }
+    }
+  }
+
+  console.log(`  ${txCount} marasi tx(s), ${attemptCount} attempt(s) seeded.`);
+
+  // Build a marsaTitle → marsa_id lookup for notifications that aren't tx-anchored.
+  const marasiRows = await prisma.marasi.findMany({
+    where: { user_id: userId },
+    select: { id: true, title: true },
+  });
+  const marsaIdByTitle = new Map(marasiRows.map((m) => [m.title, m.id]));
+
+  let notifCount = 0;
+  for (const n of marasiNotificationFixtures) {
+    const marsaId = marsaIdByTitle.get(n.marsaTitle);
+    if (!marsaId) continue;
+    const txId = n.txScheduledFor
+      ? txByKey.get(`${n.marsaTitle}::${n.txScheduledFor.toISOString()}`) ?? null
+      : null;
+    await prisma.marasi_notifications.create({
+      data: {
+        user_id: userId,
+        marsa_id: marsaId,
+        transaction_id: txId,
+        type: n.type,
+        channel: 'in_app',
+        sent_at: n.sentAt,
+        read_at: n.readAt ?? null,
+      },
+    });
+    notifCount++;
+  }
+  console.log(`  ${notifCount} marasi notification(s) seeded.`);
+}
+
 // ─── Clean ───────────────────────────────────────────────────
 async function cleanExpenseFixtures(userId: string): Promise<void> {
   console.log('Cleaning expense data for user…');
@@ -765,6 +1352,21 @@ async function cleanExpenseFixtures(userId: string): Promise<void> {
   );
 }
 
+async function cleanMarasiFixtures(userId: string): Promise<void> {
+  console.log('Cleaning marasi data for user…');
+  // marasi delete cascades through marasi_transactions → marasi_attempts AND marasi_notifications.
+  const { count: marasiCount } = await prisma.marasi.deleteMany({
+    where: { user_id: userId },
+  });
+  // Orphan notifications (marsa_id null — possible for upcoming_deposit before any tx exists).
+  const { count: orphanNotifs } = await prisma.marasi_notifications.deleteMany({
+    where: { user_id: userId },
+  });
+  console.log(
+    `  Deleted ${marasiCount} marasi and ${orphanNotifs} orphan marasi-notification(s).`,
+  );
+}
+
 // ─── Main ────────────────────────────────────────────────────
 async function main() {
   if (isClean) {
@@ -778,12 +1380,14 @@ async function main() {
       return;
     }
     await cleanExpenseFixtures(user.id);
+    await cleanMarasiFixtures(user.id);
     console.log('Clean complete.');
     return;
   }
 
   const { userId, accountUuidByExternal } = await seedUserAndBanks();
   await seedExpenseFixtures(userId, accountUuidByExternal);
+  await seedMarasiFixtures(userId, accountUuidByExternal);
   console.log('Seed complete.');
 }
 

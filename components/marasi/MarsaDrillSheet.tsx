@@ -49,6 +49,7 @@ export interface MarsaDrillSheetProps {
   onRetry: (marsaId: string) => void;
   onCancel: (marsaId: string) => void;
   onRelease: (marsaId: string) => void;
+  onChangeSource: (marsaId: string) => void;
 }
 
 export function MarsaDrillSheet({
@@ -62,6 +63,7 @@ export function MarsaDrillSheet({
   onRetry,
   onCancel,
   onRelease,
+  onChangeSource,
 }: MarsaDrillSheetProps) {
   if (!marsa) {
     return <Sheet open={open} onClose={onClose} />;
@@ -267,6 +269,15 @@ export function MarsaDrillSheet({
                 onClick={() => onRelease(marsa.id)}
               >
                 {drillLabels.actionReleaseReached}
+              </Button>
+            )}
+            {isActive && (
+              <Button
+                variant="ghost"
+                startIcon={<Building2 size={16} />}
+                onClick={() => onChangeSource(marsa.id)}
+              >
+                {drillLabels.actionChangeSource}
               </Button>
             )}
             {isActive && (

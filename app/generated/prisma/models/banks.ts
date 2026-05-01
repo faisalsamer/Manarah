@@ -481,10 +481,6 @@ export type banksUpdateOneRequiredWithoutAccountsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.banksUpdateToOneWithWhereWithoutAccountsInput, Prisma.banksUpdateWithoutAccountsInput>, Prisma.banksUncheckedUpdateWithoutAccountsInput>
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type banksCreateNestedManyWithoutUsersInput = {
   create?: Prisma.XOR<Prisma.banksCreateWithoutUsersInput, Prisma.banksUncheckedCreateWithoutUsersInput> | Prisma.banksCreateWithoutUsersInput[] | Prisma.banksUncheckedCreateWithoutUsersInput[]
   connectOrCreate?: Prisma.banksCreateOrConnectWithoutUsersInput | Prisma.banksCreateOrConnectWithoutUsersInput[]

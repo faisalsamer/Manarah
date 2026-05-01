@@ -4,9 +4,13 @@ import { CalendarDays, CalendarRange, RotateCw } from 'lucide-react';
 import { useMemo } from 'react';
 import { Callout } from '@/components/ui/Callout';
 import { Field, RadioCard, RadioCardGroup } from '@/components/ui/Form';
-import { cycleWord, frequencyEveryLabels, wizardLabels } from '@/lib/marasi/labels';
+import {
+  cycleWord,
+  frequencyEveryLabels,
+  wizardLabels,
+} from '@/lib/marasi/labels';
 import type { MarsaDraft, MarsaFrequency } from '@/lib/marasi/types';
-import { calcPlan } from '@/lib/marasi/utils';
+import { calcPlan, daysPerPeriod, formatDate } from '@/lib/marasi/utils';
 
 export interface StepFrequencyProps {
   data: MarsaDraft;
@@ -14,6 +18,10 @@ export interface StepFrequencyProps {
 }
 
 export function StepFrequency({ data, update }: StepFrequencyProps) {
+  // Realtime plan calc for the currently picked frequency. `null` when:
+  //   - no frequency picked yet, or
+  //   - picked frequency can't fit a first cycle before target_date
+  // The Callout below switches variant based on which case we're in.
   const plan = useMemo(() => {
     if (!data.frequency || !data.targetAmount || !data.targetDate) return null;
     return calcPlan(
@@ -23,6 +31,9 @@ export function StepFrequency({ data, update }: StepFrequencyProps) {
       data.targetDate,
     );
   }, [data.frequency, data.targetAmount, data.targetDate]);
+
+  const pickedButInfeasible = !!data.frequency && plan === null && !!data.targetDate;
+  const minDaysForPicked = data.frequency ? daysPerPeriod(data.frequency) : 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -65,19 +76,36 @@ export function StepFrequency({ data, update }: StepFrequencyProps) {
         </RadioCardGroup>
       </Field>
 
-      <Callout
-        variant={plan ? 'info' : 'neutral'}
-        title={wizardLabels.planTitle}
-        description={
-          plan && data.frequency
-            ? wizardLabels.planSummary(
-                plan.periodicAmount,
-                frequencyEveryLabels[data.frequency],
-                cycleWord(plan.cycles),
-              )
-            : wizardLabels.planMissingDetails
-        }
-      />
+      {pickedButInfeasible && data.frequency ? (
+        <Callout
+          variant="error"
+          title={wizardLabels.frequencyTooSoonTitle}
+          description={wizardLabels.frequencyTooSoonBody(data.frequency, minDaysForPicked)}
+        />
+      ) : (
+        <Callout
+          variant={plan ? 'info' : 'neutral'}
+          title={wizardLabels.planTitle}
+          description={
+            plan && data.frequency ? (
+              <span className="flex flex-col gap-1.5">
+                <span>
+                  {wizardLabels.planSummary(
+                    plan.periodicAmount,
+                    frequencyEveryLabels[data.frequency],
+                    cycleWord(plan.cycles),
+                  )}
+                </span>
+                <span className="text-caption text-text-muted">
+                  {wizardLabels.firstDepositLabel}: {formatDate(plan.firstDepositDate)}
+                </span>
+              </span>
+            ) : (
+              wizardLabels.planMissingDetails
+            )
+          }
+        />
+      )}
     </div>
   );
 }

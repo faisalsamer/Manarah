@@ -1,14 +1,17 @@
 import 'server-only';
 
 import { NextResponse } from 'next/server';
-import { MutationError } from '@/lib/expenses/mutations';
+import { MutationError, type ErrorCode } from './errors';
 
-const errorStatus: Record<MutationError['code'], number> = {
+const errorStatus: Record<ErrorCode, number> = {
   not_found: 404,
   invalid_input: 400,
   account_not_found: 404,
   insufficient_funds: 400,
   already_resolved: 409,
+  goal_terminated: 409,
+  goal_already_withdrawn: 409,
+  no_pending_attempt: 409,
 };
 
 /**

@@ -1,0 +1,137 @@
+{
+  "user_id": "CUST001",
+  "summary_date": "2026-04-29",
+  "last_30_days": {
+    "total_income": 10435.83,
+    "total_expenses": 11980.52,
+    "net": -1544.69,
+    "transaction_count": 65,
+    "by_category": {
+      "groceries": 1905.41,
+      "restaurants": 1487.81,
+      "shopping": 2352.78,
+      "salary": 8000.0,
+      "rent": 1200.0,
+      "transfer": 4871.66,
+      "transport": 651.18,
+      "utilities": 733.49,
+      "entertainment": 113.65,
+      "healthcare": 1100.37
+    },
+    "by_account": {
+      "ACC001": {
+        "income": 8000.0,
+        "expenses": 10316.88
+      },
+      "ACC003": {
+        "income": 0,
+        "expenses": 1223.63
+      },
+      "ACC002": {
+        "income": 2435.83,
+        "expenses": 440.01
+      }
+    }
+  },
+  "last_3_months": {
+    "total_income": 30047.36,
+    "total_expenses": 35808.71,
+    "average_monthly_income": 10015.79,
+    "average_monthly_expenses": 11936.24,
+    "highest_category": "salary",
+    "highest_category_amount": 24000.0,
+    "spending_trend": "stable",
+    "by_category": {
+      "groceries": 5706.31,
+      "restaurants": 3431.06,
+      "transport": 2173.87,
+      "entertainment": 403.77,
+      "salary": 24000.0,
+      "rent": 3600.0,
+      "transfer": 12094.72,
+      "utilities": 1691.45,
+      "shopping": 10521.57,
+      "healthcare": 2233.32
+    }
+  },
+  "year_to_date": {
+    "total_income": 121131.55,
+    "total_expenses": 146412.79,
+    "savings_accumulated": -25281.24,
+    "savings_rate": -20.87
+  },
+  "monthly_breakdown": {
+    "2026-04": {
+      "income": 10435.83,
+      "expenses": 11636.36,
+      "net": -1200.53,
+      "top_categories": {
+        "salary": 8000.0,
+        "transfer": 4871.66,
+        "shopping": 2139.87,
+        "groceries": 1874.85,
+        "restaurants": 1387.1200000000001
+      }
+    },
+    "2026-03": {
+      "income": 9973.5,
+      "expenses": 12581.39,
+      "net": -2607.89,
+      "top_categories": {
+        "salary": 8000.0,
+        "shopping": 4704.29,
+        "transfer": 3947.0,
+        "groceries": 1790.19,
+        "rent": 1200.0
+      }
+    },
+    "2026-02": {
+      "income": 9638.03,
+      "expenses": 11284.9,
+      "net": -1646.87,
+      "top_categories": {
+        "salary": 8000.0,
+        "shopping": 3677.41,
+        "transfer": 3276.06,
+        "groceries": 1996.99,
+        "rent": 1200.0
+      }
+    },
+    "2026-01": {
+      "income": 10023.4,
+      "expenses": 12259.6,
+      "net": -2236.2,
+      "top_categories": {
+        "salary": 8000.0,
+        "transfer": 4046.8,
+        "groceries": 2448.6700000000005,
+        "shopping": 2288.6800000000003,
+        "restaurants": 1904.4799999999996
+      }
+    },
+    "2025-12": {
+      "income": 9519.85,
+      "expenses": 10461.08,
+      "net": -941.23,
+      "top_categories": {
+        "salary": 8000.0,
+        "transfer": 3039.7,
+        "groceries": 2973.3599999999997,
+        "shopping": 1770.88,
+        "rent": 1200.0
+      }
+    },
+    "2025-11": {
+      "income": 10478.32,
+      "expenses": 13123.2,
+      "net": -2644.88,
+      "top_categories": {
+        "salary": 8000.0,
+        "transfer": 4956.64,
+        "shopping": 3908.91,
+        "healthcare": 1853.13,
+        "groceries": 1763.6599999999999
+      }
+    }
+  }
+}

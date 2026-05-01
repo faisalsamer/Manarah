@@ -2,7 +2,7 @@
 
 import { Callout } from '@/components/ui/Callout';
 import { Field, MoneyInput, RadioCard, RadioCardGroup } from '@/components/ui/Form';
-import { commonLabels, wizardLabels } from '@/lib/expenses/labels';
+import { wizardLabels } from '@/lib/expenses/labels';
 import type { AmountType, ExpenseDraft } from '@/lib/expenses/types';
 
 export interface StepAmountProps {
@@ -51,7 +51,6 @@ export function StepAmount({ data, update }: StepAmountProps) {
             value={data.amount}
             onChange={(e) => update({ amount: e.target.value })}
             placeholder="0.00"
-            currency={commonLabels.currency}
           />
         </Field>
       )}

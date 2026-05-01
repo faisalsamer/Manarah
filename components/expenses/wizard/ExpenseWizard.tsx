@@ -26,7 +26,8 @@ import { StepSource } from './StepSource';
 export interface ExpenseWizardProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (draft: ExpenseDraft) => void;
+  /** May return a Promise — the wizard awaits it and shows a loading button. */
+  onSubmit: (draft: ExpenseDraft) => void | Promise<void>;
   banks: BankVM[];
 }
 
@@ -59,6 +60,7 @@ const emptyDraft = (): ExpenseDraft => ({
 export function ExpenseWizard({ open, onClose, onSubmit, banks }: ExpenseWizardProps) {
   const [step, setStep] = useState(0); // 0-based
   const [data, setData] = useState<ExpenseDraft>(emptyDraft);
+  const [submitting, setSubmitting] = useState(false);
 
   const update = (patch: Partial<ExpenseDraft>) =>
     setData((prev) => ({ ...prev, ...patch }));
@@ -87,22 +89,28 @@ export function ExpenseWizard({ open, onClose, onSubmit, banks }: ExpenseWizardP
     }
   }, [step, data]);
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step < TOTAL_STEPS - 1) {
       setStep(step + 1);
-    } else {
-      onSubmit(data);
-      // Reset for next time the wizard opens.
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await onSubmit(data);
       setData(emptyDraft());
       setStep(0);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleBack = () => {
+    if (submitting) return;
     if (step > 0) setStep(step - 1);
   };
 
   const handleClose = () => {
+    if (submitting) return;
     setData(emptyDraft());
     setStep(0);
     onClose();
@@ -135,6 +143,9 @@ export function ExpenseWizard({ open, onClose, onSubmit, banks }: ExpenseWizardP
       open={open}
       onClose={handleClose}
       size="2xl"
+      closeOnOverlayClick={!submitting}
+      closeOnEscape={!submitting}
+      showCloseButton={!submitting}
       title={
         <div>
           <div className="text-micro uppercase tracking-[0.2em] text-text-muted mb-1">
@@ -148,14 +159,15 @@ export function ExpenseWizard({ open, onClose, onSubmit, banks }: ExpenseWizardP
           <Button
             variant="ghost"
             startIcon={<ChevronRight size={16} />}
-            disabled={step === 0}
+            disabled={step === 0 || submitting}
             onClick={handleBack}
           >
             {wizardLabels.back}
           </Button>
           <Button
             variant="primary"
-            disabled={!canProceed}
+            disabled={!canProceed || submitting}
+            loading={submitting}
             endIcon={step === TOTAL_STEPS - 1 ? <Check size={16} /> : <ChevronLeft size={16} />}
             onClick={handleNext}
           >

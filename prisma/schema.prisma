@@ -9,37 +9,44 @@ datasource db {
 }
 
 model accounts {
-  id                   String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  bank_id              String                 @db.Uuid
-  account_id           String
-  account_number       String
-  account_type         String
-  balance              Decimal                @default(0) @db.Decimal(15, 2)
-  currency             String                 @default("SAR")
-  created_at           DateTime               @default(now()) @db.Timestamptz(6)
-  account_name         String?
-  iban                 String?
-  is_primary           Boolean                @default(false)
-  banks                banks                  @relation(fields: [bank_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  marasi               marasi[]
-  marasi_transactions  marasi_transactions[]
-  payment_transactions payment_transactions[]
-  recurring_expenses   recurring_expenses[]
-  zakat_payments       zakat_payments[]
+  id                                         String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bank_id                                    String                 @db.Uuid
+  account_id                                 String
+  account_number                             String
+  account_type                               String
+  balance                                    Decimal                @default(0) @db.Decimal(15, 2)
+  currency                                   String                 @default("SAR")
+  created_at                                 DateTime               @default(now()) @db.Timestamptz(6)
+  account_name                               String?
+  iban                                       String?
+  is_primary                                 Boolean                @default(false)
+  is_active                                  Boolean                @default(true)
+  banks                                      banks                  @relation(fields: [bank_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  marasi                                     marasi[]
+  marasi_marasi_release_account_idToaccounts marasi[]               @relation("marasi_release_account_idToaccounts")
+  marasi_transactions                        marasi_transactions[]
+  payment_transactions                       payment_transactions[]
+  recurring_expenses                         recurring_expenses[]
+  zakat_payments                             zakat_payments[]
 
   @@index([bank_id], map: "idx_accounts_bank")
 }
 
 model ai_recommendations {
-  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id             String   @db.Uuid
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id             String    @db.Uuid
   recommendation_type String
   title               String
   description         String
   priority            String
-  is_dismissed        Boolean  @default(false)
-  created_at          DateTime @default(now()) @db.Timestamptz(6)
-  users               users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  is_dismissed        Boolean   @default(false)
+  created_at          DateTime  @default(now()) @db.Timestamptz(6)
+  message             String?
+  action              String?   @db.VarChar(50)
+  action_params       Json?     @db.Json
+  is_applied          Boolean?  @default(false)
+  applied_at          DateTime? @db.Timestamp(6)
+  users               users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([user_id, created_at], map: "idx_ai_recommendations_user")
 }
@@ -103,32 +110,37 @@ model hawl_daily_checks {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model marasi {
-  id                   String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id              String                 @db.Uuid
-  account_id           String                 @db.Uuid
-  title                String
-  target_amount        Decimal                @db.Decimal(15, 2)
-  periodic_amount      Decimal                @db.Decimal(15, 2)
-  frequency            marsa_frequency
-  target_date          DateTime               @db.Date
-  current_balance      Decimal                @default(0) @db.Decimal(15, 2)
-  status               marsa_status           @default(active)
-  failed_attempts      Int                    @default(0)
-  next_deposit_at      DateTime?              @db.Timestamptz(6)
-  paused_at            DateTime?              @db.Timestamptz(6)
-  reached_at           DateTime?              @db.Timestamptz(6)
-  cancelled_at         DateTime?              @db.Timestamptz(6)
-  created_at           DateTime               @default(now()) @db.Timestamptz(6)
-  updated_at           DateTime               @default(now()) @db.Timestamptz(6)
-  accounts             accounts               @relation(fields: [account_id], references: [id], onUpdate: NoAction)
-  users                users                  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  marasi_notifications marasi_notifications[]
-  marasi_transactions  marasi_transactions[]
+  id                                           String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id                                      String                 @db.Uuid
+  account_id                                   String                 @db.Uuid
+  title                                        String
+  target_amount                                Decimal                @db.Decimal(15, 2)
+  periodic_amount                              Decimal                @db.Decimal(15, 2)
+  frequency                                    marsa_frequency
+  target_date                                  DateTime               @db.Date
+  current_balance                              Decimal                @default(0) @db.Decimal(15, 2)
+  status                                       marsa_status           @default(active)
+  failed_attempts                              Int                    @default(0)
+  next_deposit_at                              DateTime?              @db.Timestamptz(6)
+  paused_at                                    DateTime?              @db.Timestamptz(6)
+  reached_at                                   DateTime?              @db.Timestamptz(6)
+  cancelled_at                                 DateTime?              @db.Timestamptz(6)
+  created_at                                   DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at                                   DateTime               @default(now()) @db.Timestamptz(6)
+  withdrawn                                    Boolean                @default(false)
+  withdrawn_at                                 DateTime?              @db.Timestamptz(6)
+  release_account_id                           String?                @db.Uuid
+  accounts                                     accounts               @relation(fields: [account_id], references: [id], onUpdate: NoAction)
+  accounts_marasi_release_account_idToaccounts accounts?              @relation("marasi_release_account_idToaccounts", fields: [release_account_id], references: [id], onUpdate: NoAction)
+  users                                        users                  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  marasi_notifications                         marasi_notifications[]
+  marasi_transactions                          marasi_transactions[]
 
   @@index([account_id], map: "idx_marasi_account")
   @@index([status], map: "idx_marasi_active", where: raw("(status = 'active'::marsa_status)"))
   @@index([next_deposit_at], map: "idx_marasi_due", where: raw("((status = 'active'::marsa_status) AND (next_deposit_at IS NOT NULL))"))
   @@index([user_id], map: "idx_marasi_user")
+  @@index([release_account_id], map: "idx_marasi_release_account", where: raw("(release_account_id IS NOT NULL)"))
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
