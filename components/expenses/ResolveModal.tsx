@@ -6,10 +6,11 @@ import { Button } from '@/components/ui/Button';
 import { Callout } from '@/components/ui/Callout';
 import { Checkbox } from '@/components/ui/Form';
 import { Dialog, DialogActions } from '@/components/ui/Dialog';
+import { Money } from '@/components/ui/RiyalSign';
 import { Spinner } from '@/components/ui/Spinner';
-import { commonLabels, resolveLabels } from '@/lib/expenses/labels';
+import { resolveLabels } from '@/lib/expenses/labels';
 import type { BankVM, ExpenseVM, TransactionVM } from '@/lib/expenses/types';
-import { findAccount, findBank, formatAmount, formatDate } from '@/lib/expenses/utils';
+import { findAccount, findBank, formatDate } from '@/lib/expenses/utils';
 import { BankAccountPicker } from './BankAccountPicker';
 
 type Phase = 'selecting' | 'loading' | 'success';
@@ -20,12 +21,18 @@ export interface ResolveModalProps {
   expense: ExpenseVM | undefined;
   tx: TransactionVM | undefined;
   banks: BankVM[];
+  /**
+   * Async — resolves on a successful charge, rejects on failure.
+   * The modal flips to its `success` phase only when this resolves; on reject
+   * it returns the user to `selecting` so they can pick a different account
+   * (the parent should also surface a toast).
+   */
   onResolve: (opts: {
     txId: string;
     bankId: string;
     accountId: string;
     updateLinked: boolean;
-  }) => void;
+  }) => Promise<void>;
 }
 
 export function ResolveModal({
@@ -57,21 +64,25 @@ export function ResolveModal({
   const accountBalance = selectedAccount ? parseFloat(selectedAccount.balance) : 0;
   const hasInsufficient = !!selectedAccount && accountBalance < dueAmount;
   const canPay = !!selectedAccount && phase === 'selecting' && !hasInsufficient;
-  const formattedAmount = `${formatAmount(tx.amount)} ${commonLabels.currency}`;
+  const dueAmountValue = tx.amount ?? '0';
 
-  const handlePay = () => {
+  const handlePay = async () => {
     setPhase('loading');
-    setTimeout(() => {
+    try {
+      await onResolve({
+        txId: tx.id,
+        bankId,
+        accountId,
+        updateLinked: isDifferent && updateLinked,
+      });
       setPhase('success');
-      setTimeout(() => {
-        onResolve({
-          txId: tx.id,
-          bankId,
-          accountId,
-          updateLinked: isDifferent && updateLinked,
-        });
-      }, 1400);
-    }, 1600);
+      // Brief success view, then close.
+      setTimeout(() => onClose(), 1400);
+    } catch {
+      // Parent surfaces the toast. Return to selecting so the user can retry
+      // with a different account.
+      setPhase('selecting');
+    }
   };
 
   const handleClose = () => {
@@ -121,9 +132,10 @@ export function ResolveModal({
               <div className="text-micro uppercase tracking-[0.2em] text-text-muted mb-1">
                 {resolveLabels.amountDue}
               </div>
-              <div className="text-h1 font-bold font-numbers text-text-primary leading-none">
-                {formattedAmount}
-              </div>
+              <Money
+                amount={dueAmountValue}
+                className="text-h1 font-bold text-text-primary leading-none"
+              />
             </div>
             <div className="text-left">
               <div className="text-micro uppercase tracking-[0.2em] text-text-muted mb-1">
@@ -155,8 +167,8 @@ export function ResolveModal({
               variant="error"
               compact
               description={resolveLabels.insufficientWarning(
-                `${formatAmount(selectedAccount.balance)} ${commonLabels.currency}`,
-                formattedAmount,
+                selectedAccount.balance,
+                dueAmountValue,
               )}
             />
           )}
@@ -199,7 +211,7 @@ export function ResolveModal({
           </div>
           <p className="text-body-sm text-text-secondary max-w-sm">
             {resolveLabels.processingBody(
-              formattedAmount,
+              dueAmountValue,
               selectedBank.name,
               selectedAccount.label,
             )}
@@ -217,7 +229,7 @@ export function ResolveModal({
           </div>
           <p className="text-body-sm text-text-secondary max-w-sm">
             {resolveLabels.successBody(
-              formattedAmount,
+              dueAmountValue,
               selectedBank.name,
               selectedAccount.label,
             )}

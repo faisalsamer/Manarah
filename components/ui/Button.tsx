@@ -7,7 +7,7 @@ type ButtonVariant = 'primary' | 'outline' | 'ghost' | 'danger' | 'link';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 const baseClasses =
-  'inline-flex items-center justify-center font-semibold rounded-full whitespace-nowrap ' +
+  'inline-flex items-center justify-center font-semibold rounded-full whitespace-nowrap cursor-pointer ' +
   'font-[var(--font-arabic)] transition-all duration-[250ms] ease-out ' +
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2 ' +
   'disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0 disabled:shadow-none';
@@ -141,7 +141,7 @@ export function IconButton({
       aria-label={ariaLabel}
       disabled={disabled || loading}
       className={[
-        'inline-flex items-center justify-center transition-all duration-[250ms] ease-out',
+        'inline-flex items-center justify-center cursor-pointer transition-all duration-[250ms] ease-out',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2',
         'disabled:opacity-50 disabled:cursor-not-allowed',
         iconBtnSize[size],

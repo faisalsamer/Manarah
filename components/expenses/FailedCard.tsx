@@ -2,12 +2,12 @@
 
 import { CreditCard, SkipForward } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { actionLabels, commonLabels } from '@/lib/expenses/labels';
+import { Money } from '@/components/ui/RiyalSign';
+import { actionLabels } from '@/lib/expenses/labels';
 import type { BankVM, ExpenseVM, TransactionVM } from '@/lib/expenses/types';
 import {
   findAccount,
   findBank,
-  formatAmount,
   formatDate,
   formatTime,
 } from '@/lib/expenses/utils';
@@ -24,7 +24,6 @@ export interface FailedCardProps {
 export function FailedCard({ tx, expense, banks, onResolveOpen, onSkip }: FailedCardProps) {
   const bank = findBank(banks, expense?.bankId);
   const account = findAccount(banks, expense?.bankId, expense?.accountId);
-  const formattedAmount = `${formatAmount(tx.amount)} ${commonLabels.currency}`;
 
   return (
     <div className="bg-card-bg border border-border rounded-md overflow-hidden">
@@ -44,9 +43,10 @@ export function FailedCard({ tx, expense, banks, onResolveOpen, onSkip }: Failed
               </p>
             </div>
             <div className="text-left">
-              <div className="text-h2 font-bold font-numbers text-text-primary">
-                {formattedAmount}
-              </div>
+              <Money
+                amount={tx.amount}
+                className="text-h2 font-bold text-text-primary"
+              />
             </div>
           </div>
 

@@ -539,6 +539,8 @@ enum expense_notification_type {
   awaiting_confirmation
   all_retries_exhausted
   auto_skipped
+  payment_succeeded
+  upcoming_payment
 }
 
 enum expense_status {

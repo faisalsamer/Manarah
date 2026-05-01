@@ -1,8 +1,14 @@
 /**
  * Single source of Arabic UI strings for the expenses module.
  * Components must import from here — never hardcode Arabic strings inline.
+ *
+ * Some labels embed the SAR currency. Those callbacks return ReactNode (not
+ * string) so we can render the official Saudi Riyal logo inline via <Money />
+ * instead of a textual symbol — that's why this file is `.tsx`.
  */
 
+import type { ReactNode } from 'react';
+import { Money } from '@/components/ui/RiyalSign';
 import type {
   AmountType,
   DayOfWeekId,
@@ -98,6 +104,7 @@ export const historyLabels = {
   sectionTitle: 'سجل العمليات',
   filterLabel: 'الحالة',
   filterAll: 'كل الحالات',
+  pageSizeLabel: 'عدد الصفوف',
   emptyFiltered: 'لا توجد عمليات تطابق هذا الفلتر.',
   colDate: 'التاريخ',
   colExpense: 'المصروف',
@@ -131,7 +138,9 @@ export const actionLabels = {
   amountToDebit: 'المبلغ المراد خصمه',
   confirmAndDebit: 'تأكيد وخصم',
   approveAndDebit: 'موافقة وخصم',
-  approveHint: (amount: string) => `وافق لخصم ${amount}، أو تخطّى هذه الدورة.`,
+  approveHint: (amount: string | number): ReactNode => (
+    <>وافق لخصم <Money amount={amount} />، أو تخطّى هذه الدورة.</>
+  ),
 } as const;
 
 // ─── Drill sheet ─────────────────────────────────────────────
@@ -162,19 +171,25 @@ export const resolveLabels = {
   linkedTag: 'مرتبط',
   balanceLabel: 'الرصيد',
   insufficientLabel: 'غير كافٍ',
-  insufficientWarning: (current: string, owed: string) =>
-    `هذا الحساب يحتوي على ${current} فقط، وهو أقل من ${owed} المستحق. اختر حساباً آخر.`,
+  insufficientWarning: (current: string | number, owed: string | number): ReactNode => (
+    <>
+      هذا الحساب يحتوي على <Money amount={current} /> فقط، وهو أقل من{' '}
+      <Money amount={owed} /> المستحق. اختر حساباً آخر.
+    </>
+  ),
   setAsLinkedTitle: 'اعتمد هذا الحساب كحساب مرتبط بهذا المصروف',
   setAsLinkedBody: (expenseTitle: string, bank: string, account: string) =>
     `الدورات القادمة من «${expenseTitle}» ستُسحب من ${bank} · ${account} بدلاً من الحساب الأصلي.`,
   cancel: 'إلغاء',
   payNow: 'ادفع الآن',
   processingTitle: 'جارٍ معالجة الدفع',
-  processingBody: (amount: string, bank: string, account: string) =>
-    `جارٍ تفويض ${amount} عبر ${bank} · ${account}…`,
+  processingBody: (amount: string | number, bank: string, account: string): ReactNode => (
+    <>جارٍ تفويض <Money amount={amount} /> عبر {bank} · {account}…</>
+  ),
   successTitle: 'تم الدفع.',
-  successBody: (amount: string, bank: string, account: string) =>
-    `تم خصم ${amount} بنجاح من ${bank} · ${account}.`,
+  successBody: (amount: string | number, bank: string, account: string): ReactNode => (
+    <>تم خصم <Money amount={amount} /> بنجاح من {bank} · {account}.</>
+  ),
   successLinkedNote: 'الدورات القادمة ستستخدم هذا الحساب.',
 } as const;
 
@@ -260,6 +275,7 @@ export const wizardLabels = {
 
 // ─── Misc ────────────────────────────────────────────────────
 export const commonLabels = {
+  /** Kept for fallbacks / non-JSX contexts. New code should use <Money>. */
   currency: 'ر.س',
   delete: 'حذف',
   close: 'إغلاق',

@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback } from 'react';
 import { ActionView } from '@/components/expenses/ActionView';
 import { DrillSheet } from '@/components/expenses/DrillSheet';
 import { ExpensesHeader } from '@/components/expenses/ExpensesHeader';
@@ -9,131 +10,198 @@ import { HistoryView } from '@/components/expenses/HistoryView';
 import { RecurringView } from '@/components/expenses/RecurringView';
 import { ResolveModal } from '@/components/expenses/ResolveModal';
 import { ExpenseWizard } from '@/components/expenses/wizard/ExpenseWizard';
-import { nowClientTimestamptz } from '@/lib/datetime';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { Spinner } from '@/components/ui/Spinner';
+import { Money } from '@/components/ui/RiyalSign';
+import { toast } from '@/components/ui/Toast';
+import { useExpenses } from '@/hooks/expenses/useExpenses';
+import { useLinkedBanks } from '@/hooks/expenses/useLinkedBanks';
 import {
-  MOCK_BANKS,
-  MOCK_EXPENSES,
-  MOCK_TRANSACTIONS,
-} from '@/lib/expenses/mock-data';
-import type { ExpenseDraft, ExpenseVM, TransactionVM } from '@/lib/expenses/types';
+  useTransactions,
+  useTransactionsCounts,
+} from '@/hooks/expenses/useTransactions';
+import { ApiError } from '@/lib/api/client';
+import type { ExpenseDraft } from '@/lib/expenses/types';
+import { useState } from 'react';
+
+const ACTION_REQUIRED_STATUSES = ['failed', 'awaiting_confirmation'] as const;
+
+const isTabValue = (v: string | null): v is ExpensesTabValue =>
+  v === 'recurring' || v === 'history' || v === 'action';
 
 export default function ExpensesPage() {
-  const [expenses, setExpenses] = useState<ExpenseVM[]>(MOCK_EXPENSES);
-  const [transactions, setTransactions] = useState<TransactionVM[]>(MOCK_TRANSACTIONS);
-  const [tab, setTab] = useState<ExpensesTabValue>('recurring');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // ── URL-driven state ─────────────────────────────────────
+  const tabParam = searchParams.get('tab');
+  const tab: ExpensesTabValue = isTabValue(tabParam) ? tabParam : 'recurring';
+  const drillExpenseId = searchParams.get('expense');
+  const txParam = searchParams.get('tx');
+
+  const writeParams = useCallback(
+    (updates: Record<string, string | null>) => {
+      const next = new URLSearchParams(searchParams.toString());
+      for (const [key, value] of Object.entries(updates)) {
+        if (value === null || value === '') next.delete(key);
+        else next.set(key, value);
+      }
+      const qs = next.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [router, pathname, searchParams],
+  );
+
+  const setTab = (next: ExpensesTabValue) => {
+    // Reset history-view filters when leaving History to keep URLs tidy.
+    if (tab === 'history' && next !== 'history') {
+      writeParams({
+        tab: next === 'recurring' ? null : next,
+        status: null,
+        page: null,
+        pageSize: null,
+      });
+    } else {
+      writeParams({ tab: next === 'recurring' ? null : next });
+    }
+  };
+
+  const setDrillExpenseId = (id: string | null) => {
+    writeParams({ expense: id });
+  };
+
+  // ── Data ─────────────────────────────────────────────────
+  const expenses = useExpenses();
+  const actionTxs = useTransactions({
+    statuses: [...ACTION_REQUIRED_STATUSES],
+  });
+  const counts = useTransactionsCounts();
+  const linkedBanks = useLinkedBanks();
+
+  // ── Modal / dialog state (purely local, not URL-driven) ──
   const [wizardOpen, setWizardOpen] = useState(false);
-  const [drillExpenseId, setDrillExpenseId] = useState<string | null>(null);
   const [resolveTxId, setResolveTxId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+  const [pendingSkip, setPendingSkip] = useState<string | null>(null);
+  const [pendingConfirm, setPendingConfirm] = useState<{
+    txId: string;
+    amount: string;
+  } | null>(null);
 
-  const actionRequired = useMemo(
-    () =>
-      transactions.filter(
-        (t) => t.status === 'failed' || t.status === 'awaiting_confirmation',
-      ),
-    [transactions],
-  );
+  // ── Derived ──────────────────────────────────────────────
+  // Notification deep-link: when a notification points to a tx but no expense,
+  // resolve the tx → expenseId from the action-required list (most likely
+  // candidate). If we don't have it cached, falls through to no drill.
+  const drillExpenseFromTx = (() => {
+    if (!txParam || drillExpenseId) return null;
+    const tx = actionTxs.data.find((t) => t.id === txParam);
+    return tx ? tx.expenseId : null;
+  })();
+  const effectiveDrillExpenseId = drillExpenseId ?? drillExpenseFromTx;
 
-  const historyExecutedCount = useMemo(
-    () => transactions.filter((t) => t.executedAt).length,
-    [transactions],
-  );
-
-  const drillExpense = drillExpenseId
-    ? expenses.find((e) => e.id === drillExpenseId)
+  const drillExpense = effectiveDrillExpenseId
+    ? expenses.data.find((e) => e.id === effectiveDrillExpenseId)
     : undefined;
-  const drillTransactions = drillExpenseId
-    ? transactions.filter((t) => t.expenseId === drillExpenseId)
-    : [];
 
-  const resolveTx = resolveTxId ? transactions.find((t) => t.id === resolveTxId) : undefined;
+  const resolveTx = resolveTxId
+    ? actionTxs.data.find((t) => t.id === resolveTxId)
+    : undefined;
   const resolveExpense = resolveTx
-    ? expenses.find((e) => e.id === resolveTx.expenseId)
+    ? expenses.data.find((e) => e.id === resolveTx.expenseId)
     : undefined;
 
-  // ── Mutations (mock-only; replace with API calls later) ─────
-  const handleAdd = (draft: ExpenseDraft) => {
-    const { amountType, unit } = draft;
-    if (!amountType || !unit) return;
-    const newId = `exp-${Date.now()}`;
-    const next: ExpenseVM = {
-      id: newId,
-      title: draft.title,
-      description: draft.description || null,
-      bankId: draft.bankId,
-      accountId: draft.accountId,
-      amountType,
-      amount: amountType === 'fixed' ? draft.amount : null,
-      unit,
-      interval: draft.interval,
-      dayOfWeek: unit === 'week' ? draft.dayOfWeek : null,
-      dayOfMonth: unit === 'month' ? draft.dayOfMonth : null,
-      timeOfDay: draft.timeOfDay,
-      paymentMode: draft.paymentMode,
-      status: 'active',
-      createdAt: nowClientTimestamptz(),
-    };
-    setExpenses((list) => [...list, next]);
-    setWizardOpen(false);
+  // ── Mutation handlers ────────────────────────────────────
+  /** Refetch every cache that may have shifted after a tx mutation. */
+  const refreshAfterTxMutation = async () => {
+    await Promise.all([counts.refetch(), linkedBanks.refetch()]);
   };
 
-  const handleDelete = (expenseId: string) => {
-    setExpenses((list) => list.filter((e) => e.id !== expenseId));
-    setTransactions((list) => list.filter((t) => t.expenseId !== expenseId));
+  const handleAdd = async (draft: ExpenseDraft) => {
+    try {
+      await expenses.create(draft);
+      toast.success('تم جدولة المصروف الجديد');
+      setWizardOpen(false);
+    } catch (err) {
+      const message =
+        err instanceof ApiError && err.code === 'account_not_found'
+          ? 'الحساب غير موجود — اختر حساباً آخر'
+          : 'فشل جدولة المصروف';
+      toast.error(message);
+    }
   };
 
-  const handleSkip = (txId: string) => {
-    setTransactions((list) =>
-      list.map((t) =>
-        t.id === txId ? { ...t, status: 'skipped', note: 'تم التخطي يدوياً' } : t,
-      ),
-    );
+  const confirmDelete = async () => {
+    if (!pendingDelete) return;
+    try {
+      await expenses.remove(pendingDelete);
+      await Promise.all([counts.refetch(), actionTxs.refetch()]);
+      toast.success('تم حذف المصروف');
+    } catch {
+      toast.error('فشل حذف المصروف');
+    } finally {
+      setPendingDelete(null);
+    }
   };
 
-  const handleConfirm = (txId: string, amount: string) => {
-    const now = nowClientTimestamptz();
-    setTransactions((list) =>
-      list.map((t) =>
-        t.id === txId
-          ? { ...t, status: 'succeeded', executedAt: now, amount }
-          : t,
-      ),
-    );
+  const confirmSkip = async () => {
+    if (!pendingSkip) return;
+    try {
+      await actionTxs.skip(pendingSkip);
+      await refreshAfterTxMutation();
+      toast.success('تم تخطي الدورة');
+    } catch {
+      toast.error('فشل تخطي الدورة');
+    } finally {
+      setPendingSkip(null);
+    }
   };
 
-  const handleResolve = ({
-    txId,
-    bankId,
-    accountId,
-    updateLinked,
-  }: {
+  const confirmDebit = async () => {
+    if (!pendingConfirm) return;
+    try {
+      await actionTxs.confirm(pendingConfirm.txId, pendingConfirm.amount);
+      await refreshAfterTxMutation();
+      toast.success('تم الخصم بنجاح');
+    } catch (err) {
+      if (err instanceof ApiError && err.code === 'insufficient_funds') {
+        toast.error('الرصيد غير كافٍ', 'اختر حساباً آخر أو تخطّ الدورة.');
+      } else {
+        toast.error('فشل الخصم');
+      }
+    } finally {
+      setPendingConfirm(null);
+    }
+  };
+
+  const handleResolve = async (opts: {
     txId: string;
     bankId: string;
     accountId: string;
     updateLinked: boolean;
   }) => {
-    const now = nowClientTimestamptz();
-    setTransactions((list) =>
-      list.map((t) =>
-        t.id === txId
-          ? {
-              ...t,
-              status: 'succeeded',
-              executedAt: now,
-              resolvedManually: true,
-            }
-          : t,
-      ),
-    );
-    if (updateLinked) {
-      const tx = transactions.find((t) => t.id === txId);
-      if (tx) {
-        setExpenses((list) =>
-          list.map((e) => (e.id === tx.expenseId ? { ...e, bankId, accountId } : e)),
-        );
-      }
+    try {
+      await actionTxs.resolve(opts.txId, {
+        bankId: opts.bankId,
+        accountId: opts.accountId,
+        updateLinked: opts.updateLinked,
+      });
+      if (opts.updateLinked) await expenses.refetch();
+      await refreshAfterTxMutation();
+      toast.success('تم تسوية الدفعة');
+    } catch (err) {
+      const message =
+        err instanceof ApiError && err.code === 'insufficient_funds'
+          ? 'الرصيد غير كافٍ — اختر حساباً آخر'
+          : 'فشل تسوية الدفعة';
+      toast.error(message);
+      throw err;
     }
-    setResolveTxId(null);
   };
+
+  // ── Render ───────────────────────────────────────────────
+  const isInitialLoading =
+    expenses.loading && expenses.data.length === 0;
 
   return (
     <main className="min-h-screen bg-page-bg">
@@ -143,35 +211,36 @@ export default function ExpensesPage() {
         <ExpensesTabs
           value={tab}
           onChange={setTab}
-          recurringCount={expenses.length}
-          historyCount={historyExecutedCount}
-          actionCount={actionRequired.length}
+          recurringCount={expenses.data.length}
+          historyCount={counts.data.executed}
+          actionCount={counts.data.actionRequired}
         />
 
-        {tab === 'recurring' && (
-          <RecurringView
-            expenses={expenses}
-            transactions={transactions}
-            banks={MOCK_BANKS}
-            onOpen={setDrillExpenseId}
-            onDelete={handleDelete}
-            onNewExpense={() => setWizardOpen(true)}
-          />
-        )}
-
-        {tab === 'history' && (
-          <HistoryView transactions={transactions} expenses={expenses} />
-        )}
-
-        {tab === 'action' && (
-          <ActionView
-            transactions={actionRequired}
-            expenses={expenses}
-            banks={MOCK_BANKS}
-            onResolveOpen={setResolveTxId}
-            onConfirm={handleConfirm}
-            onSkip={handleSkip}
-          />
+        {isInitialLoading ? (
+          <Spinner fullArea size="lg" label="جارٍ التحميل…" />
+        ) : (
+          <>
+            {tab === 'recurring' && (
+              <RecurringView
+                expenses={expenses.data}
+                banks={linkedBanks.data}
+                onOpen={setDrillExpenseId}
+                onDelete={setPendingDelete}
+                onNewExpense={() => setWizardOpen(true)}
+              />
+            )}
+            {tab === 'history' && <HistoryView expenses={expenses.data} />}
+            {tab === 'action' && (
+              <ActionView
+                transactions={actionTxs.data}
+                expenses={expenses.data}
+                banks={linkedBanks.data}
+                onResolveOpen={setResolveTxId}
+                onConfirm={(txId, amount) => setPendingConfirm({ txId, amount })}
+                onSkip={setPendingSkip}
+              />
+            )}
+          </>
         )}
       </div>
 
@@ -179,15 +248,15 @@ export default function ExpensesPage() {
         open={wizardOpen}
         onClose={() => setWizardOpen(false)}
         onSubmit={handleAdd}
-        banks={MOCK_BANKS}
+        banks={linkedBanks.data}
       />
 
       <DrillSheet
-        open={drillExpenseId !== null}
+        open={effectiveDrillExpenseId !== null}
         onClose={() => setDrillExpenseId(null)}
         expense={drillExpense}
-        transactions={drillTransactions}
-        banks={MOCK_BANKS}
+        banks={linkedBanks.data}
+        highlightTxId={txParam ?? undefined}
       />
 
       <ResolveModal
@@ -195,8 +264,50 @@ export default function ExpensesPage() {
         onClose={() => setResolveTxId(null)}
         expense={resolveExpense}
         tx={resolveTx}
-        banks={MOCK_BANKS}
+        banks={linkedBanks.data}
         onResolve={handleResolve}
+      />
+
+      {/* ── Confirmation dialogs ───────────────────────────── */}
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        onClose={() => setPendingDelete(null)}
+        onConfirm={confirmDelete}
+        title="حذف المصروف"
+        description="سيُحذف المصروف وكل سجلّ دفعاته. لا يمكن التراجع."
+        variant="danger"
+        confirmLabel="حذف"
+        cancelLabel="إلغاء"
+      />
+
+      <ConfirmDialog
+        open={pendingSkip !== null}
+        onClose={() => setPendingSkip(null)}
+        onConfirm={confirmSkip}
+        title="تخطي هذه الدورة"
+        description="ستُتخطى ولن تُخصم. الدورة القادمة ستعمل عادي."
+        variant="warning"
+        confirmLabel="نعم، تخطي"
+        cancelLabel="إلغاء"
+      />
+
+      <ConfirmDialog
+        open={pendingConfirm !== null}
+        onClose={() => setPendingConfirm(null)}
+        onConfirm={confirmDebit}
+        title="تأكيد الخصم"
+        description={
+          pendingConfirm ? (
+            <>
+              سيتم خصم <Money amount={pendingConfirm.amount} />.
+            </>
+          ) : (
+            ''
+          )
+        }
+        variant="question"
+        confirmLabel="تأكيد وخصم"
+        cancelLabel="إلغاء"
       />
     </main>
   );

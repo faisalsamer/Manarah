@@ -12,9 +12,10 @@ import {
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Callout } from '@/components/ui/Callout';
-import { commonLabels, wizardLabels } from '@/lib/expenses/labels';
+import { Money } from '@/components/ui/RiyalSign';
+import { wizardLabels } from '@/lib/expenses/labels';
 import type { BankVM, ExpenseDraft } from '@/lib/expenses/types';
-import { findAccount, findBank, formatAmount, formatSchedule } from '@/lib/expenses/utils';
+import { findAccount, findBank, formatSchedule } from '@/lib/expenses/utils';
 
 export interface StepConfirmProps {
   data: ExpenseDraft;
@@ -25,9 +26,9 @@ export function StepConfirm({ data, banks }: StepConfirmProps) {
   const bank = findBank(banks, data.bankId);
   const account = findAccount(banks, data.bankId, data.accountId);
 
-  const amountValue =
+  const amountValue: ReactNode =
     data.amountType === 'fixed'
-      ? `${formatAmount(data.amount)} ${commonLabels.currency}`
+      ? <Money amount={data.amount} />
       : wizardLabels.summaryVariableAmount;
 
   // formatSchedule expects a partial expense shape — adapt the draft.

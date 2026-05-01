@@ -3,26 +3,24 @@
 import { ArrowUpRight, Building2, Clock, Hand, Trash2, Zap } from 'lucide-react';
 import { IconButton } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { Money } from '@/components/ui/RiyalSign';
 import {
   amountTypeLabels,
   commonLabels,
   paymentModeLabels,
   recurringLabels,
 } from '@/lib/expenses/labels';
-import type { BankVM, ExpenseVM, TransactionVM } from '@/lib/expenses/types';
+import type { BankVM, ExpenseVM } from '@/lib/expenses/types';
 import {
   findAccount,
   findBank,
-  formatAmount,
   formatDate,
   formatSchedule,
-  lastSignificantTransaction,
 } from '@/lib/expenses/utils';
 import { ExpenseStatusBadge } from './ExpenseStatusBadge';
 
 export interface ExpenseCardProps {
   expense: ExpenseVM;
-  transactions: TransactionVM[];
   banks: BankVM[];
   onOpen: (expenseId: string) => void;
   onDelete: (expenseId: string) => void;
@@ -30,14 +28,15 @@ export interface ExpenseCardProps {
 
 export function ExpenseCard({
   expense,
-  transactions,
   banks,
   onOpen,
   onDelete,
 }: ExpenseCardProps) {
   const bank = findBank(banks, expense.bankId);
   const account = findAccount(banks, expense.bankId, expense.accountId);
-  const last = lastSignificantTransaction(transactions);
+  // Latest "significant" tx is joined onto the expense by the API — no need
+  // to look it up across a full transactions list.
+  const last = expense.latestTransaction;
   const isFixed = expense.amountType === 'fixed';
 
   return (
@@ -106,12 +105,10 @@ export function ExpenseCard({
             <div className="text-left font-numbers">
               {isFixed ? (
                 <>
-                  <div className="text-h2 font-bold text-text-primary leading-none">
-                    {formatAmount(expense.amount)}{' '}
-                    <span className="text-caption text-text-muted">
-                      {commonLabels.currency}
-                    </span>
-                  </div>
+                  <Money
+                    amount={expense.amount}
+                    className="text-h2 font-bold text-text-primary leading-none"
+                  />
                   <div className="text-caption uppercase tracking-wider text-text-muted mt-1 font-arabic">
                     {recurringLabels.perCycle}
                   </div>

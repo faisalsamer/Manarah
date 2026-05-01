@@ -1,8 +1,9 @@
 'use client';
 
-import { commonLabels, historyLabels } from '@/lib/expenses/labels';
+import { Money } from '@/components/ui/RiyalSign';
+import { historyLabels } from '@/lib/expenses/labels';
 import type { ExpenseVM, TransactionVM } from '@/lib/expenses/types';
-import { formatAmount, formatDate, formatTime } from '@/lib/expenses/utils';
+import { formatDate, formatTime } from '@/lib/expenses/utils';
 import { ExpenseStatusBadge } from './ExpenseStatusBadge';
 
 export interface HistoryTableProps {
@@ -78,12 +79,7 @@ function HistoryRow({ tx, expense }: HistoryRowProps) {
       </div>
       <div className="col-span-2 text-left">
         {tx.amount ? (
-          <span className="text-body font-semibold font-numbers">
-            {formatAmount(tx.amount)}{' '}
-            <span className="text-caption text-text-muted font-arabic">
-              {commonLabels.currency}
-            </span>
-          </span>
+          <Money amount={tx.amount} className="text-body font-semibold" />
         ) : (
           <span className="text-text-muted italic font-arabic">
             {historyLabels.pendingAmount}

@@ -76,7 +76,9 @@ export const expense_notification_type = {
   payment_failed: 'payment_failed',
   awaiting_confirmation: 'awaiting_confirmation',
   all_retries_exhausted: 'all_retries_exhausted',
-  auto_skipped: 'auto_skipped'
+  auto_skipped: 'auto_skipped',
+  payment_succeeded: 'payment_succeeded',
+  upcoming_payment: 'upcoming_payment'
 } as const
 
 export type expense_notification_type = (typeof expense_notification_type)[keyof typeof expense_notification_type]

@@ -4,15 +4,14 @@ import { useMemo } from 'react';
 import { Plus, Repeat, TrendingUp, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { commonLabels, pageLabels, recurringLabels } from '@/lib/expenses/labels';
-import type { BankVM, ExpenseVM, TransactionVM } from '@/lib/expenses/types';
-import { formatAmount } from '@/lib/expenses/utils';
+import { Money } from '@/components/ui/RiyalSign';
+import { pageLabels, recurringLabels } from '@/lib/expenses/labels';
+import type { BankVM, ExpenseVM } from '@/lib/expenses/types';
 import { ExpenseCard } from './ExpenseCard';
 import { HeroStat } from './HeroStat';
 
 export interface RecurringViewProps {
   expenses: ExpenseVM[];
-  transactions: TransactionVM[];
   banks: BankVM[];
   onOpen: (expenseId: string) => void;
   onDelete: (expenseId: string) => void;
@@ -21,7 +20,6 @@ export interface RecurringViewProps {
 
 export function RecurringView({
   expenses,
-  transactions,
   banks,
   onOpen,
   onDelete,
@@ -69,7 +67,7 @@ export function RecurringView({
           tone="primary"
           icon={<Wallet size={20} strokeWidth={2.25} />}
           label={recurringLabels.statFixedLabel}
-          value={`${formatAmount(totalFixed)} ${commonLabels.currency}`}
+          value={<Money amount={totalFixed} />}
           suffix={recurringLabels.statFixedSuffix}
         />
         <HeroStat
@@ -95,7 +93,6 @@ export function RecurringView({
           <ExpenseCard
             key={expense.id}
             expense={expense}
-            transactions={transactions.filter((t) => t.expenseId === expense.id)}
             banks={banks}
             onOpen={onOpen}
             onDelete={onDelete}

@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronDown } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
+import { forwardRef, useState, type ReactNode } from 'react';
 
 export interface TimelineProps {
   children: ReactNode;
@@ -36,26 +36,32 @@ export interface TimelineItemProps {
   defaultOpen?: boolean;
   detailsLabel?: { open: ReactNode; close: ReactNode };
   className?: string;
+  /** Extra classes for the inner card panel — useful for highlight/ring states. */
+  panelClassName?: string;
   children?: ReactNode;
 }
 
-export function TimelineItem({
-  icon,
-  iconColor,
-  title,
-  meta,
-  rightSlot,
-  details,
-  defaultOpen = false,
-  detailsLabel = { open: 'عرض التفاصيل', close: 'إخفاء التفاصيل' },
-  className = '',
-  children,
-}: TimelineItemProps) {
+export const TimelineItem = forwardRef<HTMLDivElement, TimelineItemProps>(function TimelineItem(
+  {
+    icon,
+    iconColor,
+    title,
+    meta,
+    rightSlot,
+    details,
+    defaultOpen = false,
+    detailsLabel = { open: 'عرض التفاصيل', close: 'إخفاء التفاصيل' },
+    className = '',
+    panelClassName = '',
+    children,
+  },
+  ref,
+) {
   const [open, setOpen] = useState(defaultOpen);
   const hasDetails = details !== undefined && details !== null;
 
   return (
-    <div className={['relative pb-5 last:pb-0', className].join(' ')}>
+    <div ref={ref} className={['relative pb-5 last:pb-0', className].join(' ')}>
       <div
         aria-hidden
         className="absolute -right-[18px] top-2 w-4 h-4 flex items-center justify-center bg-page-bg rounded-full"
@@ -63,7 +69,13 @@ export function TimelineItem({
       >
         {icon}
       </div>
-      <div className="bg-card-bg border border-border rounded-md overflow-hidden">
+      <div
+        className={[
+          'bg-card-bg border border-border rounded-md overflow-hidden',
+          'transition-all duration-300',
+          panelClassName,
+        ].join(' ')}
+      >
         <div className="p-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0 text-right">
@@ -119,4 +131,4 @@ export function TimelineItem({
       </div>
     </div>
   );
-}
+});

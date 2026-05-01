@@ -5,9 +5,10 @@ import { useState } from 'react';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Field, MoneyInput } from '@/components/ui/Form';
+import { Money } from '@/components/ui/RiyalSign';
 import { actionLabels, commonLabels } from '@/lib/expenses/labels';
 import type { BankVM, ExpenseVM, TransactionVM } from '@/lib/expenses/types';
-import { findAccount, findBank, formatAmount, formatDate, formatTime } from '@/lib/expenses/utils';
+import { findAccount, findBank, formatDate, formatTime } from '@/lib/expenses/utils';
 import { ExpenseStatusBadge } from './ExpenseStatusBadge';
 
 export interface ConfirmCardProps {
@@ -25,9 +26,6 @@ export function ConfirmCard({ tx, expense, banks, onConfirm, onSkip }: ConfirmCa
 
   const bank = findBank(banks, expense?.bankId);
   const account = findAccount(banks, expense?.bankId, expense?.accountId);
-  const formattedAmount = tx.amount
-    ? `${formatAmount(tx.amount)} ${commonLabels.currency}`
-    : '';
 
   const reasonLabel = isVariable
     ? actionLabels.variableLabel
@@ -63,9 +61,10 @@ export function ConfirmCard({ tx, expense, banks, onConfirm, onSkip }: ConfirmCa
             </div>
             {!isVariable && tx.amount && (
               <div className="text-left">
-                <div className="text-h2 font-bold font-numbers text-text-primary">
-                  {formattedAmount}
-                </div>
+                <Money
+                  amount={tx.amount}
+                  className="text-h2 font-bold text-text-primary"
+                />
               </div>
             )}
           </div>
@@ -115,7 +114,7 @@ export function ConfirmCard({ tx, expense, banks, onConfirm, onSkip }: ConfirmCa
           ) : (
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <p className="text-caption italic text-text-muted">
-                {actionLabels.approveHint(formattedAmount)}
+                {tx.amount && actionLabels.approveHint(tx.amount)}
               </p>
               <div className="flex gap-2">
                 <Button

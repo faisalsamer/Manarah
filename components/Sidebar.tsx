@@ -3,17 +3,24 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Building2, Receipt, PiggyBank, HandCoins, Landmark } from 'lucide-react';
+import { Money } from '@/components/ui/RiyalSign';
+import type { CurrentUser } from '@/lib/user';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'الصفحة الرئيسية',     href: '/advisor' },
   { icon: Building2,       label: 'البنوك',              href: '/dashboard' },
   { icon: Receipt,         label: 'المصاريف والنفقات',   href: '/expenses' },
-  { icon: PiggyBank,       label: 'المدخرات',            href: '/payments' },
+  { icon: PiggyBank,       label: 'المدخرات',            href: '/marasi' },
   { icon: HandCoins,       label: 'الزكاة',              href: '/settings' },
 ];
 
-export default function Sidebar() {
+export interface SidebarProps {
+  user: CurrentUser;
+}
+
+export default function Sidebar({ user }: SidebarProps) {
   const pathname = usePathname();
+  const initial = user.name.trim().charAt(0) || '?';
 
   return (
     <aside className="fixed top-0 right-0 w-(--sidebar-width) h-screen flex flex-col z-sidebar overflow-hidden bg-linear-to-b from-sidebar-bg to-sidebar-bg-deep">
@@ -24,8 +31,8 @@ export default function Sidebar() {
             <Landmark size={20} color="white" />
           </div>
           <div>
-            <div className="text-[17px] font-bold text-white leading-[1.1]">منار</div>
-            <div className="text-[10px] text-primary-400 tracking-[0.5px]">MANAR FINANCE</div>
+            <div className="text-[17px] font-bold text-white leading-[1.1]">منارة</div>
+            <div className="text-[10px] text-primary-400 tracking-[0.5px]">MANARAH FINANCE</div>
           </div>
         </div>
       </div>
@@ -33,7 +40,7 @@ export default function Sidebar() {
       <div className="h-px bg-white/[0.07] mx-4 mb-2" />
 
       {/* Navigation */}
-      <nav className="flex-1 py-1 overflow-y-auto">
+      <nav className="flex-1 flex flex-col gap-1 py-2 px-2 overflow-y-auto">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
@@ -42,13 +49,19 @@ export default function Sidebar() {
               key={item.href}
               href={item.href}
               className={
-                'flex items-center gap-3 mx-2 px-4 py-3 rounded-sm text-body-sm font-medium transition-all duration-150 ' +
+                'relative flex items-center gap-3 px-3.5 py-2.5 rounded-md text-body-sm font-medium transition-colors duration-150 ' +
                 (isActive
-                  ? 'bg-sidebar-active-bg text-primary-400 border-r-[3px] border-sidebar-active-border'
-                  : 'text-sidebar-text-muted hover:bg-white/6 hover:text-sidebar-text')
+                  ? 'bg-sidebar-active-bg text-primary-400'
+                  : 'text-sidebar-text-muted hover:bg-white/4 hover:text-sidebar-text')
               }
             >
-              <Icon size={17} />
+              {isActive && (
+                <span
+                  aria-hidden="true"
+                  className="absolute right-0 top-1.5 bottom-1.5 w-0.75 rounded-full bg-sidebar-active-border"
+                />
+              )}
+              <Icon size={18} />
               <span>{item.label}</span>
             </Link>
           );
@@ -58,18 +71,20 @@ export default function Sidebar() {
       {/* Balance Panel */}
       <div className="mt-auto mx-3 mb-3 p-4 rounded-md bg-white/6 border border-white/10">
         <div className="text-micro text-sidebar-text-muted mb-1.5">الرصيد الإجمالي</div>
-        <div className="text-[22px] font-bold text-text-inverse text-right [direction:ltr]">42,800 ر.س</div>
+        <div className="text-[22px] font-bold text-text-inverse">
+          <Money amount={42800} />
+        </div>
         <div className="text-caption text-primary-400 mt-1">↑ 2.4% هذا الشهر</div>
       </div>
 
       {/* User */}
       <div className="flex items-center gap-2.5 px-4 py-3.5 border-t border-white/[0.07]">
         <div className="w-8.5 h-8.5 rounded-full bg-linear-to-br from-primary-400 to-primary-600 flex items-center justify-center text-body-lg font-bold text-white shrink-0">
-          أ
+          {initial}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-body-sm font-semibold text-white truncate">أحمد الفارسي</div>
-          <div className="text-micro text-sidebar-text-muted">CUST001</div>
+          <div className="text-body-sm font-semibold text-white truncate">{user.name}</div>
+          <div className="text-micro text-sidebar-text-muted truncate">{user.email}</div>
         </div>
       </div>
     </aside>

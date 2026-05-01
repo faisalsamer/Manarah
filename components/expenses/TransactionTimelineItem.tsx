@@ -10,11 +10,12 @@ import {
   SkipForward,
   XCircle,
 } from 'lucide-react';
-import type { ComponentType } from 'react';
+import { useEffect, useRef, type ComponentType } from 'react';
+import { Money } from '@/components/ui/RiyalSign';
 import { TimelineItem } from '@/components/ui/Timeline';
-import { commonLabels, drillLabels } from '@/lib/expenses/labels';
+import { drillLabels } from '@/lib/expenses/labels';
 import type { AttemptStatus, TransactionStatus, TransactionVM } from '@/lib/expenses/types';
-import { formatAmount, formatDate, formatTime } from '@/lib/expenses/utils';
+import { formatDate, formatTime } from '@/lib/expenses/utils';
 import { ExpenseStatusBadge } from './ExpenseStatusBadge';
 
 type Icon = ComponentType<{ size?: number | string; className?: string; strokeWidth?: number }>;
@@ -43,16 +44,28 @@ const attemptIcon: Record<AttemptStatus, { Icon: Icon; color: string }> = {
 
 export interface TransactionTimelineItemProps {
   tx: TransactionVM;
+  /** When true, scroll into view + apply a primary ring so the user sees
+   *  which transaction triggered them landing here (deep-linked from a notification). */
+  highlight?: boolean;
 }
 
-export function TransactionTimelineItem({ tx }: TransactionTimelineItemProps) {
+export function TransactionTimelineItem({ tx, highlight = false }: TransactionTimelineItemProps) {
   const statusCfg = statusIcon[tx.status];
   const StatusIcon = statusCfg.Icon;
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (highlight && ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [highlight]);
   const dateToShow = tx.executedAt ?? tx.scheduledFor;
   const hasAttempts = tx.attempts.length > 0;
 
   return (
     <TimelineItem
+      ref={ref}
+      panelClassName={highlight ? 'ring-2 ring-primary-400 ring-offset-2 ring-offset-page-bg' : ''}
       iconColor={statusCfg.color}
       icon={
         <StatusIcon
@@ -91,14 +104,9 @@ export function TransactionTimelineItem({ tx }: TransactionTimelineItemProps) {
         </span>
       }
       rightSlot={
-        <div className="text-left font-numbers">
+        <div className="text-left">
           {tx.amount ? (
-            <span className="text-h4 font-bold text-text-primary">
-              {formatAmount(tx.amount)}{' '}
-              <span className="text-caption text-text-muted font-arabic">
-                {commonLabels.currency}
-              </span>
-            </span>
+            <Money amount={tx.amount} className="text-h4 font-bold text-text-primary" />
           ) : (
             <span className="text-caption italic text-text-muted font-arabic">
               {drillLabels.pendingAmount}

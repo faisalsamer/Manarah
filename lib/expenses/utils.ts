@@ -10,6 +10,10 @@ import type {
   TransactionVM,
 } from './types';
 
+// Re-export the project-wide formatters so existing imports keep working.
+// New code should import directly from `@/lib/format`.
+export { formatAmount, formatDate, formatTime, formatDateTime } from '../format';
+
 // ─── Bank / account lookups ──────────────────────────────────
 export const findBank = (banks: BankVM[], id: string | undefined): BankVM | undefined =>
   id ? banks.find((b) => b.id === id) : undefined;
@@ -21,41 +25,6 @@ export const findAccount = (
 ): AccountVM | undefined => {
   if (!bankId || !accountId) return undefined;
   return findBank(banks, bankId)?.accounts.find((a) => a.id === accountId);
-};
-
-// ─── Currency formatting ─────────────────────────────────────
-/** "1234.5" → "1,234.50". Uses Latin digits — most readable for finance UI. */
-export const formatAmount = (amount: string | number | null | undefined): string => {
-  if (amount === null || amount === undefined || amount === '') return '0.00';
-  const n = typeof amount === 'string' ? parseFloat(amount) : amount;
-  if (Number.isNaN(n)) return '0.00';
-  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-};
-
-// ─── Date / time formatting (Arabic locale, Latin digits) ────
-const dateFmt = new Intl.DateTimeFormat('ar-SA-u-nu-latn', {
-  day: '2-digit',
-  month: 'short',
-  year: 'numeric',
-});
-const timeFmt = new Intl.DateTimeFormat('ar-SA-u-nu-latn', {
-  hour: '2-digit',
-  minute: '2-digit',
-  hour12: false,
-});
-
-export const formatDate = (iso: string | null | undefined): string => {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '—';
-  return dateFmt.format(d);
-};
-
-export const formatTime = (iso: string | null | undefined): string => {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '—';
-  return timeFmt.format(d);
 };
 
 // ─── Schedule label ──────────────────────────────────────────

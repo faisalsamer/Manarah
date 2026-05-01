@@ -62,6 +62,13 @@ export interface ExpenseVM {
   paymentMode: PaymentMode;
   status: ExpenseStatus;
   createdAt: string;
+  /**
+   * Most recent "significant" transaction for this expense, if any —
+   * either executed, or in a failed / retrying / awaiting state. Joined
+   * onto the expense by the API so the recurring card can show last-run
+   * status without fetching the full transactions list.
+   */
+  latestTransaction: TransactionVM | null;
 }
 
 // ─── Transaction (one cycle) ─────────────────────────────────

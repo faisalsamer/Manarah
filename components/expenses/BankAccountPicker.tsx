@@ -3,9 +3,10 @@
 import { Building2, Wallet } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { Field } from '@/components/ui/Form';
-import { commonLabels, resolveLabels, wizardLabels } from '@/lib/expenses/labels';
+import { Money } from '@/components/ui/RiyalSign';
+import { resolveLabels, wizardLabels } from '@/lib/expenses/labels';
 import type { BankVM } from '@/lib/expenses/types';
-import { findBank, formatAmount } from '@/lib/expenses/utils';
+import { findBank } from '@/lib/expenses/utils';
 
 export interface BankAccountPickerProps {
   banks: BankVM[];
@@ -144,12 +145,10 @@ export function BankAccountPicker({
                   </span>
                   {showBalance && (
                     <span className="text-left shrink-0">
-                      <span className="block text-body font-semibold font-numbers leading-none">
-                        {formatAmount(a.balance)}{' '}
-                        <span className="text-caption font-arabic">
-                          {commonLabels.currency}
-                        </span>
-                      </span>
+                      <Money
+                        amount={a.balance}
+                        className="text-body font-semibold leading-none"
+                      />
                       <span
                         className={[
                           'block text-micro uppercase tracking-wider mt-1',

@@ -172,7 +172,7 @@
 /* ── Layout variables (not Tailwind utilities) ───────────────
    Used directly via var() in component CSS / inline styles    */
 :root {
-  --sidebar-width:      220px;
+  --sidebar-width:      256px;
   --sidebar-collapsed:  64px;
   --navbar-height:      60px;
   --content-max-width:  1200px;
@@ -238,13 +238,24 @@
     background-color: var(--color-page-bg);
     color: var(--color-text-primary);
     line-height: var(--leading-normal);
-    /* Radix's react-remove-scroll-bar applies inline padding-right to <body>
-       to compensate for a removed scrollbar. With scrollbar-gutter:stable on
-       <html> the gutter is already reserved, so that compensation just shifts
-       our content. !important is required to win over the inline style. */
-    padding-right: 0 !important;
-    padding-left: 0 !important;
   }
+}
+
+/* Neutralize react-remove-scroll-bar's body offset.
+   When a Radix Dialog opens it injects an unlayered <style> with
+     body[data-scroll-locked] { margin-right: <gap>px !important; ... }
+   to compensate for the scrollbar it just hid. We already reserve the gutter
+   via `scrollbar-gutter: stable` on <html>, so that compensation is pure shift.
+
+   This rule must stay unlayered AND outspecify Radix's selector — Radix's
+   <style> is appended to <head> when the dialog opens (later in source order),
+   so at equal specificity Radix wins. `html body[data-scroll-locked]` raises
+   specificity from (0,1,1) to (0,1,2) and beats it regardless of order. */
+html body[data-scroll-locked] {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
 }
 
 /* ── Component Classes ───────────────────────────────────────

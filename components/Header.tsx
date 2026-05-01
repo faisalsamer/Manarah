@@ -1,8 +1,16 @@
 'use client';
 
-import { Bell, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
+import { NotificationBell } from './notifications/NotificationBell';
+import type { CurrentUser } from '@/lib/user';
 
-export default function Navbar() {
+export interface HeaderProps {
+  user: CurrentUser;
+}
+
+export default function Navbar({ user }: HeaderProps) {
+  const initial = user.name.trim().charAt(0) || '?';
+
   return (
     <header className="navbar">
       {/* Search */}
@@ -25,34 +33,14 @@ export default function Navbar() {
 
       {/* Actions */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <button style={{
-          position: 'relative',
-          padding: '7px',
-          borderRadius: '8px',
-          border: '1px solid var(--color-border)',
-          background: 'var(--color-surface)',
-          cursor: 'pointer',
-          color: 'var(--color-text-secondary)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-          <Bell size={18} />
-          <span style={{
-            position: 'absolute', top: '5px', left: '5px',
-            width: '7px', height: '7px',
-            borderRadius: '50%',
-            background: 'var(--color-danger)',
-            border: '1.5px solid white',
-          }} />
-        </button>
+        <NotificationBell />
 
         <div style={{ width: '1px', height: '28px', background: 'var(--color-border)' }} />
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
           <div style={{ textAlign: 'right' }}>
             <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text-primary)', lineHeight: 1.2 }}>
-              أحمد الفارسي
+              {user.name}
             </div>
             <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
               عميل مميز
@@ -64,7 +52,7 @@ export default function Navbar() {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '15px', fontWeight: '700', color: 'white', flexShrink: 0,
           }}>
-            أ
+            {initial}
           </div>
         </div>
       </div>

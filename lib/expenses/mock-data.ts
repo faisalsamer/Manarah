@@ -56,6 +56,7 @@ export const MOCK_EXPENSES: ExpenseVM[] = [
     paymentMode: 'auto',
     status: 'active',
     createdAt: '2025-10-01T08:00:00+03:00',
+    latestTransaction: null,
   },
   {
     id: 'exp-2',
@@ -73,6 +74,7 @@ export const MOCK_EXPENSES: ExpenseVM[] = [
     paymentMode: 'auto',
     status: 'active',
     createdAt: '2025-09-15T08:00:00+03:00',
+    latestTransaction: null,
   },
   {
     id: 'exp-3',
@@ -90,6 +92,7 @@ export const MOCK_EXPENSES: ExpenseVM[] = [
     paymentMode: 'auto',
     status: 'active',
     createdAt: '2025-08-20T08:00:00+03:00',
+    latestTransaction: null,
   },
   {
     id: 'exp-4',
@@ -107,6 +110,7 @@ export const MOCK_EXPENSES: ExpenseVM[] = [
     paymentMode: 'auto',
     status: 'active',
     createdAt: '2025-11-12T08:00:00+03:00',
+    latestTransaction: null,
   },
   {
     id: 'exp-5',
@@ -124,6 +128,7 @@ export const MOCK_EXPENSES: ExpenseVM[] = [
     paymentMode: 'manual',
     status: 'active',
     createdAt: '2025-07-10T08:00:00+03:00',
+    latestTransaction: null,
   },
 ];
 
