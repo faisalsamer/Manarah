@@ -1,14 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { Sparkles, LayoutDashboard, TrendingUp, CreditCard, Settings, Landmark } from 'lucide-react';
-import { SARSymbol } from '@/components/ui/SARSymbol';
+import { Sparkles, LayoutDashboard, TrendingUp, CreditCard, Settings, Landmark, Coins } from 'lucide-react';
 
 const menuItems = [
   { icon: Sparkles,        label: 'المستشار الذكي',     href: '/advisor' },
   { icon: LayoutDashboard, label: 'الصفحة الرئيسية',    href: '/dashboard' },
+  { icon: Coins,           label: 'الزكاة',              href: '/zakat' },
   { icon: TrendingUp,      label: 'المصاريف والنفقات', href: '/expenses' },
   { icon: CreditCard,      label: 'المدفوعات',          href: '/payments' },
   { icon: Settings,        label: 'الإعدادات',          href: '/settings' },
@@ -16,18 +15,6 @@ const menuItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const [totalBalance, setTotalBalance] = useState<number | null>(null);
-
-  useEffect(() => {
-    fetch('/api/banks/linked')
-      .then((r) => r.json())
-      .then((banks: { total_balance: number }[]) => {
-        if (Array.isArray(banks)) {
-          setTotalBalance(banks.reduce((sum, b) => sum + b.total_balance, 0));
-        }
-      })
-      .catch(() => {});
-  }, []);
 
   return (
     <aside className="fixed top-0 right-0 w-(--sidebar-width) h-screen flex flex-col z-sidebar overflow-hidden bg-linear-to-b from-sidebar-bg to-sidebar-bg-deep">
@@ -68,16 +55,6 @@ export default function Sidebar() {
           );
         })}
       </nav>
-
-      {/* Balance Panel */}
-      <div className="mt-auto mx-3 mb-3 p-4 rounded-md bg-white/6 border border-white/10">
-        <div className="text-micro text-sidebar-text-muted mb-1.5">الرصيد الإجمالي</div>
-        <div className="text-[22px] font-bold text-text-inverse text-right [direction:ltr]">
-          <SARSymbol size={16} className="invert mix-blend-screen" />{' '}
-          {totalBalance === null ? '—' : totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-        </div>
-        <div className="text-caption text-primary-400 mt-1">↑ 2.4% هذا الشهر</div>
-      </div>
 
       {/* User */}
       <div className="flex items-center gap-2.5 px-4 py-3.5 border-t border-white/[0.07]">

@@ -1,0 +1,210 @@
+// ─────────────────────────────────────────────────────────────
+// GOLD API CLIENT
+// Fetches gold and silver prices from goldapi.io
+// Prices are returned per troy ounce — we convert to per gram
+// 1 troy ounce = 31.1035 grams
+// ─────────────────────────────────────────────────────────────
+
+import { NisabPrices, MetalPrice } from '@/types/zakat'
+import { NISAB, SAUDI_TIMEZONE } from '@/lib/zakat/constants'
+import { toRiyadhDateString } from '@/utils/date'
+
+const TROY_OUNCE_IN_GRAMS = 31.1035
+
+// In-memory cache to avoid hammering the API within the same process
+const priceCache = new Map<string, NisabPrices>()
+
+/**
+ * Fetch price for one metal (XAU or XAG) in SAR
+ * Returns price per gram
+ */
+async function fetchMetalPriceSAR(metal: 'XAU' | 'XAG'): Promise<MetalPrice> {
+  const apiKey = process.env.GOLD_API_KEY
+  const baseUrl = process.env.GOLD_API_BASE_URL || 'https://www.goldapi.io/api'
+
+  if (!apiKey) {
+    throw new Error('GOLD_API_KEY is not set in environment variables')
+  }
+
+  const url = `${baseUrl}/${metal}/SAR`
+
+  const res = await fetch(url, {
+    headers: {
+      'x-access-token': apiKey,
+      'Content-Type': 'application/json',
+    },
+    // Next.js cache — revalidate every 6 hours
+    next: { revalidate: 21600 },
+  })
+
+  if (!res.ok) {
+    throw new Error(
+      `GoldAPI error: ${res.status} ${res.statusText} for metal ${metal}`
+    )
+  }
+
+  const data = await res.json()
+
+  // GoldAPI returns price per troy ounce
+  if (!data.price || data.price <= 0) {
+    throw new Error(`GoldAPI returned invalid price for ${metal}: ${data.price}`)
+  }
+
+  const pricePerGram = data.price / TROY_OUNCE_IN_GRAMS
+
+  return {
+    pricePerGramSAR: parseFloat(pricePerGram.toFixed(4)),
+    fetchedAt: new Date().toISOString(),
+    source: 'api',
+  }
+}
+
+/**
+ * Get today's nisab prices — tries API first, falls back to DB cache
+ * Cached in memory for the current process lifetime
+ */
+export async function getTodayNisabPrices(): Promise<NisabPrices> {
+  const todayRiyadh = toRiyadhDateString(new Date())
+
+  // Check in-memory cache first
+  if (priceCache.has(todayRiyadh)) {
+    return priceCache.get(todayRiyadh)!
+  }
+
+  const { PrismaClient } = await import('@prisma/client')
+  const db = new PrismaClient()
+  const { nisab_price_history } = db
+
+  // Try to get from DB first (already fetched today)
+  const cached = await nisab_price_history.findUnique({
+    where: { price_date: new Date(todayRiyadh) },
+  })
+
+  if (cached) {
+    const prices: NisabPrices = {
+      gold: {
+        pricePerGramSAR: cached.gold_price_per_gram.toNumber(),
+        fetchedAt:       cached.fetched_at.toISOString(),
+        source:          'cache',
+      },
+      silver: {
+        pricePerGramSAR: cached.silver_price_per_gram.toNumber(),
+        fetchedAt:       cached.fetched_at.toISOString(),
+        source:          'cache',
+      },
+      goldNisabValueSAR:   cached.gold_nisab_value_sar.toNumber(),
+      silverNisabValueSAR: cached.silver_nisab_value_sar.toNumber(),
+      priceDate:           todayRiyadh,
+    }
+    priceCache.set(todayRiyadh, prices)
+    return prices
+  }
+
+  // Fetch fresh from API
+  const [gold, silver] = await Promise.all([
+    fetchMetalPriceSAR('XAU'),
+    fetchMetalPriceSAR('XAG'),
+  ])
+
+  const goldNisabValueSAR = parseFloat(
+    (gold.pricePerGramSAR * NISAB.GOLD_GRAMS).toFixed(2)
+  )
+  const silverNisabValueSAR = parseFloat(
+    (silver.pricePerGramSAR * NISAB.SILVER_GRAMS).toFixed(2)
+  )
+
+  const prices: NisabPrices = {
+    gold,
+    silver,
+    goldNisabValueSAR,
+    silverNisabValueSAR,
+    priceDate: todayRiyadh,
+  }
+
+  // Save to DB — all snake_case
+  await nisab_price_history.upsert({
+    where: { price_date: new Date(todayRiyadh) },
+    create: {
+      price_date:            new Date(todayRiyadh),
+      gold_price_per_gram:   gold.pricePerGramSAR,
+      gold_nisab_grams:      NISAB.GOLD_GRAMS,
+      gold_nisab_value_sar:  goldNisabValueSAR,
+      silver_price_per_gram: silver.pricePerGramSAR,
+      silver_nisab_grams:    NISAB.SILVER_GRAMS,
+      silver_nisab_value_sar: silverNisabValueSAR,
+      source:                'goldapi',
+      raw_response:          { gold, silver },
+    },
+    update: {
+      gold_price_per_gram:   gold.pricePerGramSAR,
+      gold_nisab_value_sar:  goldNisabValueSAR,
+      silver_price_per_gram: silver.pricePerGramSAR,
+      silver_nisab_value_sar: silverNisabValueSAR,
+      fetched_at:            new Date(),
+    },
+  })
+
+  priceCache.set(todayRiyadh, prices)
+  return prices
+}
+
+/**
+ * Get nisab price for a specific past date
+ * Used for retroactive hawl checking
+ * If not in DB, we cannot fetch historical API data on free plan
+ * so we use the closest available date
+ */
+export async function getNisabPriceForDate(
+  dateStr: string
+): Promise<NisabPrices | null> {
+  const { PrismaClient } = await import('@prisma/client')
+  const db = new PrismaClient()
+  const { nisab_price_history } = db
+
+  // Try exact date
+  const exact = await nisab_price_history.findUnique({
+    where: { price_date: new Date(dateStr) },
+  })
+
+  if (exact) {
+    return {
+      gold: {
+        pricePerGramSAR: exact.gold_price_per_gram.toNumber(),
+        fetchedAt:       exact.fetched_at.toISOString(),
+        source:          'cache',
+      },
+      silver: {
+        pricePerGramSAR: exact.silver_price_per_gram.toNumber(),
+        fetchedAt:       exact.fetched_at.toISOString(),
+        source:          'cache',
+      },
+      goldNisabValueSAR:   exact.gold_nisab_value_sar.toNumber(),
+      silverNisabValueSAR: exact.silver_nisab_value_sar.toNumber(),
+      priceDate:           dateStr,
+    }
+  }
+
+  // Fallback: find the closest earlier date we have
+  const closest = await nisab_price_history.findFirst({
+    where:   { price_date: { lte: new Date(dateStr) } },
+    orderBy: { price_date: 'desc' },
+  })
+
+  if (!closest) return null
+
+  return {
+    gold: {
+      pricePerGramSAR: closest.gold_price_per_gram.toNumber(),
+      fetchedAt:       closest.fetched_at.toISOString(),
+      source:          'cache',
+    },
+    silver: {
+      pricePerGramSAR: closest.silver_price_per_gram.toNumber(),
+      fetchedAt:       closest.fetched_at.toISOString(),
+      source:          'cache',
+    },
+    goldNisabValueSAR:   closest.gold_nisab_value_sar.toNumber(),
+    silverNisabValueSAR: closest.silver_nisab_value_sar.toNumber(),
+    priceDate:           dateStr,
+  }
+}

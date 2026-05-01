@@ -1,0 +1,186 @@
+// ─────────────────────────────────────────────────────────────
+// ZAKAT MODULE TYPES
+// ─────────────────────────────────────────────────────────────
+
+export type NisabStandard = 'SILVER' | 'GOLD'
+
+export type AssetType =
+  | 'GOLD_SAVINGS'
+  | 'SILVER_SAVINGS'
+  | 'STOCKS'
+  | 'CONFIRMED_DEBTS'
+  | 'TRADE_GOODS'
+  | 'CASH'
+  | 'CUSTOM'
+
+export type AssetStatus = 'ACTIVE' | 'ZAKAT_PAID' | 'DELETED' | 'EDITED'
+
+export type HawlStatusType = 'ACTIVE' | 'BROKEN' | 'COMPLETED' | 'PENDING'
+
+export type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED'
+
+export type AssetHistoryAction = 'CREATED' | 'UPDATED' | 'DELETED' | 'ZAKAT_PAID'
+
+// ── Nisab price from API ──────────────────────────────────────
+
+export interface MetalPrice {
+  pricePerGramSAR: number
+  fetchedAt: string        // ISO UTC
+  source: 'api' | 'cache'
+}
+
+export interface NisabPrices {
+  gold: MetalPrice
+  silver: MetalPrice
+  goldNisabValueSAR: number    // goldPricePerGram * 85
+  silverNisabValueSAR: number  // silverPricePerGram * 595
+  priceDate: string            // YYYY-MM-DD in Riyadh timezone
+}
+
+// ── Manual asset added by user ────────────────────────────────
+
+export interface ZakatAssetInput {
+  assetType: AssetType
+  customLabel?: string       // required when type is CUSTOM
+  description?: string
+  amount: number             // SAR value
+  currency?: string
+  weightGrams?: number       // for gold/silver
+  karat?: number             // for gold: 24,22,21,18...
+  ownedSince: string         // ISO date — can be past date
+  ownedUntil?: string        // ISO date — if no longer owned
+}
+
+export interface ZakatAsset extends ZakatAssetInput {
+  id: string
+  userId: string
+  status: AssetStatus
+  createdAt: string
+  updatedAt: string
+}
+
+// ── Calculation engine input/output ──────────────────────────
+
+export interface BankAccountBalance {
+  accountId: string
+  accountName: string
+  bankName: string
+  balance: number
+  currency: string
+}
+
+export interface ZakatCalculationInput {
+  userId: string
+  nisabStandard: NisabStandard
+  bankAccounts: BankAccountBalance[]
+  manualAssets: ZakatAsset[]
+  liabilitiesTotal: number
+  nisabPrices: NisabPrices
+}
+
+export interface AssetBreakdownItem {
+  label: string
+  assetType: string
+  valueSAR: number
+  isZakatable: boolean
+  notes?: string
+}
+
+export interface ZakatCalculationResult {
+  // Inputs used
+  nisabStandard: NisabStandard
+  nisabValueSAR: number
+  goldPricePerGram: number
+  silverPricePerGram: number
+
+  // Totals
+  bankBalanceTotal: number
+  manualAssetsTotal: number
+  liabilitiesTotal: number
+  netWorth: number           // bankBalance + manualAssets - liabilities
+
+  // Decision
+  isAboveNisab: boolean
+  zakatAmount: number | null // null = not due (below nisab or hawl incomplete)
+  zakatRate: number          // 0.025
+
+  // Detailed breakdown for UI display
+  breakdown: AssetBreakdownItem[]
+
+  calculatedAt: string       // ISO UTC
+}
+
+// ── Hawl tracking ─────────────────────────────────────────────
+
+export interface HawlState {
+  isActive: boolean
+  isComplete: boolean
+  startDate: string | null    // ISO date Riyadh
+  expectedEndDate: string | null
+  daysPassed: number
+  daysRemaining: number
+  status: HawlStatusType
+  wasReset: boolean
+  resetReason?: string
+  message: string             // human-readable status in Arabic
+}
+
+// ── Daily check (used in retroactive + ongoing hawl) ──────────
+
+export interface DailyCheckInput {
+  date: string               // YYYY-MM-DD Riyadh
+  bankBalance: number
+  manualAssetsTotal: number
+  nisabPrices: NisabPrices
+  nisabStandard: NisabStandard
+}
+
+export interface DailyCheckResult extends DailyCheckInput {
+  totalNetWorth: number
+  nisabValueSAR: number
+  isAboveNisab: boolean
+}
+
+// ── Retroactive period (from setup page) ─────────────────────
+
+export interface RetroactivePeriodInput {
+  userId: string
+  previousNetBalance: number  // user's balance at moneyCollectedDate
+  moneyCollectedDate: string  // YYYY-MM-DD — when user first had this money
+  lastZakatPaymentDate?: string
+  nisabStandard: NisabStandard
+}
+
+export interface RetroactivePeriodResult {
+  startDate: string
+  endDate: string             // today
+  totalDays: number
+  daysAboveNisab: number
+  hawlBrokenDates: string[]   // dates where balance dropped below nisab
+  shouldStartFreshHawl: boolean
+  suggestedHawlStartDate: string | null
+  dailyChecks: DailyCheckResult[]
+}
+
+// ── Payment ───────────────────────────────────────────────────
+
+export interface ZakatPaymentInput {
+  userId: string
+  calculationId: string
+  amount: number
+  fromAccountId: string
+  receiverId: string
+  notes?: string
+  isAutomated?: boolean
+}
+
+export interface ZakatPaymentReceiver {
+  id: string
+  userId: string
+  label: string
+  iban: string
+  accountName: string
+  bankName?: string
+  isCharity: boolean
+  isDefault: boolean
+}

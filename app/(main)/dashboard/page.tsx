@@ -4,10 +4,13 @@ import Image from 'next/image'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Transaction } from '@/lib/data/transactions'
 import {
+  AlertTriangle,
   ArrowLeft,
   BadgeCheck,
   Building2,
   Check,
+  ChevronDown,
+  ChevronUp,
   CreditCard,
   ExternalLink,
   Landmark,
@@ -15,12 +18,16 @@ import {
   Loader2,
   Plus,
   ShieldCheck,
+  Unlink,
   WalletCards,
   X,
 } from 'lucide-react'
 import { Button, IconButton } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { toast } from '@/components/ui/Toast'
 import { SARSymbol } from '@/components/ui/SARSymbol'
+import type { AccountBlockers, BankBlockedAccount } from '@/lib/bank-dependencies'
 
 interface BankSummary {
   bank_id: string
@@ -142,25 +149,46 @@ function BankLogo({ bank }: { bank: Pick<BankSummary, 'bank_id' | 'bank_code' | 
   )
 }
 
-function BankCard({ bank }: { bank: LinkedBank }) {
+function BankCard({
+  bank,
+  onDisconnectBank,
+  onDisconnectAccount,
+}: {
+  bank: LinkedBank
+  onDisconnectBank: (bankId: string) => void
+  onDisconnectAccount: (bankId: string, accountId: string, accountName: string) => void
+}) {
   const brand = bankBrand(bank.bank_id)
+  const [expanded, setExpanded] = useState(false)
 
   return (
-    <article className="bank-card min-h-[230px] overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-[var(--shadow-md)]">
+    <article className="bank-card overflow-hidden transition-all duration-200 hover:shadow-[var(--shadow-md)]">
       <div className="absolute inset-x-0 top-0 h-1" style={{ background: brand.primary }} />
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-24"
         style={{ background: `radial-gradient(ellipse at 80% 0%, ${brand.primary}18 0%, transparent 70%)` }}
       />
 
+      {/* Header row */}
       <div className="relative flex items-start justify-between gap-3">
         <BankLogo bank={bank} />
-        <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-success-light)] px-2 py-1 text-[11px] font-bold text-[var(--color-success)]">
-          <BadgeCheck size={13} />
-          نشط
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-success-light)] px-2 py-1 text-[11px] font-bold text-[var(--color-success)]">
+            <BadgeCheck size={13} />
+            نشط
+          </span>
+          <button
+            type="button"
+            onClick={() => onDisconnectBank(bank.bank_id)}
+            title="إلغاء ربط البنك"
+            className="flex size-7 items-center justify-center rounded-md border border-[var(--color-border)] bg-white text-[var(--color-text-muted)] transition hover:border-[var(--color-danger)] hover:bg-[var(--color-danger-light)] hover:text-[var(--color-danger)]"
+          >
+            <Unlink size={13} />
+          </button>
+        </div>
       </div>
 
+      {/* Bank name */}
       <div className="relative min-w-0">
         <h3 className="text-[15px] font-bold text-[var(--color-text-primary)]">{bank.bank_name_ar}</h3>
         <p className="mt-1 text-[12px] text-[var(--color-text-muted)]">
@@ -168,6 +196,7 @@ function BankCard({ bank }: { bank: LinkedBank }) {
         </p>
       </div>
 
+      {/* Balance */}
       <div className="relative rounded-sm bg-[var(--color-primary-50)] p-3">
         <p className="text-[12px] text-[var(--color-text-muted)]">الرصيد المتاح</p>
         <p className="mt-1 text-right font-[var(--font-numbers)] text-[20px] font-bold text-[var(--color-primary-500)] [direction:ltr]">
@@ -175,8 +204,9 @@ function BankCard({ bank }: { bank: LinkedBank }) {
         </p>
       </div>
 
+      {/* Accounts list — collapsed shows first 2, expanded shows all with disconnect */}
       <div className="relative mt-auto space-y-2">
-        {bank.accounts.slice(0, 2).map((account) => (
+        {(expanded ? bank.accounts : bank.accounts.slice(0, 2)).map((account) => (
           <div key={account.account_id} className="flex items-center justify-between gap-2 rounded-sm border border-[var(--color-border)] bg-white px-3 py-2">
             <div className="min-w-0">
               <p className="truncate text-[12px] font-semibold text-[var(--color-text-primary)]">
@@ -186,14 +216,41 @@ function BankCard({ bank }: { bank: LinkedBank }) {
                 {account.iban}
               </p>
             </div>
-            {account.is_primary && (
-              <span className="shrink-0 rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[10px] font-bold text-[var(--color-primary-500)]">
-                رئيسي
-              </span>
-            )}
+            <div className="flex shrink-0 items-center gap-1.5">
+              {account.is_primary && (
+                <span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[10px] font-bold text-[var(--color-primary-500)]">
+                  رئيسي
+                </span>
+              )}
+              {expanded && (
+                <button
+                  type="button"
+                  onClick={() => onDisconnectAccount(bank.bank_id, account.account_id, account.account_name)}
+                  title="إلغاء ربط الحساب"
+                  className="flex size-6 items-center justify-center rounded border border-[var(--color-border)] bg-white text-[var(--color-text-muted)] transition hover:border-[var(--color-danger)] hover:bg-[var(--color-danger-light)] hover:text-[var(--color-danger)]"
+                >
+                  <Unlink size={11} />
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
+
+      {/* Expand / collapse toggle */}
+      {bank.accounts.length > 0 && (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="relative mt-2 flex w-full items-center justify-center gap-1 rounded-sm py-1.5 text-[11px] font-semibold text-[var(--color-text-muted)] transition hover:bg-[var(--color-surface)] hover:text-[var(--color-text-secondary)]"
+        >
+          {expanded ? (
+            <><ChevronUp size={13} /> إخفاء الحسابات</>
+          ) : (
+            <><ChevronDown size={13} /> إدارة الحسابات ({bank.accounts.length})</>
+          )}
+        </button>
+      )}
     </article>
   )
 }
@@ -213,6 +270,92 @@ function AddBankCard({ onClick }: { onClick: () => void }) {
         اربط حساباتك البنكية لمتابعة رصيدك من مكان واحد
       </span>
     </button>
+  )
+}
+
+// ── Blocker dialog — shown when disconnect is blocked by active module usage ──
+
+const blockerModuleLabels: Record<keyof AccountBlockers, string> = {
+  marasi: 'المراسي (أهداف الادخار)',
+  recurring_expenses: 'النفقات المتكررة',
+  pending_payments: 'مدفوعات معلّقة',
+}
+
+function BlockerDialog({
+  open,
+  onClose,
+  // single-account blocker
+  accountName,
+  blockers,
+  // bank-level blocker
+  blockedAccounts,
+}: {
+  open: boolean
+  onClose: () => void
+  accountName?: string
+  blockers?: AccountBlockers
+  blockedAccounts?: BankBlockedAccount[]
+}) {
+  const isBankLevel = !!blockedAccounts
+
+  return (
+    <Dialog open={open} onClose={onClose} title="لا يمكن إلغاء الربط" size="sm">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', paddingTop: '4px', paddingBottom: '4px' }}>
+        <div className="flex items-start gap-3 rounded-md border border-[rgba(229,57,53,0.25)] bg-[var(--color-danger-light)] p-3">
+          <AlertTriangle size={18} className="mt-0.5 shrink-0 text-[var(--color-danger)]" />
+          <p className="text-[13px] leading-6 text-[var(--color-danger)]">
+            {isBankLevel
+              ? 'بعض الحسابات تحت هذا البنك مستخدمة في وحدات أخرى. يرجى إيقافها أو إعادة تعيينها أولاً.'
+              : `الحساب "${accountName}" مستخدم في وحدات أخرى. يرجى إيقافها أو إعادة تعيينها أولاً.`}
+          </p>
+        </div>
+
+        {/* Single account blockers */}
+        {!isBankLevel && blockers && (
+          <ul className="space-y-2">
+            {(Object.keys(blockers) as (keyof AccountBlockers)[])
+              .filter((k) => blockers[k] > 0)
+              .map((k) => (
+                <li key={k} className="flex items-center justify-between rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[13px]">
+                  <span className="font-semibold text-[var(--color-text-primary)]">{blockerModuleLabels[k]}</span>
+                  <span className="rounded-full bg-[var(--color-danger-light)] px-2 py-0.5 text-[11px] font-bold text-[var(--color-danger)]">
+                    {blockers[k]} {blockers[k] === 1 ? 'سجل' : 'سجلات'}
+                  </span>
+                </li>
+              ))}
+          </ul>
+        )}
+
+        {/* Bank-level: list each blocked account and its blockers */}
+        {isBankLevel && blockedAccounts && (
+          <ul className="space-y-3">
+            {blockedAccounts.map((ba) => (
+              <li key={ba.account_id} className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2">
+                <p className="mb-1.5 text-[12px] font-bold text-[var(--color-text-primary)]">{ba.account_name}</p>
+                <ul className="space-y-1">
+                  {(Object.keys(ba.blockers) as (keyof AccountBlockers)[])
+                    .filter((k) => ba.blockers[k] > 0)
+                    .map((k) => (
+                      <li key={k} className="flex items-center justify-between text-[12px]">
+                        <span className="text-[var(--color-text-secondary)]">{blockerModuleLabels[k]}</span>
+                        <span className="font-bold text-[var(--color-danger)]">{ba.blockers[k]}</span>
+                      </li>
+                    ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-1 w-full rounded-md bg-[var(--color-surface)] py-2.5 text-[13px] font-semibold text-[var(--color-text-primary)] transition hover:bg-[var(--color-border)]"
+        >
+          حسناً، سأعالج ذلك
+        </button>
+      </div>
+    </Dialog>
   )
 }
 
@@ -499,6 +642,20 @@ export default function DashboardPage() {
   const [linkedBanks, setLinkedBanks] = useState<LinkedBank[]>([])
   const [wizardOpen, setWizardOpen] = useState(false)
 
+  // Disconnect state
+  const [disconnectBankId, setDisconnectBankId] = useState<string | null>(null)
+  const [disconnectAccount, setDisconnectAccount] = useState<{
+    bankId: string
+    accountId: string
+    accountName: string
+  } | null>(null)
+  const [blockerState, setBlockerState] = useState<{
+    accountName?: string
+    blockers?: AccountBlockers
+    blockedAccounts?: BankBlockedAccount[]
+  } | null>(null)
+  const [disconnecting, setDisconnecting] = useState(false)
+
   const loadLinkedBanks = useCallback(async () => {
     try {
       const res = await fetch('/api/banks/linked')
@@ -571,6 +728,55 @@ export default function DashboardPage() {
     loadLinkedBanks()
   }, [loadLinkedBanks])
 
+  const handleConfirmDisconnectBank = useCallback(async () => {
+    if (!disconnectBankId) return
+    setDisconnecting(true)
+    try {
+      const res = await fetch(`/api/banks/${disconnectBankId}`, { method: 'PATCH' })
+      const data = await res.json()
+      if (data.blocked) {
+        setBlockerState({ blockedAccounts: data.blockedAccounts })
+      } else if (data.success) {
+        toast.success('تم إلغاء ربط البنك')
+        loadLinkedBanks()
+      } else {
+        toast.error('فشل إلغاء الربط', data.error)
+      }
+    } catch {
+      toast.error('خطأ في الاتصال')
+    } finally {
+      setDisconnecting(false)
+      setDisconnectBankId(null)
+    }
+  }, [disconnectBankId, loadLinkedBanks])
+
+  const handleConfirmDisconnectAccount = useCallback(async () => {
+    if (!disconnectAccount) return
+    setDisconnecting(true)
+    try {
+      const { bankId, accountId, accountName } = disconnectAccount
+      const res = await fetch(`/api/banks/${bankId}/accounts/${accountId}`, { method: 'PATCH' })
+      const data = await res.json()
+      if (data.blocked) {
+        setBlockerState({ accountName, blockers: data.blockers })
+      } else if (data.success) {
+        toast.success(
+          data.bankAlsoDisconnected
+            ? 'تم إلغاء ربط الحساب والبنك (لا توجد حسابات نشطة)'
+            : 'تم إلغاء ربط الحساب',
+        )
+        loadLinkedBanks()
+      } else {
+        toast.error('فشل إلغاء الربط', data.error)
+      }
+    } catch {
+      toast.error('خطأ في الاتصال')
+    } finally {
+      setDisconnecting(false)
+      setDisconnectAccount(null)
+    }
+  }, [disconnectAccount, loadLinkedBanks])
+
   return (
     <main className="min-h-[calc(100vh-var(--navbar-height))] bg-[var(--color-page-bg)] px-5 py-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-[var(--content-max-width)] flex-col gap-6">
@@ -635,7 +841,16 @@ export default function DashboardPage() {
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {linkedBanks.map((bank) => {
               const freshLogo = allBanks.find((b) => b.bank_id === bank.bank_id)?.logo_url
-              return <BankCard key={bank.bank_id} bank={{ ...bank, logo_url: freshLogo ?? bank.logo_url }} />
+              return (
+                <BankCard
+                  key={bank.bank_id}
+                  bank={{ ...bank, logo_url: freshLogo ?? bank.logo_url }}
+                  onDisconnectBank={(id) => setDisconnectBankId(id)}
+                  onDisconnectAccount={(bankId, accountId, accountName) =>
+                    setDisconnectAccount({ bankId, accountId, accountName })
+                  }
+                />
+              )
             })}
             <AddBankCard onClick={() => setWizardOpen(true)} />
           </div>
@@ -711,6 +926,37 @@ export default function DashboardPage() {
           تحميل البنوك
         </div>
       )}
+
+      {/* Confirm: disconnect entire bank */}
+      <ConfirmDialog
+        open={!!disconnectBankId}
+        onClose={() => setDisconnectBankId(null)}
+        onConfirm={handleConfirmDisconnectBank}
+        title="إلغاء ربط البنك"
+        description="سيتم إخفاء هذا البنك وجميع حساباته من التطبيق. بياناتك التاريخية تبقى محفوظة ويمكنك إعادة الربط في أي وقت."
+        confirmLabel="نعم، إلغاء الربط"
+        variant="danger"
+      />
+
+      {/* Confirm: disconnect single account */}
+      <ConfirmDialog
+        open={!!disconnectAccount}
+        onClose={() => setDisconnectAccount(null)}
+        onConfirm={handleConfirmDisconnectAccount}
+        title="إلغاء ربط الحساب"
+        description={`سيتم إخفاء حساب "${disconnectAccount?.accountName ?? ''}" من التطبيق. بياناتك التاريخية تبقى محفوظة ويمكنك إعادة الربط عبر ربط البنك من جديد.`}
+        confirmLabel="نعم، إلغاء الربط"
+        variant="danger"
+      />
+
+      {/* Blocker dialog — dependency conflict */}
+      <BlockerDialog
+        open={!!blockerState}
+        onClose={() => setBlockerState(null)}
+        accountName={blockerState?.accountName}
+        blockers={blockerState?.blockers}
+        blockedAccounts={blockerState?.blockedAccounts}
+      />
     </main>
   )
 }

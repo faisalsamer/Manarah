@@ -21,17 +21,21 @@ export async function GET() {
     bank_code: row.bank_code ?? row.bank_id.toUpperCase(),
     type: row.bank_type ?? 'Commercial',
     logo_url: row.logo_url ?? undefined,
-    accounts: row.accounts.map((acc) => ({
-      account_id: acc.account_id,
-      account_type: acc.account_type,
-      account_name: acc.account_name ?? '',
-      iban: acc.iban ? getMaskedIban(acc.iban) : acc.account_number,
-      balance: Number(acc.balance),
-      currency: acc.currency,
-      is_primary: acc.is_primary,
-      status: 'active',
-    })),
-    total_balance: row.accounts.reduce((sum, acc) => sum + Number(acc.balance), 0),
+    accounts: row.accounts
+      .filter((acc) => acc.is_active)
+      .map((acc) => ({
+        account_id: acc.account_id,
+        account_type: acc.account_type,
+        account_name: acc.account_name ?? '',
+        iban: acc.iban ? getMaskedIban(acc.iban) : acc.account_number,
+        balance: Number(acc.balance),
+        currency: acc.currency,
+        is_primary: acc.is_primary,
+        status: 'active',
+      })),
+    total_balance: row.accounts
+      .filter((acc) => acc.is_active)
+      .reduce((sum, acc) => sum + Number(acc.balance), 0),
     linked_at: row.connected_at?.toISOString() ?? row.created_at.toISOString(),
   }))
 

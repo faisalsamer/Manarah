@@ -2176,6 +2176,7 @@ export const AccountsScalarFieldEnum = {
   account_name: 'account_name',
   iban: 'iban',
   is_primary: 'is_primary',
+  is_active: 'is_active',
   balance: 'balance',
   currency: 'currency',
   created_at: 'created_at'
