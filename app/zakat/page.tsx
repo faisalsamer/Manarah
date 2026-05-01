@@ -50,6 +50,12 @@ interface CalcSummary {
   hawlDaysPassed: number
   hawlDaysRemaining: number
   nisabStandard: string
+  bankBalanceTotal?: number
+  manualAssetsTotal?: number
+  liabilitiesTotal?: number
+  zakatRate?: number
+  goldPricePerGram?: number
+  silverPricePerGram?: number
 }
 
 interface NisabPrices {
@@ -116,13 +122,39 @@ function formatCompactMoney(value: number): string {
   return value.toLocaleString('en-US', { maximumFractionDigits: 0 })
 }
 
+const HIJRI_AXIS_DAYS = {
+  month: 30,
+  '6months': 177,
+  year: 354,
+} as const
+
+const HIJRI_MONTH_LABEL_LIMIT = {
+  month: 2,
+  '6months': 6,
+  year: 12,
+} as const
+
 function parseChartDate(dateStr: string): Date {
   return new Date(`${dateStr}T12:00:00Z`)
+}
+
+function toChartDateString(date: Date): string {
+  const year = date.getFullYear()
+  const month = `${date.getMonth() + 1}`.padStart(2, '0')
+  const day = `${date.getDate()}`.padStart(2, '0')
+
+  return `${year}-${month}-${day}`
 }
 
 function formatArabicMonth(dateStr: string): string {
   return parseChartDate(dateStr).toLocaleDateString('ar-SA-u-ca-islamic-umalqura', {
     month: 'short',
+  })
+}
+
+function formatArabicHijriYear(dateStr: string): string {
+  return parseChartDate(dateStr).toLocaleDateString('ar-SA-u-ca-islamic-umalqura', {
+    year: 'numeric',
   })
 }
 
@@ -145,7 +177,42 @@ function getHijriMonthKey(dateStr: string): string {
   return `${year}-${month}`
 }
 
-function NisabTrendChart({ data, nisabLine }: { data: ChartPoint[]; nisabLine: number }) {
+function buildHijriMonthTicks(startDate: string, endDate: string, maxTicks: number) {
+  const ticks: { date: string; key: string }[] = []
+  const cursor = parseChartDate(startDate)
+  const end = parseChartDate(endDate)
+  let lastKey = ''
+
+  while (cursor <= end) {
+    const date = toChartDateString(cursor)
+    const key = getHijriMonthKey(date)
+
+    if (key !== lastKey) {
+      ticks.push({ date, key })
+      lastKey = key
+    }
+
+    cursor.setUTCDate(cursor.getUTCDate() + 1)
+  }
+
+  return ticks.slice(-maxTicks)
+}
+
+function NisabTrendChart({
+  data,
+  nisabLine,
+  rangeStartDate,
+  rangeEndDate,
+  nisabStandard,
+  maxMonthLabels,
+}: {
+  data: ChartPoint[]
+  nisabLine: number
+  rangeStartDate: string
+  rangeEndDate: string
+  nisabStandard: string
+  maxMonthLabels: number
+}) {
   const [hoveredPoint, setHoveredPoint] = useState<{
     point: ChartPoint
     x: number
@@ -163,31 +230,34 @@ function NisabTrendChart({ data, nisabLine }: { data: ChartPoint[]; nisabLine: n
   const minValue = Math.max(0, rawMinValue - verticalBuffer)
   const maxValue = rawMaxValue + verticalBuffer
   const range = Math.max(maxValue - minValue, 1)
+  const startMs = parseChartDate(rangeStartDate).getTime()
+  const endMs = Math.max(parseChartDate(rangeEndDate).getTime(), startMs + 1)
+  const timeRange = endMs - startMs
 
-  const getX = (index: number) =>
-    padding.left + (data.length === 1 ? plotWidth : (index / (data.length - 1)) * plotWidth)
+  const getX = (date: string) => {
+    const ratio = (parseChartDate(date).getTime() - startMs) / timeRange
+    return padding.left + Math.min(1, Math.max(0, ratio)) * plotWidth
+  }
   const getY = (value: number) =>
     padding.top + plotHeight - ((value - minValue) / range) * plotHeight
 
-  const points = data.map((point, index) => `${getX(index)},${getY(point.balance)}`).join(' ')
-  const nisabPoints = data.map((point, index) => `${getX(index)},${getY(point.nisab)}`).join(' ')
-  const areaPoints = `${padding.left},${padding.top + plotHeight} ${points} ${padding.left + plotWidth},${padding.top + plotHeight}`
+  const points = data.map((point) => `${getX(point.date)},${getY(point.balance)}`).join(' ')
+  const nisabPoints = data.map((point) => `${getX(point.date)},${getY(point.nisab)}`).join(' ')
+  const firstPointX = data[0] ? getX(data[0].date) : padding.left
+  const lastPointX = data.at(-1) ? getX(data.at(-1)!.date) : padding.left + plotWidth
+  const areaPoints = `${firstPointX},${padding.top + plotHeight} ${points} ${lastPointX},${padding.top + plotHeight}`
   const latestNisab = data.at(-1)?.nisab ?? nisabLine
   const latestBalance = data.at(-1)?.balance ?? 0
   const latestNisabY = getY(latestNisab)
   const latestBalanceY = getY(latestBalance)
-  const monthTicks = data.filter((point, index) => {
-    if (index === 0 || index === data.length - 1) return true
-    return getHijriMonthKey(point.date) !== getHijriMonthKey(data[index - 1].date)
-  })
-  const tickStep = Math.max(1, Math.ceil(monthTicks.length / 12))
-  const ticks = monthTicks.filter((_, index) => index % tickStep === 0 || index === monthTicks.length - 1)
+  const ticks = buildHijriMonthTicks(rangeStartDate, rangeEndDate, maxMonthLabels)
+  const nisabGramWeight = nisabStandard === 'GOLD' ? 85 : 595
   const yAxisTicks = Array.from({ length: 5 }, (_, index) => minValue + (range * index) / 4).reverse()
   const eventPoints = data
     .map((point, index) => ({ point, index }))
     .filter(({ point }) => point.events?.length)
   const tooltipHeight = hoveredPoint
-    ? 86 + Math.min(hoveredPoint.point.events?.length ?? 0, 2) * 18
+    ? 104 + Math.min(hoveredPoint.point.events?.length ?? 0, 2) * 18
     : 0
   const tooltipX = hoveredPoint
     ? hoveredPoint.x > width - 260 ? hoveredPoint.x - 238 : hoveredPoint.x + 14
@@ -314,7 +384,7 @@ function NisabTrendChart({ data, nisabLine }: { data: ChartPoint[]; nisabLine: n
       </text>
 
       {data.map((point, index) => {
-        const x = getX(index)
+        const x = getX(point.date)
         const y = getY(point.balance)
         return (
           <g key={point.date}>
@@ -346,8 +416,8 @@ function NisabTrendChart({ data, nisabLine }: { data: ChartPoint[]; nisabLine: n
       {eventPoints.map(({ point, index }) => (
         <g
           key={`${point.date}-event`}
-          transform={`translate(${getX(index)},${getY(point.balance)})`}
-          onMouseEnter={() => setHoveredPoint({ point, x: getX(index), y: getY(point.balance) })}
+          transform={`translate(${getX(point.date)},${getY(point.balance)})`}
+          onMouseEnter={() => setHoveredPoint({ point, x: getX(point.date), y: getY(point.balance) })}
           style={{ cursor: 'pointer' }}
         >
           <circle r="8" fill="white" stroke={point.events?.some((event) => event.type === 'hawl_break') ? 'var(--color-danger)' : '#00A87A'} strokeWidth="2" />
@@ -356,17 +426,20 @@ function NisabTrendChart({ data, nisabLine }: { data: ChartPoint[]; nisabLine: n
       ))}
 
       {ticks.map((point) => {
-        const index = data.findIndex((item) => item.date === point.date)
         return (
           <text
             key={point.date}
-            x={getX(index)}
-            y={height - 10}
+            x={getX(point.date)}
+            y={height - 24}
             fill="var(--color-text-muted)"
-            fontSize="11"
+            fontSize="10"
+            fontWeight="700"
             textAnchor="middle"
           >
-            {formatArabicMonth(point.date)}
+            <tspan x={getX(point.date)}>{formatArabicMonth(point.date)}</tspan>
+            <tspan x={getX(point.date)} dy="14" fontSize="9" fontWeight="600">
+              {formatArabicHijriYear(point.date)}
+            </tspan>
           </text>
         )
       })}
@@ -393,11 +466,14 @@ function NisabTrendChart({ data, nisabLine }: { data: ChartPoint[]; nisabLine: n
           <text x="204" y="78" textAnchor="end" fill="var(--color-text-secondary)" fontSize="11">
             نصاب اليوم: {formatMoney(hoveredPoint.point.nisab)} ر.س
           </text>
+          <text x="204" y="96" textAnchor="end" fill="var(--color-text-secondary)" fontSize="11">
+            سعر الغرام: {formatMoney(hoveredPoint.point.nisab / nisabGramWeight)} ر.س
+          </text>
           {(hoveredPoint.point.events ?? []).slice(0, 2).map((event, index) => (
             <text
               key={`${event.type}-${index}`}
               x="204"
-              y={98 + index * 18}
+              y={116 + index * 18}
               textAnchor="end"
               fill={event.type === 'hawl_break' ? 'var(--color-danger)' : '#00A87A'}
               fontSize="11"
@@ -416,10 +492,12 @@ function MetalPriceTile({
   label,
   value,
   accent,
+  hint,
 }: {
   label: string
   value: number
   accent: 'gold' | 'silver'
+  hint?: string
 }) {
   return (
     <div
@@ -435,16 +513,21 @@ function MetalPriceTile({
         {label}
       </div>
       <div style={{ fontSize: 'var(--text-body-lg)', color: 'var(--color-text-primary)', fontWeight: 800, direction: 'ltr', textAlign: 'right' }}>
-        {value.toFixed(2)}
+        {formatMoney(value)}
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
-        <span style={{ fontSize: 'var(--text-caption)', color: accent === 'gold' ? 'var(--color-success)' : 'var(--color-danger)', fontWeight: 700 }}>
-          {accent === 'gold' ? '+0.28%' : '-0.5%'}
+        <span style={{ fontSize: 'var(--text-caption)', color: accent === 'gold' ? 'var(--color-success)' : 'var(--color-primary-500)', fontWeight: 700 }}>
+          مباشر من API
         </span>
         <span style={{ fontSize: 'var(--text-caption)', color: 'var(--color-text-muted)' }}>
           ر.س / غم
         </span>
       </div>
+      {hint && (
+        <div style={{ marginTop: '8px', fontSize: 'var(--text-caption)', color: 'var(--color-text-muted)', lineHeight: 'var(--leading-normal)' }}>
+          {hint}
+        </div>
+      )}
     </div>
   )
 }
@@ -465,6 +548,8 @@ function ZakatStatusCard({
   onHistoryClick: () => void
 }) {
   const zakatAmount = summary?.zakatDue ? (summary.zakatAmount ?? 0) : 0
+  const zakatRate = summary?.zakatRate ?? 0.025
+  const zakatRatePercent = (zakatRate * 100).toFixed(1)
   const aboveNisab = comparisonSummary?.currentlyAboveNisab ?? summary?.isAboveNisab ?? false
   const isDue = zakatAmount > 0
   const hasActiveHawl = hawlState?.status === 'ACTIVE' || hawlState?.status === 'COMPLETED'
@@ -512,11 +597,24 @@ function ZakatStatusCard({
               ر.س
             </span>
           </div>
+          <div style={{ marginTop: '10px', padding: '10px 12px', borderRadius: 'var(--radius-sm)', background: 'var(--color-surface)', color: 'var(--color-text-secondary)', fontSize: 'var(--text-caption)', lineHeight: 'var(--leading-normal)' }}>
+            محسوب تلقائياً: صافي الثروة {formatMoney(summary?.netWorth ?? 0)} ر.س × {zakatRatePercent}%.
+          </div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
-          <MetalPriceTile label="النصاب (زكاة المال)" value={summary?.nisabValueSAR ?? 0} accent="gold" />
-          <MetalPriceTile label="الفضة" value={prices?.silver.pricePerGramSAR ?? 0} accent="silver" />
+          <MetalPriceTile
+            label="سعر الذهب لكل غرام (24 قيراط)"
+            value={prices?.gold.pricePerGramSAR ?? summary?.goldPricePerGram ?? 0}
+            accent="gold"
+            hint={`نصاب الذهب 85 غ = ${formatMoney(prices?.goldNisabValueSAR ?? 0, 0)} ر.س`}
+          />
+          <MetalPriceTile
+            label="سعر الفضة لكل غرام"
+            value={prices?.silver.pricePerGramSAR ?? summary?.silverPricePerGram ?? 0}
+            accent="silver"
+            hint={`نصاب الفضة 595 غ = ${formatMoney(prices?.silverNisabValueSAR ?? 0, 0)} ر.س`}
+          />
         </div>
 
         <Button variant="primary" size="md" fullWidth onClick={onPayClick}>
@@ -571,7 +669,7 @@ function ZakatStatusCard({
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', paddingTop: '14px', borderTop: '1px solid var(--color-border)' }}>
         <div>
           <div style={{ fontSize: 'var(--text-caption)', color: 'var(--color-text-muted)', fontWeight: 700, marginBottom: '6px' }}>
-            سعر الفضة
+            سعر الفضة لكل غرام
           </div>
           <div style={{ fontSize: 'var(--text-body)', fontWeight: 800, color: 'var(--color-text-primary)', direction: 'ltr' }}>
             {prices?.silver.pricePerGramSAR.toFixed(2) ?? '0.00'} ر.س
@@ -579,13 +677,19 @@ function ZakatStatusCard({
         </div>
         <div>
           <div style={{ fontSize: 'var(--text-caption)', color: 'var(--color-text-muted)', fontWeight: 700, marginBottom: '6px' }}>
-            سعر الذهب (غرام)
+            سعر الذهب لكل غرام (24 قيراط)
           </div>
           <div style={{ fontSize: 'var(--text-body)', fontWeight: 800, color: 'var(--color-text-primary)', direction: 'ltr' }}>
             {prices?.gold.pricePerGramSAR.toFixed(2) ?? '0.00'} ر.س
           </div>
         </div>
       </div>
+      {prices && (
+        <div style={{ marginTop: '10px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: 'var(--text-caption)', color: 'var(--color-text-muted)' }}>
+          <div>نصاب الفضة: {formatMoney(prices.silverNisabValueSAR, 0)} ر.س</div>
+          <div>نصاب الذهب: {formatMoney(prices.goldNisabValueSAR, 0)} ر.س</div>
+        </div>
+      )}
 
       {comparisonSummary && (
         <div style={{ marginTop: '14px', padding: '10px 12px', borderRadius: 'var(--radius-sm)', background: 'var(--color-surface)', fontSize: 'var(--text-caption)', color: 'var(--color-text-secondary)', lineHeight: 'var(--leading-normal)' }}>
@@ -734,13 +838,24 @@ export default function ZakatPage() {
 
   // ── Chart filter ──────────────────────────────────────────
 
+  const sortedChartData = [...chartData].sort((a, b) => a.date.localeCompare(b.date))
+  const chartWindow = (() => {
+    const endDate = sortedChartData.at(-1)?.date ?? toChartDateString(new Date())
+    const start = parseChartDate(endDate)
+    start.setUTCDate(start.getUTCDate() - HIJRI_AXIS_DAYS[chartRange])
+
+    return {
+      startDate: toChartDateString(start),
+      endDate,
+    }
+  })()
+
   const filteredChart = (() => {
-    if (!chartData.length) return []
-    const now = new Date()
-    const cutoff = new Date(now)
-    const rangeDays = chartRange === 'month' ? 30 : chartRange === '6months' ? 177 : 354
-    cutoff.setDate(now.getDate() - rangeDays)
-    return chartData.filter((d) => parseChartDate(d.date) >= cutoff)
+    if (!sortedChartData.length) return []
+    return sortedChartData.filter((d) =>
+      parseChartDate(d.date) >= parseChartDate(chartWindow.startDate) &&
+      parseChartDate(d.date) <= parseChartDate(chartWindow.endDate)
+    )
   })()
 
   const nisabLine = filteredChart.length > 0
@@ -835,7 +950,14 @@ export default function ZakatPage() {
 
             <div style={{ height: '430px' }}>
               {filteredChart.length > 0 ? (
-                <NisabTrendChart data={filteredChart} nisabLine={nisabLine} />
+                <NisabTrendChart
+                  data={filteredChart}
+                  nisabLine={nisabLine}
+                  rangeStartDate={chartWindow.startDate}
+                  rangeEndDate={chartWindow.endDate}
+                  nisabStandard={summary?.nisabStandard ?? 'SILVER'}
+                  maxMonthLabels={HIJRI_MONTH_LABEL_LIMIT[chartRange]}
+                />
               ) : (
                 <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-muted)', fontSize: 'var(--text-body-sm)' }}>
                   لا توجد بيانات كافية لعرض الرسم البياني
